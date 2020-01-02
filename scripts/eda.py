@@ -28,3 +28,28 @@ y_pred = model.predict(X_test)
 mse = mean_squared_error(y_test, y_pred)
 
 print("Mean Squared Error:", mse)
+# Change made on 2024-06-26 21:06:42.570265
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data_url = "https://example.com/public_dataset.csv"
+data = pd.read_csv(data_url)
+
+# Perform some preprocessing on the data
+data.dropna(inplace=True)
+X = data[['X1', 'X2', 'X3']]
+y = data['Y']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients of the model
+coefficients = model.coef_
+intercept = model.intercept_
+
+# Print the results
+print("Coefficients: ", coefficients)
+print("Intercept: ", intercept)
