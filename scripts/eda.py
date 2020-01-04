@@ -53,3 +53,29 @@ intercept = model.intercept_
 # Print the results
 print("Coefficients: ", coefficients)
 print("Intercept: ", intercept)
+# Change made on 2024-06-26 21:06:47.338574
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data_url = "https://exampledata.com"
+df = pd.read_csv(data_url)
+
+# Preprocess data
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation_rate']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate model
+r_squared = model.score(X, y)
+
+# Output results
+print("R-squared value: {}".format(r_squared))
+print("Predictions: {}".format(predictions))
