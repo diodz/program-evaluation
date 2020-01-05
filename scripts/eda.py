@@ -108,3 +108,42 @@ predictions = model.predict(X)
 # Calculate the mean squared error
 mse = np.mean((predictions - y) ** 2)
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:06:57.647909
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://url_to_public_database.com/dataset.csv')
+
+# Data preprocessing
+# ...
+
+# Feature selection
+X = data[['feature1', 'feature2', 'feature3']]
+y = data['target']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, predictions)
+print("Mean Squared Error:", mse)
+
+# Visualize data and predictions
+plt.scatter(X_test['feature1'], y_test, color='blue')
+plt.plot(X_test['feature1'], predictions, color='red', linewidth=2)
+plt.xlabel('Feature 1')
+plt.ylabel('Target')
+plt.title('Linear Regression Model')
+plt.show()
