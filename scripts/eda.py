@@ -79,3 +79,32 @@ r_squared = model.score(X, y)
 # Output results
 print("R-squared value: {}".format(r_squared))
 print("Predictions: {}".format(predictions))
+# Change made on 2024-06-26 21:06:51.666665
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Perform some data cleaning and preprocessing
+data.dropna()
+data = data[data['GDP'] > 0]
+
+# Split the data into features (X) and target variable (y)
+X = data[['Unemployment Rate', 'Income per Capita', 'Inflation Rate']]
+y = data['GDP']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients of the model
+print('Coefficients:', model.coef_)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the mean squared error
+mse = np.mean((predictions - y) ** 2)
+print('Mean Squared Error:', mse)
