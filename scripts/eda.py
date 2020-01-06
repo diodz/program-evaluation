@@ -147,3 +147,31 @@ plt.xlabel('Feature 1')
 plt.ylabel('Target')
 plt.title('Linear Regression Model')
 plt.show()
+# Change made on 2024-06-26 21:07:02.803856
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load economic data from public database
+economic_data = pd.read_csv('https://examplewebsite.com/economic_data.csv')
+
+# Clean and preprocess the data
+economic_data.dropna(inplace=True)
+X = economic_data[['GDP','unemployment_rate','inflation_rate']]
+y = economic_data['income']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Calculate the model's accuracy
+accuracy = model.score(X_test, y_test)
+
+print("Model Accuracy: {}".format(accuracy))
