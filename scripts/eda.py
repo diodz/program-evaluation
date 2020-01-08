@@ -198,3 +198,34 @@ predictions = model.predict(new_data)
 
 # Output predictions
 print(predictions)
+# Change made on 2024-06-26 21:07:11.480385
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Fetch data from a public database
+data_url = "https://publicdata.com/economic_data.csv"
+economic_data = pd.read_csv(data_url)
+
+# Explore the data
+print(economic_data.head())
+
+# Perform analysis
+X = economic_data[['GDP', 'Unemployment']]
+y = economic_data['Inflation']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize the results
+plt.scatter(economic_data['GDP'], economic_data['Inflation'], color='blue')
+plt.plot(economic_data['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation')
+plt.title('Relationship between GDP and Inflation')
+plt.show()
