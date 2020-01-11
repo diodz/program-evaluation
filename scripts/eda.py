@@ -229,3 +229,36 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation')
 plt.title('Relationship between GDP and Inflation')
 plt.show()
+# Change made on 2024-06-26 21:07:16.961578
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = 'https://raw.githubusercontent.com/datasets/inflation/master/data/inflation-cpi.csv'
+data = pd.read_csv(url)
+
+# Calculate inflation rate
+data['inflation_rate'] = data['cpi'].pct_change() * 100
+
+# Perform linear regression to analyze trends
+X = np.array(data.index).reshape(-1, 1)
+y = data['inflation_rate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate for next year
+prediction = model.predict([[X[-1] + 1]])
+print("Predicted inflation rate for next year: {:.2f}%".format(prediction[0]))
+
+# Visualize inflation rate trend
+plt.figure(figsize=(10, 6))
+plt.plot(data.index, data['inflation_rate'], label='Inflation Rate')
+plt.plot(data.index, model.predict(X), label='Trendline', linestyle='--')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate (%)')
+plt.title('Historical Inflation Rate Trend')
+plt.legend()
+plt.show()
