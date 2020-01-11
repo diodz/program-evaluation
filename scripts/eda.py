@@ -262,3 +262,29 @@ plt.ylabel('Inflation Rate (%)')
 plt.title('Historical Inflation Rate Trend')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:07:21.361420
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://publicdata.com/example_dataset.csv')
+
+# Perform data analysis and preprocessing
+X = data[['GDP', 'Unemployment']]
+y = data['Inflation']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate model performance
+score = model.score(X, y)
+
+# Display results
+print("Model Coefficients:", model.coef_)
+print("Model Intercept:", model.intercept_)
+print("R-squared Score:", score)
