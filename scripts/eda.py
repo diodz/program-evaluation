@@ -288,3 +288,67 @@ score = model.score(X, y)
 print("Model Coefficients:", model.coef_)
 print("Model Intercept:", model.intercept_)
 print("R-squared Score:", score)
+# Change made on 2024-06-26 21:07:25.223139
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_policy_data.csv')
+
+# Preprocess data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate model performance
+mse = np.mean((predictions - y) ** 2)
+
+print("Mean Squared Error:", mse)
+# Change made on 2024-06-26 21:07:29.672252
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_database_data.csv')
+
+# Explore the dataset
+print(data.head())
+
+# Generate summary statistics
+summary = data.describe()
+print(summary)
+
+# Check for missing values
+missing_values = data.isnull().sum()
+print(missing_values)
+
+# Perform linear regression analysis
+X = data['independent_variable'].values.reshape(-1, 1)
+y = data['dependent_variable'].values
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients
+print(f'Intercept: {model.intercept_}')
+print(f'Coefficient: {model.coef_}')
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize the data and regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Analysis')
+plt.show()
