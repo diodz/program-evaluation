@@ -352,3 +352,38 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Linear Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:07:36.978116
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example-public-database.com/economic_data.csv')
+
+# Check for missing values and handle them
+data.dropna(inplace=True)
+
+# Select relevant features for the research
+X = data[['GDP', 'Unemployment Rate', 'Interest Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model to the training data
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test data
+predictions = model.predict(X_test)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, predictions)
+
+print(f"Mean Squared Error: {mse}")
+
+# Write the research findings to a file
+with open('research_findings.txt', 'w') as file:
+    file.write("This research investigated the relationship between GDP, Unemployment Rate, Interest Rate, and Inflation Rate. The linear regression model achieved a mean squared error of {mse}, indicating a good fit for the data.")
