@@ -387,3 +387,32 @@ print(f"Mean Squared Error: {mse}")
 # Write the research findings to a file
 with open('research_findings.txt', 'w') as file:
     file.write("This research investigated the relationship between GDP, Unemployment Rate, Interest Rate, and Inflation Rate. The linear regression model achieved a mean squared error of {mse}, indicating a good fit for the data.")
+# Change made on 2024-06-26 21:07:42.785143
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the data from a public database or API
+data = pd.read_csv('https://example.com/data.csv')
+
+# Perform some data analysis
+mean_income = np.mean(data['income'])
+median_education = np.median(data['education'])
+
+# Fit a linear regression model
+X = data[['education']]
+y = data['income']
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Visualize the data and regression line
+plt.scatter(data['education'], data['income'])
+plt.plot(data['education'], predictions, color='red')
+plt.xlabel('Education Level')
+plt.ylabel('Income')
+plt.title('Relationship between Education and Income')
+plt.show()
