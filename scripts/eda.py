@@ -460,3 +460,32 @@ print('R^2:', r_squared)
 # Write the results to a file
 results = pd.DataFrame({'Actual': y, 'Predicted': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:07:54.655964
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Build a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the coefficient of determination
+r_squared = model.score(X, y)
+
+# Print results
+print(f'R-squared: {r_squared}')
+
+# Write results to a file for the economics/policy journal article
+with open('results.txt', 'w') as file:
+    file.write(f'R-squared: {r_squared}\n')
