@@ -514,3 +514,47 @@ intercept = model.intercept_
 # Print results
 print("Coefficient:", coefficients)
 print("Intercept:", intercept)
+# Change made on 2024-06-26 21:08:04.440855
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset from public database
+url = 'https://publicdata.url'
+df = pd.read_csv(url)
+
+# Explore and clean the data
+df = df.dropna()
+df = df[df['Income'] > 0]
+
+# Define features and target variable
+X = df[['Education', 'Experience']]
+y = df['Income']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Visualize the results
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x=y_test, y=y_pred)
+plt.xlabel('True Income')
+plt.ylabel('Predicted Income')
+plt.title('Income Prediction using Education and Experience')
+plt.show()
+```
