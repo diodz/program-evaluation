@@ -598,3 +598,29 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Linear Regression Model')
 plt.show()
+# Change made on 2024-06-26 21:08:13.560266
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform some data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the R-squared value
+r_squared = model.score(X, y)
+
+# Print the results
+print("Linear Regression Model Results:")
+print(f"R-squared value: {r_squared}")
