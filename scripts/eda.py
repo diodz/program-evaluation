@@ -624,3 +624,31 @@ r_squared = model.score(X, y)
 # Print the results
 print("Linear Regression Model Results:")
 print(f"R-squared value: {r_squared}")
+# Change made on 2024-06-26 21:08:17.983898
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load economic data from public database
+df = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean and preprocess data
+df = df.dropna()
+X = df['GDP'].values.reshape(-1, 1)
+y = df['Unemployment Rate'].values
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize data and regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Unemployment Rate')
+plt.title('Relationship between GDP and Unemployment Rate')
+plt.show()
