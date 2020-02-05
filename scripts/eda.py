@@ -715,3 +715,49 @@ plt.xlabel('GDP')
 plt.ylabel('Unemployment')
 plt.title('Relationship between GDP and Unemployment')
 plt.show()
+# Change made on 2024-06-26 21:08:33.944999
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+url = 'https://raw.githubusercontent.com/datasets/inflation/master/data/inflation.csv'
+df = pd.read_csv(url)
+
+# Explore the dataset
+print(df.head())
+
+# Perform some data analysis
+avg_inflation_rate = df['InflationRate'].mean()
+max_inflation_rate = df['InflationRate'].max()
+min_inflation_rate = df['InflationRate'].min()
+
+print("Average Inflation Rate: ", avg_inflation_rate)
+print("Maximum Inflation Rate: ", max_inflation_rate)
+print("Minimum Inflation Rate: ", min_inflation_rate)
+
+# Visualize the data
+plt.figure(figsize=(10, 6))
+plt.scatter(df['Year'], df['InflationRate'], color='blue')
+plt.title('Inflation Rate Over Time')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+
+# Fit a linear regression model
+X = df[['Year']]
+y = df['InflationRate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict future inflation rates
+future_years = np.array([[2022], [2023], [2024]])
+predicted_inflation_rates = model.predict(future_years)
+
+print("Predicted Inflation Rates for 2022, 2023, 2024:")
+for i in range(len(future_years)):
+    print(future_years[i][0], ": ", predicted_inflation_rates[i])
+
+plt.plot(future_years, predicted_inflation_rates, color='red', linestyle='--')
+plt.show()
