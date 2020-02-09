@@ -791,3 +791,38 @@ test_score = model.score(X_test, y_test)
 # Print the results
 print(f"Training R^2 score: {train_score}")
 print(f"Test R^2 score: {test_score}")
+# Change made on 2024-06-26 21:08:46.544738
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and test sets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Visualize the results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Actual vs Predicted Inflation Rate')
+plt.show()
