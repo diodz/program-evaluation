@@ -861,3 +861,46 @@ print(f'R-squared: {r2}')
 
 # Write up results for article in economics or policy journal
 ```
+# Change made on 2024-06-26 21:09:00.008639
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Downloading a dataset from a public economic database
+url = "https://exampledata.com/economic_data.csv"
+data = pd.read_csv(url)
+
+# Exploratory data analysis
+print(data.head())
+print(data.describe())
+
+# Checking for missing values
+print(data.isnull().sum())
+
+# Feature selection
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Stock Market Index']
+
+# Splitting the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Training a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Making predictions
+predictions = model.predict(X_test)
+
+# Evaluating the model
+mse = mean_squared_error(y_test, predictions)
+print("Mean Squared Error:", mse)
+
+# Visualizing the results
+plt.scatter(y_test, predictions)
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Actual vs Predicted Stock Market Index")
+plt.show()
