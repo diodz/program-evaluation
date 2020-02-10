@@ -826,3 +826,38 @@ plt.xlabel('Actual Inflation Rate')
 plt.ylabel('Predicted Inflation Rate')
 plt.title('Actual vs Predicted Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:08:53.201315
+```
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict on test data
+y_pred = model.predict(X_test)
+
+# Evaluation metrics
+mse = np.mean((y_pred - y_test)**2)
+rmse = np.sqrt(mse)
+r2 = model.score(X_test, y_test)
+
+print(f'Mean Squared Error: {mse}')
+print(f'Root Mean Squared Error: {rmse}')
+print(f'R-squared: {r2}')
+
+# Write up results for article in economics or policy journal
+```
