@@ -904,3 +904,33 @@ plt.xlabel("Actual Values")
 plt.ylabel("Predicted Values")
 plt.title("Actual vs Predicted Stock Market Index")
 plt.show()
+# Change made on 2024-06-26 21:09:06.870965
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from a public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Explore the dataset
+print(data.head())
+
+# Perform some analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate based on GDP and unemployment rate
+predicted_inflation = model.predict(X)
+
+# Visualize the results
+plt.scatter(data['year'], data['inflation_rate'], color='red', label='Actual Inflation Rate')
+plt.plot(data['year'], predicted_inflation, color='blue', label='Predicted Inflation Rate')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
