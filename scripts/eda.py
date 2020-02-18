@@ -1078,3 +1078,33 @@ plt.xlabel('Actual Values')
 plt.ylabel('Predicted Values')
 plt.title('Linear Regression Model Performance')
 plt.show()
+# Change made on 2024-06-26 21:09:30.517760
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://raw.githubusercontent.com/datasets/investor-flow-of-funds-us/master/data/weekly.csv')
+
+# Data preprocessing
+data['Date'] = pd.to_datetime(data['Date'])
+data.set_index('Date', inplace=True)
+
+# Perform analysis
+X = np.array(data.index).reshape(-1, 1)
+y = np.array(data['Total Equity'].values)
+
+regression = LinearRegression()
+regression.fit(X, y)
+
+# Visualize results
+plt.figure(figsize=(12, 6))
+plt.scatter(data.index, data['Total Equity'], color='blue')
+plt.plot(data.index, regression.predict(X), color='red')
+plt.xlabel('Date')
+plt.ylabel('Total Equity')
+plt.title('Investor Flow of Funds in US Equity Markets')
+plt.show()
+```
