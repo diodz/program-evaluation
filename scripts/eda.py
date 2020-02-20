@@ -1108,3 +1108,63 @@ plt.ylabel('Total Equity')
 plt.title('Investor Flow of Funds in US Equity Markets')
 plt.show()
 ```
+# Change made on 2024-06-26 21:09:35.233612
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Import data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform some initial data exploration
+print(data.head())
+print(data.describe())
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['income']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+r_squared = model.score(X, y)
+
+print("R-squared value:", r_squared)
+
+# Write the results to a file
+results = pd.DataFrame({'Actual Income': y, 'Predicted Income': predictions})
+results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:09:39.083543
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Modeling
+model = LinearRegression()
+model.fit(X, y)
+
+# Predictions
+predictions = model.predict(X)
+
+# Analysis
+coef = model.coef_
+intercept = model.intercept_
+
+print("Coefficient for GDP:", coef[0])
+print("Coefficient for unemployment rate:", coef[1])
+print("Intercept:", intercept)
+
+# Write article with analysis and insights from the research.
