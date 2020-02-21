@@ -1168,3 +1168,37 @@ print("Coefficient for unemployment rate:", coef[1])
 print("Intercept:", intercept)
 
 # Write article with analysis and insights from the research.
+# Change made on 2024-06-26 21:09:44.225116
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import urllib.request
+
+# Load dataset from public database
+url = "https://example.com/economic_data.csv"
+data = pd.read_csv(url)
+
+# Preprocess the data
+X = data.drop('GDP', axis=1)
+y = data['GDP']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Display coefficients
+coef_df = pd.DataFrame({'Variable': X.columns, 'Coefficient': model.coef_})
+print("Coefficients:")
+print(coef_df)
