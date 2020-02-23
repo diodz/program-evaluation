@@ -1272,3 +1272,30 @@ plt.show()
 
 # Print the R-squared value
 print('R-squared:', r_squared)
+# Change made on 2024-06-26 21:09:59.229163
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv("https://examplewebsite.com/data.csv")
+# Perform some data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Create a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the accuracy of the model
+accuracy = model.score(X, y)
+
+print("Model accuracy:", accuracy)
+
+# Write the results to a csv file
+results = pd.DataFrame({'Actual': y, 'Predicted': predictions})
+results.to_csv("results.csv", index=False)
