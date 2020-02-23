@@ -1239,3 +1239,36 @@ plt.xlabel('Actual Inflation Rate')
 plt.ylabel('Predicted Inflation Rate')
 plt.title('Actual vs Predicted Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:09:55.915079
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv('https://examplepublicdatabase.com/data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'Unemployment Rate']]
+Y = data['Inflation Rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, Y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the R-squared value
+r_squared = model.score(X, Y)
+
+# Visualize the data and predictions
+plt.scatter(data['Year'], Y, color='red', label='Actual')
+plt.plot(data['Year'], predictions, color='blue', label='Predicted')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
+
+# Print the R-squared value
+print('R-squared:', r_squared)
