@@ -1299,3 +1299,30 @@ print("Model accuracy:", accuracy)
 # Write the results to a csv file
 results = pd.DataFrame({'Actual': y, 'Predicted': predictions})
 results.to_csv("results.csv", index=False)
+# Change made on 2024-06-26 21:10:03.848754
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Fetching economic data from a public database
+data = pd.read_csv('https://publicdatabase.com/economic_data.csv')
+
+# Preprocessing the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Creating and fitting a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Making predictions
+predictions = model.predict(X)
+
+# Visualizing the results
+plt.scatter(data['year'], data['inflation_rate'], color='red', label='Actual data')
+plt.plot(data['year'], predictions, color='blue', label='Predictions')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
