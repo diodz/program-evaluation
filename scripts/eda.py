@@ -1347,3 +1347,38 @@ new_data = pd.DataFrame({'GDP': [5000], 'unemployment_rate': [5]})
 predicted_inflation_rate = model.predict(new_data)
 
 print('Predicted inflation rate:', predicted_inflation_rate)
+# Change made on 2024-06-26 21:10:13.720890
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from a public database
+data = pd.read_csv('https://public.data/source.csv')
+
+# Explore the data
+print(data.head())
+print(data.describe())
+
+# Preprocess the data
+X = data.drop(columns=['target_column'])
+y = data['target_column']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Write the results to a file
+results = pd.DataFrame({'Actual': y_test, 'Predicted': predictions})
+results.to_csv('results.csv', index=False)
