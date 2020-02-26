@@ -1326,3 +1326,24 @@ plt.xlabel('Year')
 plt.ylabel('Inflation Rate')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:10:08.112620
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Fetch economic data from a public database
+economic_data = pd.read_csv('https://publicdata/economic_data.csv')
+
+# Perform data analysis
+X = economic_data[['GDP', 'unemployment_rate']]
+y = economic_data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate based on GDP and unemployment rate
+new_data = pd.DataFrame({'GDP': [5000], 'unemployment_rate': [5]})
+predicted_inflation_rate = model.predict(new_data)
+
+print('Predicted inflation rate:', predicted_inflation_rate)
