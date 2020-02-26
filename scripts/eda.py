@@ -1382,3 +1382,33 @@ print('Mean Squared Error:', mse)
 # Write the results to a file
 results = pd.DataFrame({'Actual': y_test, 'Predicted': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:10:19.785809
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load your dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Clean the data and perform any necessary preprocessing
+data = data.dropna()
+data = data[data['GDP'] > 0]
+
+# Define your features and target variable
+X = data[['Unemployment Rate', 'Inflation Rate']]
+y = data['GDP']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f"Training R^2 score: {train_score}")
+print(f"Testing R^2 score: {test_score}")
