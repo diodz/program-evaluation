@@ -1412,3 +1412,41 @@ test_score = model.score(X_test, y_test)
 
 print(f"Training R^2 score: {train_score}")
 print(f"Testing R^2 score: {test_score}")
+# Change made on 2024-06-26 21:10:25.263972
+# Import necessary libraries
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import statsmodels.api as sm
+
+# Load dataset from public database
+data = pd.read_csv("https://example.com/public_dataset.csv")
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['feature1', 'feature2', 'feature3']]
+y = data['target']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+print(f"Mean Squared Error: {mse}")
+
+# Get model coefficients
+print(f"Coefficients: {model.coef_}")
+
+# Perform statistical analysis
+X_train = sm.add_constant(X_train)
+results = sm.OLS(y_train, X_train).fit()
+print(results.summary())
