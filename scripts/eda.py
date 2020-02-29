@@ -1450,3 +1450,41 @@ print(f"Coefficients: {model.coef_}")
 X_train = sm.add_constant(X_train)
 results = sm.OLS(y_train, X_train).fit()
 print(results.summary())
+# Change made on 2024-06-26 21:10:38.789396
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+
+# Load data from a public database
+data = pd.read_csv('https://exampledata.com/data.csv')
+
+# Perform some exploratory data analysis
+print(data.head())
+print(data.describe())
+
+# Create a scatter plot to visualize the relationship between two variables
+import matplotlib.pyplot as plt
+plt.scatter(data['GDP'], data['Unemployment'])
+plt.xlabel('GDP')
+plt.ylabel('Unemployment')
+plt.title('GDP vs Unemployment')
+plt.show()
+
+# Fit a linear regression model to predict unemployment based on GDP
+X = data['GDP'].values.reshape(-1,1)
+y = data['Unemployment'].values
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients of the model
+print('Intercept:', model.intercept_)
+print('Coefficient:', model.coef_)
+
+# Use statsmodels for more detailed analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print the model summary
+print(model.summary())
