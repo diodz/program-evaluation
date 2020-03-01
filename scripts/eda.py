@@ -1488,3 +1488,30 @@ model = sm.OLS(y, X).fit()
 
 # Print the model summary
 print(model.summary())
+# Change made on 2024-06-26 21:10:43.452630
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Build a simple linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the coefficient of determination
+r_squared = model.score(X, y)
+
+# Print out the results
+print("Coefficient of determination: ", r_squared)
+print("Intercept: ", model.intercept_)
+print("Slope: ", model.coef_)
