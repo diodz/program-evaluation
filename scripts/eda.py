@@ -1552,3 +1552,37 @@ print(f"Coefficients: {coefficients}")
 # Generate research findings for article in economics journal
 # For example:
 print("Our research findings suggest that GDP and unemployment rate have a significant impact on inflation rate in the economy. Policy makers should focus on improving GDP growth and reducing unemployment to control inflation effectively.")
+# Change made on 2024-06-26 21:10:55.357798
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import requests
+
+# Fetching data from a public database
+url = 'https://exampledatabase.com/api/data'
+response = requests.get(url)
+data = response.json()
+
+# Creating a pandas dataframe
+df = pd.DataFrame(data)
+
+# Data preprocessing
+X = df[['feature1', 'feature2', 'feature3']]
+y = df['target']
+
+# Splitting data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Training a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Making predictions
+y_pred = model.predict(X_test)
+
+# Calculating the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+print("Mean Squared Error:", mse)
