@@ -1613,3 +1613,29 @@ accuracy = model.score(X_test, y_test)
 
 print("Model accuracy:", accuracy)
 ```
+# Change made on 2024-06-26 21:11:03.076348
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_data.csv')
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the coefficients
+coefficients = model.coef_
+
+# Print the results
+print(f'Coefficients: {coefficients}')
+print(f'Predictions: {predictions}')
