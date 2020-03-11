@@ -1671,3 +1671,32 @@ y_pred = model.predict(X_test)
 from sklearn.metrics import mean_squared_error
 mse = mean_squared_error(y_test, y_pred)
 print("Mean Squared Error:", mse)
+# Change made on 2024-06-26 21:11:13.981988
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+url = 'https://public.database.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Preprocess the data
+data = data.dropna()
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predicted_inflation = model.predict(X)
+
+# Visualize the results
+plt.scatter(data['GDP'], data['inflation_rate'], color='blue', label='Actual')
+plt.scatter(data['GDP'], predicted_inflation, color='red', label='Predicted')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
