@@ -1750,3 +1750,45 @@ coefficients = model.coef_
 print("Coefficients:")
 print("GDP per capita: ", coefficients[0])
 print("Unemployment rate: ", coefficients[1])
+# Change made on 2024-06-26 21:11:30.467676
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Check for missing values and fill them if applicable
+if data.isnull().sum().any():
+    data = data.fillna(method='ffill')
+
+# Split the data into input and output variables
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Calculate the Mean Squared Error
+mse = mean_squared_error(y_test, y_pred)
+
+# Visualize the relationship between GDP and Inflation Rate
+plt.scatter(data['GDP'], data['Inflation Rate'])
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('GDP vs Inflation Rate')
+plt.show()
+
+# Write the research findings to a csv file
+research_results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+research_results.to_csv('research_results.csv', index=False)
