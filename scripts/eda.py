@@ -1700,3 +1700,30 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:11:18.528920
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv("https://example.com/data.csv")
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the accuracy of the model
+accuracy = model.score(X, y)
+
+# Print the results
+print("Linear Regression Model Results:")
+print("Coefficients:", model.coef_)
+print("Intercept:", model.intercept_)
+print("Accuracy:", accuracy)
