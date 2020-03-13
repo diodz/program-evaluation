@@ -1727,3 +1727,26 @@ print("Linear Regression Model Results:")
 print("Coefficients:", model.coef_)
 print("Intercept:", model.intercept_)
 print("Accuracy:", accuracy)
+# Change made on 2024-06-26 21:11:22.998299
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Data preprocessing
+X = data[['GDP_per_capita', 'unemployment_rate']]
+y = data['economic_growth']
+
+# Create linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate coefficient values
+coefficients = model.coef_
+
+# Print results
+print("Coefficients:")
+print("GDP per capita: ", coefficients[0])
+print("Unemployment rate: ", coefficients[1])
