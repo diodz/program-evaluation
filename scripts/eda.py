@@ -1792,3 +1792,40 @@ plt.show()
 # Write the research findings to a csv file
 research_results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 research_results.to_csv('research_results.csv', index=False)
+# Change made on 2024-06-26 21:11:38.867529
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Data preprocessing
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Visualize results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Actual vs Predicted Inflation Rate')
+plt.show()
+
+# Output results
+print('Mean Squared Error:', mse)
