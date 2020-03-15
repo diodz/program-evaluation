@@ -1829,3 +1829,26 @@ plt.show()
 
 # Output results
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:11:42.891692
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict the inflation rate based on GDP and unemployment rate
+new_data = pd.DataFrame({'GDP': [5000], 'unemployment_rate': [5]})
+predicted_inflation = model.predict(new_data)
+
+# Print the predicted inflation rate
+print('Predicted inflation rate:', predicted_inflation[0])
