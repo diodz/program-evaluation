@@ -1852,3 +1852,31 @@ predicted_inflation = model.predict(new_data)
 
 # Print the predicted inflation rate
 print('Predicted inflation rate:', predicted_inflation[0])
+# Change made on 2024-06-26 21:11:47.857370
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://examplewebsite.com/data.csv')
+
+# Perform some economic or public policy research analysis
+# For example, calculate the correlation between two variables
+correlation = data['GDP'].corr(data['Unemployment'])
+
+# Fit a linear regression model to predict GDP based on Unemployment rate
+X = data['Unemployment'].values.reshape(-1, 1)
+y = data['GDP'].values
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Print the correlation and model coefficients
+print('Correlation between GDP and Unemployment:', correlation)
+print('Linear Regression Coefficients:', model.coef_)
+
+# Save the results to a CSV file
+results = pd.DataFrame({'Actual GDP': y, 'Predicted GDP': predictions})
+results.to_csv('results.csv', index=False)
