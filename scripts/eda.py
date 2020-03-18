@@ -1880,3 +1880,25 @@ print('Linear Regression Coefficients:', model.coef_)
 # Save the results to a CSV file
 results = pd.DataFrame({'Actual GDP': y, 'Predicted GDP': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:11:52.739855
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+url = 'https://data.gov/dataset/economic-data.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate for next year
+predicted_inflation = model.predict([[X['GDP'].iloc[-1]*1.02, X['Unemployment Rate'].iloc[-1]*0.98]])
+
+print(f"Predicted inflation rate for next year: {predicted_inflation[0]}")
