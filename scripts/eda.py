@@ -1940,3 +1940,42 @@ plt.xlabel('Actual Inflation Rate')
 plt.ylabel('Predicted Inflation Rate')
 plt.title('Actual vs Predicted Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:12:04.103122
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import statsmodels.api as sm
+
+# Load the dataset from a public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Check for missing values and handle them
+data.dropna(inplace=True)
+
+# Define the independent and dependent variables
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['stock_price']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+
+# Check for statistical significance
+X = sm.add_constant(X)
+model = sm.OLS(y, X)
+results = model.fit()
+print(results.summary())
+```
