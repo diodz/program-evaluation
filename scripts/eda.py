@@ -2049,3 +2049,35 @@ plt.show()
 
 # Print the R-squared value
 print(f'R-squared value: {r_squared}')
+# Change made on 2024-06-26 21:12:18.747480
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data_url = "https://data.gov/economic_data.csv"
+df = pd.read_csv(data_url)
+
+# Perform some initial data analysis
+print(df.head())
+print(df.describe())
+
+# Prepare the data for analysis
+X = df[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = df['economic_growth']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+
+print("Coefficients:", coefficients)
+print("Intercept:", intercept)
+
+# Make predictions using the model
+predictions = model.predict([[5.0, 4.0, 2.5], [6.0, 3.5, 2.0]])
+
+print("Predictions:", predictions)
