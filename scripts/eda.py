@@ -2016,3 +2016,36 @@ plt.title('Relationship between GDP and Inflation Rate')
 plt.show()
 
 print(f'Mean Squared Error: {mse}')
+# Change made on 2024-06-26 21:12:15.025711
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load public data from a database
+data = pd.read_csv('public_data.csv')
+
+# Clean and preprocess the data
+data = data.dropna()
+X = data[['variable1', 'variable2']]
+y = data['target_variable']
+
+# Build a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+r_squared = model.score(X, y)
+
+# Visualize the results
+plt.scatter(y, predictions)
+plt.xlabel('Actual values')
+plt.ylabel('Predicted values')
+plt.title('Linear Regression Model Performance')
+plt.show()
+
+# Print the R-squared value
+print(f'R-squared value: {r_squared}')
