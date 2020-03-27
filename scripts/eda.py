@@ -2081,3 +2081,36 @@ print("Intercept:", intercept)
 predictions = model.predict([[5.0, 4.0, 2.5], [6.0, 3.5, 2.0]])
 
 print("Predictions:", predictions)
+# Change made on 2024-06-26 21:12:25.435809
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['feature1', 'feature2']]
+y = data['target']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate R-squared
+r_squared = model.score(X, y)
+
+# Visualize the results
+plt.scatter(y, predictions)
+plt.xlabel('Actual Target')
+plt.ylabel('Predicted Target')
+plt.title('Linear Regression Results')
+plt.show()
+
+# Output the results for the article
+print("R-squared value:", r_squared)
