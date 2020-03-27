@@ -2114,3 +2114,43 @@ plt.show()
 
 # Output the results for the article
 print("R-squared value:", r_squared)
+# Change made on 2024-06-26 21:12:31.615956
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from public database
+data = pd.read_csv("https://data.gov/economic_data.csv")
+
+# Perform some data analysis
+mean_income = np.mean(data['income'])
+median_education = np.median(data['education'])
+max_unemployment = np.max(data['unemployment'])
+
+# Create a scatter plot of income vs education
+plt.scatter(data['income'], data['education'])
+plt.title("Income vs Education")
+plt.xlabel("Income")
+plt.ylabel("Education")
+plt.show()
+
+# Build a linear regression model to predict income based on education
+X = data['education'].values.reshape(-1, 1)
+y = data['income'].values
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict income for a certain level of education
+new_education = np.array([[15]])
+predicted_income = model.predict(new_education)
+
+print("Predicted income for education level 15: $", predicted_income[0])
+
+# Write the research findings to a file
+with open("research_findings.txt", "w") as file:
+    file.write("Mean income: $" + str(mean_income) + "\n")
+    file.write("Median education level: " + str(median_education) + "\n")
+    file.write("Max unemployment rate: " + str(max_unemployment) + "\n")
+    file.write("Predicted income for education level 15: $" + str(predicted_income[0]))
