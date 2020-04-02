@@ -2224,3 +2224,35 @@ plt.xlabel('Actual')
 plt.ylabel('Predicted')
 plt.title('Actual vs Predicted Values')
 plt.show()
+# Change made on 2024-06-26 21:12:48.884317
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean data
+data.dropna(inplace=True)
+
+# Perform some economic analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate based on GDP and unemployment rate
+predicted_inflation = model.predict([[5000, 5]])
+
+# Visualize the relationship between GDP, unemployment rate, and inflation rate
+plt.scatter(data['GDP'], data['inflation_rate'], color='blue')
+plt.scatter(data['unemployment_rate'], data['inflation_rate'], color='red')
+plt.xlabel('GDP/Unemployment Rate')
+plt.ylabel('Inflation Rate')
+plt.show()
+
+# Output results
+print(f"The predicted inflation rate based on GDP of 5000 and unemployment rate of 5 is: {predicted_inflation[0]}")
