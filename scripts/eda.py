@@ -2256,3 +2256,42 @@ plt.show()
 
 # Output results
 print(f"The predicted inflation rate based on GDP of 5000 and unemployment rate of 5 is: {predicted_inflation[0]}")
+# Change made on 2024-06-26 21:12:54.895226
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = "https://www.somepublicdatabase.com/economicdata.csv"
+data = pd.read_csv(url)
+
+# Explore the dataset
+print(data.head())
+
+# Data preprocessing
+X = data.drop('GDP', axis=1)
+y = data['GDP']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build and train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, predictions)
+print("Mean Squared Error:", mse)
+
+# Visualize data and model predictions
+plt.scatter(y_test, predictions)
+plt.xlabel("True GDP")
+plt.ylabel("Predicted GDP")
+plt.title("True GDP vs Predicted GDP")
+plt.show()
