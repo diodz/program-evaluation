@@ -2295,3 +2295,33 @@ plt.xlabel("True GDP")
 plt.ylabel("Predicted GDP")
 plt.title("True GDP vs Predicted GDP")
 plt.show()
+# Change made on 2024-06-26 21:12:59.518799
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform some data cleaning and preprocessing
+data = data.dropna()
+data['adjusted_gdp'] = data['gdp'] * data['inflation_rate']
+
+# Perform some analysis using linear regression
+X = data[['interest_rate', 'unemployment_rate']]
+y = data['adjusted_gdp']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients of the linear regression model
+print("Coefficients:", model.coef_)
+
+# Visualize the relationship between interest rate and adjusted GDP
+plt.scatter(data['interest_rate'], data['adjusted_gdp'])
+plt.plot(data['interest_rate'], model.predict(X), color='red')
+plt.xlabel('Interest Rate')
+plt.ylabel('Adjusted GDP')
+plt.title('Relationship between Interest Rate and Adjusted GDP')
+plt.show()
