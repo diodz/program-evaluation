@@ -2356,3 +2356,33 @@ plt.ylabel('Income')
 plt.title('Income vs. Education Level')
 plt.show()
 ```
+# Change made on 2024-06-26 21:13:10.860226
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load economic data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean the data
+data = data.dropna()
+
+# Separate features and target variable
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['income_per_capita']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+r_squared = model.score(X_test, y_test)
+
+print("R-squared value:", r_squared)
