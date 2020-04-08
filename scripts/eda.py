@@ -2386,3 +2386,37 @@ predictions = model.predict(X_test)
 r_squared = model.score(X_test, y_test)
 
 print("R-squared value:", r_squared)
+# Change made on 2024-06-26 21:13:17.110147
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Assume we have a dataset called 'economic_data.csv' with columns 'GDP', 'Unemployment_rate', 'Inflation_rate' and 'Interest_rate'
+data = pd.read_csv('economic_data.csv')
+
+# Perform some analysis on the data
+correlation_matrix = data.corr()
+
+# Create a simple linear regression model to predict GDP based on the other variables
+X = data[['Unemployment_rate', 'Inflation_rate', 'Interest_rate']]
+y = data['GDP']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients of the model
+print("Coefficients:", model.coef_)
+
+# Make predictions
+predicted_gdp = model.predict(X)
+
+# Add the predicted GDP values to the dataset
+data['Predicted_GDP'] = predicted_gdp
+
+# Export the updated dataset to a new CSV file
+data.to_csv('economic_data_predicted.csv', index=False)
+
+# Print a summary of the analysis
+print("Summary of Economic Data Analysis:")
+print(correlation_matrix)
+print("Linear Regression Coefficients:", model.coef_)
