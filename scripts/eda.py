@@ -2513,3 +2513,30 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Linear Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:13:37.744310
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv('economic_data.csv')
+
+# Data preprocessing
+X = data['GDP'].values.reshape(-1,1)
+y = data['Unemployment Rate'].values
+
+# Train the linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize the results
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Unemployment Rate')
+plt.title('GDP vs Unemployment Rate')
+plt.show()
