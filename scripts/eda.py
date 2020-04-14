@@ -2540,3 +2540,40 @@ plt.xlabel('GDP')
 plt.ylabel('Unemployment Rate')
 plt.title('GDP vs Unemployment Rate')
 plt.show()
+# Change made on 2024-06-26 21:13:44.290644
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://data.gov/dataset/economic_data.csv')
+
+# Clean and preprocess data
+data = data.dropna()
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and testing sets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Visualize data and model
+plt.scatter(X_test['GDP'], y_test, color='blue')
+plt.plot(X_test['GDP'], predictions, color='red', linewidth=2)
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('GDP vs Inflation Rate Prediction')
+plt.show()
