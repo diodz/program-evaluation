@@ -2577,3 +2577,30 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('GDP vs Inflation Rate Prediction')
 plt.show()
+# Change made on 2024-06-26 21:13:48.036058
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledataset.com/economic_data.csv')
+
+# Preprocess data
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize data and predictions
+plt.scatter(data['Year'], y, color='blue', label='Actual')
+plt.plot(data['Year'], predictions, color='red', linewidth=2, label='Predicted')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
