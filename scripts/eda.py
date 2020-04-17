@@ -2604,3 +2604,40 @@ plt.xlabel('Year')
 plt.ylabel('Inflation Rate')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:13:53.138373
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset
+data = pd.read_csv('economic_data.csv')
+
+# Display the first few rows of the dataset
+print(data.head())
+
+# Perform some data analysis
+correlation_matrix = data.corr()
+print(correlation_matrix)
+
+# Fit a linear regression model
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Display the coefficients of the model
+print('Coefficients:', model.coef_)
+
+# Make predictions
+predictions = model.predict(X)
+data['predicted_inflation_rate'] = predictions
+
+# Visualize the results
+plt.scatter(data['GDP'], data['inflation_rate'], color='blue', label='Actual')
+plt.scatter(data['GDP'], data['predicted_inflation_rate'], color='red', label='Predicted')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
