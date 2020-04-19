@@ -2641,3 +2641,40 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:13:58.942687
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the data from a public database
+data = pd.read_csv('https://exampledatabase.com/economic_data.csv')
+
+# Perform basic data analysis
+print(data.head())
+print(data.describe())
+
+# Visualize the data
+plt.scatter(data['GDP'], data['Unemployment Rate'])
+plt.xlabel('GDP')
+plt.ylabel('Unemployment Rate')
+plt.title('GDP vs Unemployment Rate')
+plt.show()
+
+# Build a linear regression model
+X = data['GDP'].values.reshape(-1, 1)
+y = data['Unemployment Rate'].values.reshape(-1, 1)
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Evaluate the model
+score = model.score(X, y)
+
+# Print the results
+print("R^2 score: ", score)
+print("Coefficient: ", model.coef_)
+print("Intercept: ", model.intercept_)
