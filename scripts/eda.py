@@ -2678,3 +2678,34 @@ score = model.score(X, y)
 print("R^2 score: ", score)
 print("Coefficient: ", model.coef_)
 print("Intercept: ", model.intercept_)
+# Change made on 2024-06-26 21:14:03.722586
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example-database.com')
+
+# Explore the data
+print(data.head())
+
+# Perform some data analysis
+avg_income = data['income'].mean()
+median_age = data['age'].median()
+
+# Create a linear regression model
+X = data[['income', 'age']]
+y = data['savings']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+r_squared = model.score(X, y)
+
+# Write results to a CSV file
+results = pd.DataFrame({'predictions': predictions})
+results.to_csv('results.csv', index=False)
