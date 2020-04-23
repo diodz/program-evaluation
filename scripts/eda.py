@@ -2709,3 +2709,38 @@ r_squared = model.score(X, y)
 # Write results to a CSV file
 results = pd.DataFrame({'predictions': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:14:08.985031
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import pandas_datareader.data as pdr
+import datetime
+
+# Load the dataset from a public database
+start_date = datetime.datetime(2010, 1, 1)
+end_date = datetime.datetime(2020, 12, 31)
+data = pdr.DataReader('SP500', 'fred', start_date, end_date)
+
+# Preprocess the data
+data['Returns'] = data['SP500'].pct_change()
+data.dropna(inplace=True)
+
+# Split the data into features and target variable
+X = data[['Returns']]
+y = data['SP500']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
