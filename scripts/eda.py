@@ -2812,3 +2812,34 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:14:22.436761
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import requests
+
+# Load data from a public database
+url = "https://example.com/data.csv"
+data = pd.read_csv(url)
+
+# Preprocess the data
+data = data.dropna()
+X = data.drop(columns=['target_variable'])
+y = data['target_variable']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+mse = np.mean((predictions - y) ** 2)
+r_squared = model.score(X, y)
+
+# Print results
+print("Mean Squared Error:", mse)
+print("R-squared:", r_squared)
+```
