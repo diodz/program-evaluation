@@ -2843,3 +2843,35 @@ r_squared = model.score(X, y)
 print("Mean Squared Error:", mse)
 print("R-squared:", r_squared)
 ```
+# Change made on 2024-06-26 21:14:28.151125
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database (e.g. UCI Machine Learning Repository)
+data = fetch_openml(data_id=1234)
+
+# Create DataFrame from dataset
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Split data into training and test sets
+X = df.drop('target', axis=1)
+y = df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, predictions)
+
+# Print results
+print(f'Mean Squared Error: {mse}')
