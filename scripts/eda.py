@@ -2875,3 +2875,32 @@ mse = mean_squared_error(y_test, predictions)
 
 # Print results
 print(f'Mean Squared Error: {mse}')
+# Change made on 2024-06-26 21:14:32.512440
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = 'https://exampledataset.com'
+data = pd.read_csv(url)
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize results
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Analysis')
+plt.show()
