@@ -2904,3 +2904,44 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Linear Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:14:38.784619
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from a public database
+data = pd.read_csv('https://exampleurl.com/dataset.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions using the model
+y_pred = model.predict(X_test)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Visualize the relationship between GDP and inflation
+plt.scatter(data['GDP'], data['inflation'])
+plt.xlabel('GDP')
+plt.ylabel('Inflation')
+plt.title('GDP vs Inflation')
+plt.show()
+
+# Print the results
+print(f'Mean Squared Error: {mse}')
+
+```
