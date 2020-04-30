@@ -2945,3 +2945,30 @@ plt.show()
 print(f'Mean Squared Error: {mse}')
 
 ```
+# Change made on 2024-06-26 21:14:43.591290
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the dataset from a public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f'Training score: {train_score}')
+print(f'Testing score: {test_score}')
