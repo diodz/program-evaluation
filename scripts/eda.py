@@ -2972,3 +2972,76 @@ test_score = model.score(X_test, y_test)
 
 print(f'Training score: {train_score}')
 print(f'Testing score: {test_score}')
+# Change made on 2024-06-26 21:14:49.198718
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load the data from a public database
+data = pd.read_csv('https://examplepublicdatabase.com/data.csv')
+
+# Explore the data
+print(data.head())
+
+# Preprocess the data
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='blue')
+plt.plot(X_test, y_pred, color='red')
+plt.title('Regression Analysis')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.show()
+# Change made on 2024-06-26 21:14:54.325883
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Processing and cleaning the data
+data = data.dropna()  # Drop rows with missing values
+data['income_growth'] = data['income'] - data['income'].shift(1)  # Calculate income growth
+
+# Perform linear regression to analyze the relationship between income and other variables
+X = data[['education', 'unemployment_rate']]
+y = data['income']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients and intercept
+print("Coefficient for education:", model.coef_[0])
+print("Coefficient for unemployment rate:", model.coef_[1])
+print("Intercept:", model.intercept_) 
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Calculate R-squared value
+r_squared = model.score(X, y)
+print("R-squared value:", r_squared)
+
+# Export the results to a CSV file
+results = pd.DataFrame({'Observed income': y, 'Predicted income': predictions})
+results.to_csv('results.csv', index=False)
