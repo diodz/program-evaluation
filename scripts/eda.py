@@ -3045,3 +3045,38 @@ print("R-squared value:", r_squared)
 # Export the results to a CSV file
 results = pd.DataFrame({'Observed income': y, 'Predicted income': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:15:00.210841
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+df = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data preprocessing
+df.dropna(inplace=True)
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on test set
+predictions = model.predict(X_test)
+
+# Evaluate model
+r_squared = model.score(X_test, y_test)
+print(f'R-squared value: {r_squared}')
+
+# Create visualization of results
+import matplotlib.pyplot as plt
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Predicted vs Actual Inflation Rate')
+plt.show()
