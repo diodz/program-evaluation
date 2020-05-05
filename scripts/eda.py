@@ -3080,3 +3080,44 @@ plt.xlabel('Actual Inflation Rate')
 plt.ylabel('Predicted Inflation Rate')
 plt.title('Predicted vs Actual Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:15:06.352843
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = 'https://exampledata.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Explore the dataset
+print(data.head())
+
+# Select relevant features for analysis
+features = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+
+# Split data into training and testing sets
+X = features[['GDP', 'unemployment_rate']]
+y = features['inflation_rate']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+r2 = r2_score(y_test, predictions)
+print('R-squared:', r2)
+
+# Visualize predictions
+plt.scatter(X_test['GDP'], y_test, color='blue')
+plt.plot(X_test['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('Predicted Inflation Rate vs. GDP')
+plt.show()
