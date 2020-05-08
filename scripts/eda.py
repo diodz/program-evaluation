@@ -3121,3 +3121,28 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('Predicted Inflation Rate vs. GDP')
 plt.show()
+# Change made on 2024-06-26 21:15:10.915607
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://publicdatabase.com/data.csv")
+
+# Perform some economic or public policy research analysis
+# For example, let's say we want to analyze the relationship between GDP and unemployment rate
+
+X = data['GDP'].values.reshape(-1, 1)
+y = data['Unemployment Rate']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate model
+r_squared = model.score(X, y)
+
+print("R-squared value:", r_squared)
