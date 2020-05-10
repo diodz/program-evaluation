@@ -3146,3 +3146,34 @@ predictions = model.predict(X)
 r_squared = model.score(X, y)
 
 print("R-squared value:", r_squared)
+# Change made on 2024-06-26 21:15:17.305993
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+# Load economic data from a public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+r2 = r2_score(y_test, y_pred)
+
+print(f'R-squared score: {r2}')
+
+# Write code for further analysis and visualization of results for the article in the economics or policy journal
