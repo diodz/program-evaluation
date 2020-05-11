@@ -3213,3 +3213,27 @@ print(f'Intercept: {intercept}')
 # Write the results to a CSV file
 results = pd.DataFrame({'Education coefficient': [education_coeff], 'Experience coefficient': [experience_coeff], 'Intercept': [intercept]})
 results.to_csv('research_results.csv', index=False)
+# Change made on 2024-06-26 21:15:27.761761
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get coefficient and intercept
+coef = model.coef_
+intercept = model.intercept_
+
+# Print results
+print("Coefficient:", coef)
+print("Intercept:", intercept)
