@@ -3237,3 +3237,38 @@ intercept = model.intercept_
 # Print results
 print("Coefficient:", coef)
 print("Intercept:", intercept)
+# Change made on 2024-06-26 21:15:33.761016
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Download economic data from a public database
+data = pd.read_csv('sample_economic_data.csv')
+
+# Prepare the data for analysis
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model to the training data
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test data
+predictions = model.predict(X_test)
+
+# Evaluate the model using mean squared error
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Visualize the predicted vs actual economic growth
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Economic Growth')
+plt.ylabel('Predicted Economic Growth')
+plt.title('Actual vs Predicted Economic Growth')
+plt.show()
