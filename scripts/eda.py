@@ -3272,3 +3272,103 @@ plt.xlabel('Actual Economic Growth')
 plt.ylabel('Predicted Economic Growth')
 plt.title('Actual vs Predicted Economic Growth')
 plt.show()
+# Change made on 2024-06-26 21:15:39.172395
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load public dataset for economic research
+data_url = "https://example.com/public_dataset.csv"
+df = pd.read_csv(data_url)
+
+# Explore the dataset
+print(df.head())
+
+# Data preprocessing
+X = df[['independent_variable_1', 'independent_variable_2']]
+y = df['dependent_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Visualize the results
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Linear Regression Model Performance")
+plt.show()
+# Change made on 2024-06-26 21:15:43.085372
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Perform data analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients
+print("Coefficients: ", model.coef_)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate mean squared error
+mse = np.mean((predictions - y) ** 2)
+print("Mean Squared Error: ", mse)
+# Change made on 2024-06-26 21:15:47.681763
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Perform linear regression
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+data['predicted_inflation_rate'] = model.predict(X)
+
+# Visualize results
+plt.scatter(data['GDP'], data['inflation_rate'], label='Actual Inflation Rate')
+plt.plot(data['GDP'], data['predicted_inflation_rate'], color='red', label='Predicted Inflation Rate')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
+
+# Output results
+print("Coefficient for GDP:", model.coef_[0])
+print("Coefficient for Unemployment Rate:", model.coef_[1])
+print("Intercept:", model.intercept_)
+
+# Save results to csv file
+data.to_csv('predicted_inflation_rate.csv', index=False)
