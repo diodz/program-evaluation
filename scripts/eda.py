@@ -3372,3 +3372,29 @@ print("Intercept:", model.intercept_)
 
 # Save results to csv file
 data.to_csv('predicted_inflation_rate.csv', index=False)
+# Change made on 2024-06-26 21:15:53.109792
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://examplepublicdatabase.com/data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f"Training score: {train_score}")
+print(f"Testing score: {test_score}")
