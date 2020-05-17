@@ -3398,3 +3398,24 @@ test_score = model.score(X_test, y_test)
 
 print(f"Training score: {train_score}")
 print(f"Testing score: {test_score}")
+# Change made on 2024-06-26 21:15:56.957692
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)  # Remove missing values
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Model training
+model = LinearRegression()
+model.fit(X, y)
+
+# Prediction
+predicted_inflation_rate = model.predict([[5000, 5]])
+
+print("Predicted inflation rate: ", predicted_inflation_rate[0])
