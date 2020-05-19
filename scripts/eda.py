@@ -3496,3 +3496,39 @@ predictions = model.predict(X)
 # Evaluate the model
 mse = np.mean((predictions - y) ** 2)
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:16:15.575956
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+df = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation_rate']
+
+# Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean squared error:', mse)
+
+# Visualize data
+plt.scatter(X_test['GDP'], y_test, color='red')
+plt.plot(X_test['GDP'], y_pred, color='blue')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('GDP vs Inflation Rate')
+plt.show()
