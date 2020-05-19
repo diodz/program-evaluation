@@ -3460,3 +3460,39 @@ plt.ylabel('Predicted Economic Growth')
 plt.title('Actual vs Predicted Economic Growth')
 plt.show()
 ```
+# Change made on 2024-06-26 21:16:10.129572
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+data['new_feature'] = data['feature1'] + data['feature2']
+
+# Explore the dataset
+plt.scatter(data['feature1'], data['target_variable'])
+plt.xlabel('Feature 1')
+plt.ylabel('Target Variable')
+plt.title('Relationship between Feature 1 and Target Variable')
+plt.show()
+
+# Build a linear regression model
+X = data[['feature1', 'feature2', 'new_feature']]
+y = data['target_variable']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients
+print('Coefficients:', model.coef_)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+mse = np.mean((predictions - y) ** 2)
+print('Mean Squared Error:', mse)
