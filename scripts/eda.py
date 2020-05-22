@@ -3532,3 +3532,27 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('GDP vs Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:16:20.216311
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from a public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Perform exploratory data analysis
+print(data.describe())
+
+# Prepare data for regression analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions on new data
+new_data = pd.DataFrame({'GDP': [5000, 6000, 7000], 'unemployment_rate': [5.2, 4.8, 4.5]})
+predictions = model.predict(new_data)
+
+print(predictions)
