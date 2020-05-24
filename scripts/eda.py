@@ -3556,3 +3556,34 @@ new_data = pd.DataFrame({'GDP': [5000, 6000, 7000], 'unemployment_rate': [5.2, 4
 predictions = model.predict(new_data)
 
 print(predictions)
+# Change made on 2024-06-26 21:16:25.651071
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv("https://example.com/economic_data.csv")
+
+# Perform data analysis and visualization
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients for GDP and Unemployment Rate
+coefficients = model.coef_
+
+# Visualize the relationship between GDP, Unemployment Rate, and Inflation
+plt.scatter(data['GDP'], data['Inflation'], color='red')
+plt.scatter(data['Unemployment Rate'], data['Inflation'], color='blue')
+plt.xlabel('GDP and Unemployment Rate')
+plt.ylabel('Inflation')
+plt.title('Relationship between Economic Indicators and Inflation')
+plt.show()
+
+# Print the coefficients
+print("Coefficient for GDP: ", coefficients[0])
+print("Coefficient for Unemployment Rate: ", coefficients[1])
