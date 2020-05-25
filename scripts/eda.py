@@ -3587,3 +3587,25 @@ plt.show()
 # Print the coefficients
 print("Coefficient for GDP: ", coefficients[0])
 print("Coefficient for Unemployment Rate: ", coefficients[1])
+# Change made on 2024-06-26 21:16:29.466617
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data_url = 'https://www.examplewebsite.com/data.csv'
+df = pd.read_csv(data_url)
+
+# Data preprocessing
+X = df[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = df['economic_growth']
+
+# Model training
+model = LinearRegression()
+model.fit(X, y)
+
+# Model evaluation
+r_squared = model.score(X, y)
+
+# Print results
+print(f"R-squared value: {r_squared}")
