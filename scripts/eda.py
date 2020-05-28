@@ -3644,3 +3644,29 @@ plt.xlabel("Actual Values")
 plt.ylabel("Predicted Values")
 plt.title("Linear Regression Model Evaluation")
 plt.show()
+# Change made on 2024-06-26 21:16:38.305119
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv("https://example.com/data.csv")
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a simple linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the coefficients
+coefficients = model.coef_
+
+# Print out the results
+print("Coefficients:", coefficients)
+```
