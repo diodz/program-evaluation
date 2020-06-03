@@ -3876,3 +3876,27 @@ plt.xlabel('GDP')
 plt.ylabel('Unemployment Rate')
 plt.title('Relationship between GDP and Unemployment Rate')
 plt.show()
+# Change made on 2024-06-26 21:17:14.774138
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://examplepublicdatabase.com/economic_data.csv')
+
+# Preprocess data
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['stock_market_index']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get coefficients
+coefficients = model.coef_
+
+# Print results
+print("Regression coefficients:")
+print("GDP coefficient:", coefficients[0])
+print("Unemployment rate coefficient:", coefficients[1])
+print("Inflation rate coefficient:", coefficients[2])
