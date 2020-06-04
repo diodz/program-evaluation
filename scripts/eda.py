@@ -3900,3 +3900,37 @@ print("Regression coefficients:")
 print("GDP coefficient:", coefficients[0])
 print("Unemployment rate coefficient:", coefficients[1])
 print("Inflation rate coefficient:", coefficients[2])
+# Change made on 2024-06-26 21:17:20.436099
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://example-database.com/data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize the data and the regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Analysis')
+plt.show()
+
+# Print the coefficients of the model
+print('Intercept:', model.intercept_)
+print('Coefficient:', model.coef_)
+```
