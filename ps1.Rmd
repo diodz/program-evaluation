@@ -1,0 +1,221 @@
+---
+title: "Answers to PS1 - Program Evaluation PPHA 34600"
+author: "Diego Diaz"
+date: "April 23, 2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Other group members: Piyush Tank, Matthew Mauer.
+\
+\
+1 - BURLIG wants to describe the impact of their loans in small businesses. According to the potential outcomes framework, the impact of the loans in, for example, wages, can be described as
+the realized outcome of the wages of each business minus the potential outcome of what 
+we could have observed, had the treatment not taken place. We can express this impact as:
+
+\[ \tau_i = Y_i(1) - Y_i(0) \]
+
+Where $Y_i(1)$ is the observed outcome in business $i$ that received a loan and $Y_i(0)$ is what we could have observed (without the loan).
+\
+\
+
+2 - The individual-specific impact $\tau_i$ cannot be measured because it depends on the term $Y_i(0)$, which is not observed as it is the individual-specific outcome (wage) of the unit (business $i$) if it had not received a loan. Without this measure, estimating the precise impact of loans in wages is impossible. 
+\
+\
+
+3 - BURLIG wants to compare average wages paid across the two sets of firms, this can be described formally as:
+
+\[ \tau^N = \overline{Y(1)} - \overline{Y(0)}  \]
+
+The term $\tau^N$ is called the Naive estimator in the potential outcomes framework, it measures the average differences in outcomes (wages) between the two groups. This might differ from the average treatment effect because both groups may differ in other covariates even absent treatment, which may happen because of selection issues. Another source of potential discrepancy is compliance, that is, the issue that some business that may have been selected to take the loan did not actually take it. 
+As an example, let's consider that firms that are higher in human capital are more likely to borrow BURLIG's loans. If this were the case, both groups would differ in human capital, and when these firms borrow loans, they might use it more productively as firms that are lower in human capital would, which could lead to a higher wage increase than that that would happen to lower-human capital firms, which would lead us to over-estimate the impact of the loans on wages.
+\
+\
+
+4 - In this context, the ATT can be defined as:
+
+\[ \tau^{ATT} = E[\tau_i|D_i = 1] = E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 1] \]
+
+We can approximate the ATT as $\tau^{ATT} = \overline{Y(1)} - \overline{Y(0)}$ after adding and sustracting $E[Y_i(0)|D_i = 0]$ to the above term, which we can calculate as we observe the wages of firms that received loans and the ones of those that did not. However, we can't observe the term $E[Y_i(0)|D_i = 1]$, which captures the issue of selection mentioned in part (3). The difference with part (3) is that in this case we don't have to worry about the issue of compliance since we can observe perfectly what businesses took or did not take loans.
+\
+\
+
+5 - We calculate and report the balance table for pre-treatment wages, sales, number of workers, and owner gender:
+
+```{r p5, results='asis', cache=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+library(haven)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(broom)
+
+ps1_data <- read.csv("C:/Users/diego/Google Drive/Program Eval/Assignments/data/ps1_data.csv")
+
+pre_ra_rest<-c("baseline_employees", "baseline_wages", "baseline_sales","baseline_owner_female")
+
+balance_test <- cbind(e = ps1_data$burlig_trt,
+                      ps1_data[, pre_ra_rest]) %>%
+  {map(.[, -1], function(i) lm(i~.$e))} %>%  
+  {map(., summary)} %>%
+  sapply(`[`, "coefficients") %>%
+  sapply(function(x) x[2,])%>%
+  t()%>%
+  data.frame()%>%
+  rownames_to_column()%>%
+  mutate_if(is.character, ~gsub(".coefficients", "", x=.))%>%
+  `colnames<-`(c("var","Estimate","standard_error","t-statistics","Pr(>|t|)")) ; 
+balance_test %>% kable()
+
+
+```
+
+We need to check for three things, whether we test for all outcome variables (at least the observables), check if the differences are statistically significant, and whether the magnitudes are economically meaningful. 
+We did check for all observable outcomes and we also find that none of the variables have a p-value lower than 0.10, meaning that there are no statistically significant differences between both groups before the treatment is applied. We also find that the estimate of the variables, in particular that of baseline_wages, has an extremely large negative value, which could be due to a problem with the data that creates an outlier which does not portray real measurements of wages..
+\
+\
+
+6 - Histogram of wages for treated firms and control firms respectively:
+
+```{r p6_1, fig.height = 3, fig.width = 3, fig.align = "center", results='asis', cache=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+treated = ps1_data[ps1_data$burlig_trt == 1,]
+control = ps1_data[ps1_data$burlig_trt == 0,]
+
+hist(treated$baseline_wages, breaks=20, xlab = "Wage [$]",col = "gray", 
+     border = "black", main = "Wages of treated firms")
+
+hist(control$baseline_wages, breaks=20, xlab = "Wage [$]",col = "gray",
+     border = "black", main = "Wages of control firms")
+
+```
+There's an error in one data point of the treated group as its value of wages is $-175 * 10^{15}$. We remove it and estimate again the histogram for treated firms and balance table from part (5).
+
+```{r p6_2, fig.height = 3, fig.width = 3, fig.align = "center", results='asis', cache=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+ps1_data = ps1_data[-c(2750),]
+treated = ps1_data[ps1_data$burlig_trt == 1,]
+control = ps1_data[ps1_data$burlig_trt == 0,]
+
+hist(treated$baseline_wages, breaks=20, xlab = "Wage [$]",col = "gray",
+     border = "black", main = "Wages of treated firms")
+
+balance_test <- cbind(e = ps1_data$burlig_trt,
+                      ps1_data[, pre_ra_rest]) %>%
+  {map(.[, -1], function(i) lm(i~.$e))} %>%  
+  {map(., summary)} %>%
+  sapply(`[`, "coefficients") %>%
+  sapply(function(x) x[2,])%>%
+  t()%>%
+  data.frame()%>%
+  rownames_to_column()%>%
+  mutate_if(is.character, ~gsub(".coefficients", "", x=.))%>%
+  `colnames<-`(c("var","Estimate","standard_error","t-statistics","Pr(>|t|)")) ; 
+balance_test %>% kable()
+
+
+```
+
+The new balance table tells us that the randomization worked as both groups are balanced. We observed this by noticing that the regressions of the treatment variable on each variable is not statistically significant in each regression. 
+
+To estimate the causal effect of the treatment, we also have to assume that both groups are similar in unobservable characteristics. That is, if we were to regress the treatment variable in those characteristics, the coefficients of those variables would also have to be not statistically significant.
+\
+\
+
+7 - Assuming we have random assignment we can estimate the average treatment effect as:
+
+\[ \tau^{ATE} = \overline{Y(1)} - \overline{Y(0)}  \]
+
+A regression of the treatment variable on the outcome is a convenient way to do this. The difference with the balance table is that we take the endline outcome as the dependent variable.
+
+```{r p7, results='asis', cache=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+library(haven)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(broom)
+
+ps1_data = ps1_data[-c(2750),]
+
+pre_ra_rest<-c("endline_employees", "endline_wages", "endline_sales","endline_owner_female")
+
+balance_test <- cbind(e = ps1_data$burlig_trt,
+                      ps1_data[, pre_ra_rest]) %>%
+  {map(.[, -1], function(i) lm(i~.$e))} %>%  
+  {map(., summary)} %>%
+  sapply(`[`, "coefficients") %>%
+  sapply(function(x) x[2,])%>%
+  t()%>%
+  data.frame()%>%
+  rownames_to_column()%>%
+  mutate_if(is.character, ~gsub(".coefficients", "", x=.))%>%
+  `colnames<-`(c("var","Estimate","standard_error","t-statistics","Pr(>|t|)")) ; 
+balance_test %>% kable()
+
+
+```
+
+Let's focus on wages for now.
+Based on the histograms calculated earlier, these values represent yearly total wages paid to employess in dollars. This means that a coefficient of 1 would indicate that the treatment increases total yearly wages of a treated unit in 1 dollar per year. Since the coefficient for endline wages is \$41.639,25 and it is statistically significant with a $p$-value < 0.01, we can say that taking a loan increases total wages ina firm by approximately \$41.6 thousand per year.
+\
+\
+
+8 - Regressing the treatment variable burlig_trt on endline wages while controlling for endline number of employees:
+
+```{r p8_1, results = 'asis', warning=FALSE, comment=FALSE, message=FALSE}
+
+linear_model = lm(ps1_data$endline_wages~ps1_data$burlig_trt + ps1_data$endline_employees)
+summary = summary(linear_model) 
+summary$coefficients %>% kable()
+
+```
+
+The estimate for the treatment in this case is -914,15 and it is no longer statistically significant. However, controlling for endline number of employees is a terrible idea since the treatment can affect this variable, and therefore we would have correlated regressors. In this case, endline_employees is explaining part of the wages
+
+Repeating the regression while controlling for baseline number of employees we obtain: 
+
+
+```{r p8_2, results = 'asis', cache=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+linear_model = lm(ps1_data$endline_wages~ps1_data$burlig_trt + ps1_data$baseline_employees)
+summary = summary(linear_model) 
+summary$coefficients %>% kable()
+
+```
+
+In this case, the coefficient of the treatment variable is \$43.306,48, similar as when we did not include the extra control. Including the baseline number of employees does not introduce bias in the regression as it is uncorrelated with the treatment status (both groups are balanced in terms of observables). 
+\
+\
+
+9 - This means that what we estimated in question (7) was the ATE of BURLIG's offering a loan to a business, and not actually giving a loan to a business. In other words, we were estimating the effect of assignment to treatment. This is different from what we thought we were estimating since there are businesses that we were considering that took loans when in fact they did not. 
+\
+\
+
+10 - We have an RCT with not perfect compliance. Even though we know exactly which units were compliers and which weren't,  we can't make a regression of the burlig_trt_take in the outcome since there could be selection issues. The impacts on the treated ($\tau^T$) and nontreated ($\tau^N$) are:
+
+\[ \tau^{T} = E[Y_i(1)|R_i = 1, D_i = 1] - E[Y_i(0)|R_i = 0, D^*_i = 1] \]
+
+\[ \tau^{N} = E[Y_i(1)|R_i = 1, D_i = 0] - E[Y_i(0)|R_i = 0, D^*_i = 0] \]
+
+We are interested in $\tau^T$, but we can only directly estimate what we estimated in part (7), which we can call $\tau^{Experiment}$. Since $\tau^{Experiment}$ is the probability-weighted average of being treated or nontreated after being assigned the treatment, we can estimate $\tau^T$ as: 
+
+\[ \tau^T = \frac{\overline{Y(R=1)} - \overline{Y(R=0)}}{P^{D_i=1}_{R_i=1}} \]
+
+We can calculate $P^{D_i=1}_{R_i=1}$ from the data as the fraction of units that were assigned the treatment and took the loan out of all of those that were assigned the treatment. We obtain $P^{D_i=1}_{R_i=1} = 0.6564$.
+
+```{r p10, results = FALSE, cache=FALSE, echo=FALSE, warning=FALSE, comment=FALSE, message=FALSE}
+
+ps1_R = ps1_data[ps1_data$burlig_trt == 1,]
+count(ps1_R[ps1_R$burlig_trt_take == 1,]) / count(ps1_R) 
+
+```
+
+Considering the impact of the experiment from part (7) was \$41.639,25, the impact on the treated $\tau^T$ is:
+
+\[ \tau^{T} = \frac{\tau^{Experiment}}{P^{D_i=1}_{R_i=1}} = \frac{\$41.639,25}{0.6564} = \$63435.79\]
+
+This is significantly larger (slightly over 50%) than what we had estimated in (7). It means that the treatment effect, that is, the impact of BURLIG's loans in businesses' total yearly wages is $63,436. 
+
