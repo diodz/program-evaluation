@@ -3934,3 +3934,27 @@ plt.show()
 print('Intercept:', model.intercept_)
 print('Coefficient:', model.coef_)
 ```
+# Change made on 2024-06-26 21:17:24.041181
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Preprocess data
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate mean squared error
+mse = np.mean((predictions - y) ** 2)
+
+# Output results
+print('Mean Squared Error:', mse)
