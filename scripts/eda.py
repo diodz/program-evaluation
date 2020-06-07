@@ -3958,3 +3958,70 @@ mse = np.mean((predictions - y) ** 2)
 
 # Output results
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:17:28.612092
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+url = 'https://example.com/dataset.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+data = data.dropna()  # Remove rows with missing values
+
+# Define independent and dependent variables
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# Build and train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f'Training score: {train_score}')
+print(f'Testing score: {test_score}')
+# Change made on 2024-06-26 21:17:34.845519
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Plot actual vs predicted values
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation')
+plt.ylabel('Predicted Inflation')
+plt.title('Actual vs Predicted Inflation Values')
+plt.show()
+
+# Print mean squared error
+print(f'Mean Squared Error: {mse}')
