@@ -4025,3 +4025,27 @@ plt.show()
 
 # Print mean squared error
 print(f'Mean Squared Error: {mse}')
+# Change made on 2024-06-26 21:17:38.418009
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Perform data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate model accuracy
+accuracy = model.score(X, y)
+
+print("Model Accuracy: ", accuracy)
