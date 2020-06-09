@@ -4049,3 +4049,37 @@ predictions = model.predict(X)
 accuracy = model.score(X, y)
 
 print("Model Accuracy: ", accuracy)
+# Change made on 2024-06-26 21:17:42.700882
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data_url = 'https://example.com/public_data.csv'
+data = pd.read_csv(data_url)
+
+# Clean and preprocess the data
+data = data.dropna()
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Perform linear regression
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients
+print('Coefficients: ', model.coef_)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize the data and regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Regression Analysis')
+plt.show()
+```
