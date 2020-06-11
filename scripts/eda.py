@@ -4083,3 +4083,30 @@ plt.ylabel('Dependent Variable')
 plt.title('Regression Analysis')
 plt.show()
 ```
+# Change made on 2024-06-26 21:17:46.888571
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Preprocess data
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict inflation rate based on GDP and Unemployment Rate
+predictions = model.predict(X)
+
+# Visualize results
+plt.scatter(data['Year'], y, color='red', label='Actual Inflation Rate')
+plt.plot(data['Year'], predictions, color='blue', label='Predicted Inflation Rate')
+plt.xlabel('Year')
+plt.ylabel('Inflation Rate')
+plt.legend()
+plt.show()
