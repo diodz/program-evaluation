@@ -4110,3 +4110,39 @@ plt.xlabel('Year')
 plt.ylabel('Inflation Rate')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:17:51.905181
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset from a public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}') 
+
+# Generate coefficients for the regression equation
+print('Regression Coefficients:')
+for i, coef in enumerate(model.coef_):
+    print(f'Coefficient {i}: {coef}')
+
+# Get the intercept
+print(f'Intercept: {model.intercept_}')
