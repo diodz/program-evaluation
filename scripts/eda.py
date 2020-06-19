@@ -4234,3 +4234,34 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:18:09.234621
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data_url = "https://example.com/economic_data.csv"
+economic_data = pd.read_csv(data_url)
+
+# Explore the data
+print(economic_data.head())
+
+# Perform analysis using linear regression
+X = economic_data[['GDP', 'unemployment_rate']]
+y = economic_data['inflation_rate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients
+print("GDP coefficient:", model.coef_[0])
+print("Unemployment rate coefficient:", model.coef_[1])
+print("Intercept:", model.intercept_)
+
+# Visualize the relationship between GDP and inflation rate
+plt.scatter(economic_data['GDP'], economic_data['inflation_rate'])
+plt.xlabel("GDP")
+plt.ylabel("Inflation Rate")
+plt.title("Relationship between GDP and Inflation Rate")
+plt.show()
