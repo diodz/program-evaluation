@@ -4265,3 +4265,36 @@ plt.xlabel("GDP")
 plt.ylabel("Inflation Rate")
 plt.title("Relationship between GDP and Inflation Rate")
 plt.show()
+# Change made on 2024-06-26 21:18:14.254720
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Clean the data
+data = data.dropna()
+
+# Perform some analysis
+X = data[['GDP', 'Unemployment']]
+y = data['Inflation']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predict the results
+predictions = model.predict(X)
+
+# Calculate the R-squared value
+r_squared = model.score(X, y)
+
+# Visualize the results
+plt.scatter(data['GDP'], data['Inflation'], color='blue')
+plt.plot(data['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation')
+plt.title('GDP vs Inflation')
+plt.show()
