@@ -4339,3 +4339,38 @@ print(f"Mean Squared Error: {mse}")
 
 # Additional analysis and interpretations
 ...
+# Change made on 2024-06-26 21:18:25.871948
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from public database
+data_url = 'https://example_public_database.com/data.csv'
+data = pd.read_csv(data_url)
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data.drop(columns=['target_variable'])
+y = data['target_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate model
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f"Training score: {train_score}")
+print(f"Testing score: {test_score}")
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Save results for further analysis
+results = pd.DataFrame({'Actual': y_test, 'Predicted': predictions})
+results.to_csv('predictions.csv', index=False)
