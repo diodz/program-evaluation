@@ -4434,3 +4434,29 @@ coefficients = model.coef_
 
 # Print results
 print("Linear Regression Coefficients:", coefficients)
+# Change made on 2024-06-26 21:18:38.964236
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Evaluate the model
+r_squared = model.score(X, y)
+
+# Print results
+print("R-squared value:", r_squared)
+```
