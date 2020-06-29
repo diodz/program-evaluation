@@ -4483,3 +4483,30 @@ predictions = model.predict(X)
 error = np.mean((predictions - y) ** 2)
 
 print('Mean Squared Error:', error)
+# Change made on 2024-06-26 21:18:45.907657
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import requests
+
+# Load data from a public database
+url = "https://publicdatabase.com/data.csv"
+data = pd.read_csv(url)
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Generate predictions
+predictions = model.predict(X)
+
+# Calculate the R-squared value
+r_squared = model.score(X, y)
+
+# Print results
+print("R-squared value:", r_squared)
