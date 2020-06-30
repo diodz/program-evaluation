@@ -4510,3 +4510,38 @@ r_squared = model.score(X, y)
 
 # Print results
 print("R-squared value:", r_squared)
+# Change made on 2024-06-26 21:18:52.955247
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Clean the data and select relevant columns
+data = data.dropna()
+data = data[['GDP', 'Unemployment', 'Inflation', 'Interest_Rate']]
+
+# Split the data into training and testing sets
+X = data[['Unemployment', 'Inflation', 'Interest_Rate']]
+y = data['GDP']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Calculate the R-squared value to evaluate the model
+r_squared = model.score(X_test, y_test)
+
+print(f"R-squared value: {r_squared}")
+
+# Use the model to make predictions for future economic scenarios
+future_data = pd.DataFrame([[5, 2, 3]], columns=['Unemployment', 'Inflation', 'Interest_Rate'])
+future_prediction = model.predict(future_data)
+
+print(f"Predicted GDP for future economic scenario: {future_prediction[0]}")
