@@ -4680,3 +4680,35 @@ print('R-squared:', model.score(test[['log_income', 'education']], test['savings
 # Write results to a file
 test['predictions'] = predictions
 test.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:19:17.251827
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+url = 'https://example_public_database.com/dataset.csv'
+data = pd.read_csv(url)
+
+# Data preprocessing
+data = data.dropna()  # Drop rows with missing values
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Calculate model accuracy
+accuracy = model.score(X_test, y_test)
+
+print("Model accuracy: ", accuracy)
+
+# Research analysis goes here
+# Write findings and conclusion for the economics or policy journal article
