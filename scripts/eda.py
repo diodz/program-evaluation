@@ -4648,3 +4648,35 @@ plt.show()
 # Write results to a csv file for further analysis
 results = pd.DataFrame({'Coefficient': coef, 'Intercept': intercept})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:19:12.430397
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Perform some initial data analysis
+print(data.head())
+print(data.describe())
+
+# Feature engineering
+data['log_income'] = np.log(data['income'])
+
+# Split data into training and testing sets
+train = data.sample(frac=0.8, random_state=1)
+test = data.drop(train.index)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(train[['log_income', 'education']], train['savings'])
+
+# Make predictions on the test set
+predictions = model.predict(test[['log_income', 'education']])
+
+# Evaluate the model
+print('R-squared:', model.score(test[['log_income', 'education']], test['savings']))
+
+# Write results to a file
+test['predictions'] = predictions
+test.to_csv('results.csv', index=False)
