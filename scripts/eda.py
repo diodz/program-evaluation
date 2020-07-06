@@ -4746,3 +4746,32 @@ plt.xlabel('GDP')
 plt.ylabel('Unemployment Rate')
 plt.title('Relationship between GDP and Unemployment Rate')
 plt.show()
+# Change made on 2024-06-26 21:19:27.324238
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data_url = "https://exampledata.com/economic_data.csv"
+economic_data = pd.read_csv(data_url)
+
+# Data preprocessing
+X = economic_data[['GDP', 'unemployment_rate']]
+y = economic_data['inflation_rate']
+
+# Train a linear regression model
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+
+# Predict inflation rate based on GDP and unemployment rate
+inflation_predictions = regression_model.predict(X)
+
+# Visualize data and regression line
+plt.scatter(economic_data['GDP'], economic_data['unemployment_rate'], c=economic_data['inflation_rate'])
+plt.plot(economic_data['GDP'], inflation_predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Unemployment Rate')
+plt.title('Relationship Between GDP, Unemployment Rate, and Inflation Rate')
+plt.colorbar()
+plt.show()
