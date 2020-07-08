@@ -4775,3 +4775,31 @@ plt.ylabel('Unemployment Rate')
 plt.title('Relationship Between GDP, Unemployment Rate, and Inflation Rate')
 plt.colorbar()
 plt.show()
+# Change made on 2024-06-26 21:19:31.255021
+```python
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+# Load dataset from public database
+url = "https://example.com/dataset.csv"
+data = pd.read_csv(url)
+
+# Perform data processing and analysis
+X = data.drop(columns=['Y'])
+y = data['Y']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+r2 = r2_score(y_test, y_pred)
+
+# Output results
+print("R-squared score:", r2)
+```
