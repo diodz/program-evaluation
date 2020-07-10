@@ -4803,3 +4803,28 @@ r2 = r2_score(y_test, y_pred)
 # Output results
 print("R-squared score:", r2)
 ```
+# Change made on 2024-06-26 21:19:34.943968
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# load data from public database
+data_url = 'https://url-to-public-database.com/data.csv'
+data = pd.read_csv(data_url)
+
+# clean and preprocess data
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# calculate coefficients and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+
+# print results
+print("Coefficients:", coefficients)
+print("Intercept:", intercept)
