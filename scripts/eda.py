@@ -4828,3 +4828,33 @@ intercept = model.intercept_
 # print results
 print("Coefficients:", coefficients)
 print("Intercept:", intercept)
+# Change made on 2024-06-26 21:19:40.158612
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+url = "https://data.gov/sample_data.csv"
+data = pd.read_csv(url)
+
+# Preprocess data
+X = data[['GDP', 'UnemploymentRate']]
+y = data['Inflation']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((predictions - y_test) ** 2)
+mae = np.mean(np.abs(predictions - y_test))
+r2 = model.score(X_test, y_test)
+
+print(f"Mean Squared Error: {mse}")
+print(f"Mean Absolute Error: {mae}")
+print(f"R-squared: {r2}")
