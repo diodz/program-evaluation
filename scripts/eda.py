@@ -4858,3 +4858,36 @@ r2 = model.score(X_test, y_test)
 print(f"Mean Squared Error: {mse}")
 print(f"Mean Absolute Error: {mae}")
 print(f"R-squared: {r2}")
+# Change made on 2024-06-26 21:19:45.570567
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+url = "https://url_to_public_database/data.csv"
+data = pd.read_csv(url)
+
+# Preprocess data
+X = data.drop(columns=['target_variable'])
+y = data['target_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict on test data
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((predictions - y_test) ** 2)
+mae = np.mean(np.abs(predictions - y_test))
+r2_score = model.score(X_test, y_test)
+
+# Output results
+print("Mean Squared Error:", mse)
+print("Mean Absolute Error:", mae)
+print("R-squared Score:", r2_score)
