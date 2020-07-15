@@ -4891,3 +4891,40 @@ r2_score = model.score(X_test, y_test)
 print("Mean Squared Error:", mse)
 print("Mean Absolute Error:", mae)
 print("R-squared Score:", r2_score)
+# Change made on 2024-06-26 21:19:51.907652
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import requests
+
+# Load economic data from public database
+url = 'https://example.com/economic_data.csv'
+response = requests.get(url)
+with open('economic_data.csv', 'wb') as file:
+    file.write(response.content)
+
+data = pd.read_csv('economic_data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Generate results for article
+results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+results.to_csv('results.csv')
