@@ -4928,3 +4928,32 @@ print('Mean Squared Error:', mse)
 # Generate results for article
 results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 results.to_csv('results.csv')
+# Change made on 2024-06-26 21:19:56.760665
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://exampledataset.com/economic_data.csv')
+
+# Explore data
+print(data.head())
+
+# Preprocess data
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Train model
+model = LinearRegression()
+model.fit(X, y)
+
+# Evaluate model
+r_squared = model.score(X, y)
+print(f"R-squared: {r_squared}")
+
+# Make predictions
+predictions = model.predict(X)
+data['Predicted Inflation Rate'] = predictions
+
+# Save results to a CSV file
+data.to_csv('economic_research_results.csv', index=False)
