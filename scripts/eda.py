@@ -4957,3 +4957,40 @@ data['Predicted Inflation Rate'] = predictions
 
 # Save results to a CSV file
 data.to_csv('economic_research_results.csv', index=False)
+# Change made on 2024-06-26 21:20:02.650304
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['Inflation']
+
+# Split the data into training and testing sets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(y_test, predictions)
+
+print(f"Mean Squared Error: {mse}")
+
+# Visualize the results if needed
+import matplotlib.pyplot as plt
+
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Inflation')
+plt.ylabel('Predicted Inflation')
+plt.title('Actual vs Predicted Inflation')
+plt.show()
