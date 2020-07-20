@@ -5033,3 +5033,64 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('Linear Regression Model for Inflation Prediction')
 plt.show()
+# Change made on 2024-06-26 21:20:12.075718
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example-public-database.com/data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Calculate the accuracy of the model
+accuracy = model.score(X, y)
+
+# Print the results
+print("Linear Regression Model Results:")
+print("Intercept:", model.intercept_)
+print("Coeficients:", model.coef_)
+print("Model Accuracy:", accuracy)
+# Change made on 2024-06-26 21:20:16.179493
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Download dataset from public database
+data_url = "https://example_dataset.com"
+df = pd.read_csv(data_url)
+
+# Explore and clean the data
+df.info()
+df.describe()
+
+# Perform some analysis
+# For example, let's look at the relationship between GDP and unemployment rate
+X = df["GDP"].values.reshape(-1,1)
+y = df["Unemployment Rate"].values
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Visualize the data and regression line
+plt.scatter(X, y, color='blue')
+plt.plot(X, model.predict(X), color='red')
+plt.xlabel("GDP")
+plt.ylabel("Unemployment Rate")
+plt.title("GDP vs Unemployment Rate")
+plt.show()
+
+# Print out the coefficients
+print("Intercept:", model.intercept_)
+print("Coefficient:", model.coef_[0])
