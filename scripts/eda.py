@@ -5094,3 +5094,47 @@ plt.show()
 # Print out the coefficients
 print("Intercept:", model.intercept_)
 print("Coefficient:", model.coef_[0])
+# Change made on 2024-06-26 21:20:23.092162
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = 'https://example.com/dataset.csv'
+data = pd.read_csv(url)
+
+# Explore the dataset
+print(data.head())
+print(data.info())
+print(data.describe())
+
+# Preprocess the data
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = np.mean((y_pred - y_test) ** 2)
+
+# Visualize the results
+plt.scatter(X_test['independent_variable1'], y_test, color='red')
+plt.plot(X_test['independent_variable1'], y_pred, color='blue')
+plt.xlabel('Independent Variable 1')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Model')
+plt.show()
+
+# Write results to a csv file
+results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+results.to_csv('results.csv', index=False)
