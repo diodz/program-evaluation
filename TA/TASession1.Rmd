@@ -1,0 +1,245 @@
+---
+title: "PPHA 34600 TA Session Week 1"
+author: "Zhijie Yan (based on previous material)"
+date: "4/9/2020"
+header-includes: 
+   - \usepackage{float}
+   - \usepackage{setspace}
+   - \onehalfspacing
+output: pdf_document
+urlcolor: blue 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# install.packages("MASS")
+library(MASS)
+library(ggplot2)
+library(tidyverse)
+library(stargazer)
+library(kableExtra)
+setwd("/Users/zhijie/Desktop/2020Spring/Program Evaluation") 
+# set your working directory so that the knitted PDF will be there
+# type "getwd()" in your console to see your current wd
+options(scipen = 999) # getting rid of scientific notation
+```
+
+## 1. Fundamental Problem of Causal Inference
+The fundamental problem of causal inference is missing counterfactuals, i.e., we do not observe the outcome of the same individual with __and__ without the treatment.  
+Denote the treated outcome of individual _i_ as $Y_i(1)$ and the untreated outcome of person _i_ as $Y_i(0)$, the treatment effect on unit _i_ is
+\[\ \tau_i = Y_i(1) - Y_i(0) \]
+However, we either observe $Y_i(1)$ or $Y_i(0)$. As a result, we can __never__ find the treatment effect for an individual.
+
+## 2. ATE, ATT, ATNT, and the Naïve Estimator
+Though we do not observe $\tau_i$, we do observe the marginal distribution of $Y(1)$ and $Y(0)$. That is, we observe the distribution of treated outcomes (from the treatment group), as well as the distribution of untreated outcomes (from the control group). However, we __have no idea about__ the joint distribution of $Y(1)$ and $Y(0)$ - if we observe $Y_i(1)$, we do not see $Y_i(0)$, and vice versa.  
+
+### Average Treatment Effect (ATE)
+The treatment effect might vary across individuals, and ATE is simply the average of $\tau_i$ for **all individuals**, that is
+\[\ \tau^{ATE} = E[Y_i(1) - Y_i(0)]. \]
+Again, the fundamental problem of causal inference! It would be nice if we compare individuals to themselves, then any change in the outcome will be due to the factor(s) that changed. __But we do not observe potential outcomes.__
+
+### The Naïve estimator 
+What can we do with what we observe? We calculate the naïve estimator, which is
+\[\ \tau^N = E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 0] \]
+where $D_i$ is the treatment variable.  
+In other words, the naïve estimator is the difference between the average treated outcome on the treated and the untreated outcome on the untreated. __It does not involve any potential outcomes.__ Isn't it nice? __Of course not!__  
+It is naïve because it implicitly assumes that people who received the treatment are on average the same as those who did not, or in math
+\[\ E[Y_i(1)] = E[Y_i(1)|D_i = 1] = E[Y_i(1)|D_i = 0], \]
+\[\ E[Y_i(0)] = E[Y_i(0)|D_i = 1] = E[Y_i(0)|D_i = 0]. \]
+Most of the time, there is selection, which makes the treatment group and control group different. If it's selection on the observables, we may control for these variables. If it's selection on the unobservables, we need to do better than adding covariates, which you will learn throughout the course.
+
+### Average Treatment Effect on the Treated (ATT)
+It is natural to think that the average treatment effects are different for different groups of people. Sometimes we are interested in the average treatment effect on the treated, which is
+\[\ \tau^{ATT} = \underbrace{E[Y_i(1)|D_i = 1]}_\textrm{observed} - \underbrace{E[Y_i(0)|D_i = 1]}_\textrm{potential/unobserved} \]
+Unfortunately, $\tau^{ATT}$ involves potential outcomes.  
+Now I want to compare the naïve estimator and ATT,
+\begin{align*}
+\tau^{ATT} &= E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 1] \\
+           &= E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 1] \underbrace{+ E[Y_i(0)|D_i = 0] - E[Y_i(0)|D_i = 0]}_\textrm{adding and subtracting the same item - 0!} \\
+          \text{rearranging to get} &= E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 0] + E[Y_i(0)|D_i = 0] - E[Y_i(0)|D_i = 1]\\
+           &= \tau^N + \underbrace{E[Y_i(0)|D_i = 0] - E[Y_i(0)|D_i = 1]}_\textrm{selection bias}
+\end{align*}
+The naïve estimator is not an unbiased estimate of ATT because the average observed outcome of the control group is not the same as the average potential outcome of the treatment group.
+
+### Average Treatment Effect on the Non-Treated (ATNT)
+We might also care about the average treatment effect on the non-treated, which is
+\[\ \tau^{ATNT} = \underbrace{E[Y_i(1)|D_i = 0]}_\textrm{potential/unobserved} - \underbrace{E[Y_i(0)|D_i = 0]}_\textrm{observed} \]
+Again, it involves potential outcomes.
+Similarly, we can compare the the naïve estimator and ATNT,
+\begin{align*}
+\tau^{ATNT} &= E[Y_i(1)|D_i = 0] - E[Y_i(0)|D_i = 0] \\
+           &= E[Y_i(1)|D_i = 0] - E[Y_i(0)|D_i = 0] \underbrace{+ E[Y_i(1)|D_i = 1] - E[Y_i(1)|D_i = 1]}_\textrm{adding and subtracting the same item - 0!} \\
+          \text{rearranging to get} &= E[Y_i(1)|D_i = 1] - E[Y_i(0)|D_i = 0] + E[Y_i(1)|D_i = 0] - E[Y_i(1)|D_i = 1]\\
+           &= \tau^N + \underbrace{E[Y_i(1)|D_i = 0] - E[Y_i(1)|D_i = 1]}_\textrm{selection bias}
+\end{align*}
+The naïve estimator is not an unbiased estimate of ATT because the average potential outcome of the control group is not the same as the average observed outcome of the treatment group.
+
+### ATE, ATT, and ATNT
+
++ Homogenous treatment effects: $\tau^{ATE} = \tau^{ATT} = \tau^{ATNT}$
++ Heterogenous treatment effects:  $\tau^{ATE} = Pr(D_i = 1)\tau^{ATT} + Pr(D_i = 0)\tau^{ATNT}$, i.e., the weighted average
+
+### Clear as Mud? Examples!
+Many of you might have learned about the Roy Model when you were in stats class. Not sure if you still like it, but I'm using it as the example here. This time no economists or accountants, but a replication of the example from Lecture 2.  
+I will be generating some data here. The steps are as follows:
+
++ Generating salaries for college attendees and non-attendees from a bivariate normal distribution (`MASS` package); same distributions as in lecture notes, $Y_i(1) \sim N(60000, 10000^2), Y_i(0) \sim N(65000, 5000^2), corr(Y_i(1), Y_i(0)) = 0.84$; 100000 samples.
++ Let individuals "choose" between the incomes, if for person _i_, $Y_i(1) \geq Y_i(0)$, she will attend college, otherwise she does not. In this step, the package `tidyverse` is used to build a dataframe/tibble.
++ Calculate the four estimators we discussed above and see how they are different from each other. In this step, I use the package `kableExtra` to make tables. 
+
+The results are summarized in Table 1.
+
+```{r simulation and df preparation, echo = F, warning = F}
+# this is a code chunk, {r} means the code within it is R
+# there are several options after the comma, such as
+# eval = FALSE means you do not want the code chunk to be evaluated, so the chunk won't run
+# echo = FALSE prevents the code from appearing in your output, but the result still shows
+# include = FALSE prevents the result from appearing in your output
+# you will see more as I insert pictures and tables later
+# for more, see https://yihui.org/knitr/options/
+set.seed(04102020) 
+# set.seed() allows you to get the same data on your computer everytime you run the code
+covariance <- matrix(c(10000^2, 10000*5000*0.84, 
+                       10000*5000*0.84, 5000^2), 2, 2) # covariance matrix
+inc <- mvrnorm(n = 100000, mu = c(60000, 65000), Sigma = covariance)
+df <- tibble(college = inc[,1], noncollege = inc[,2]) %>%
+  mutate(D = college >= noncollege) %>% # "choosing" between college and no college
+  rowwise %>%
+  mutate(observed = max(noncollege, college),
+         potential = min(noncollege, college))
+# head(df) to see the first several rows
+avginc <- df %>% 
+  group_by(D) %>% # this allows us to perform by group
+  summarize(college = mean(college),
+            noncollege = mean(noncollege),
+            N = n())
+```
+
+```{r tables, echo = F}
+# https://haozhu233.github.io/kableExtra/awesome_table_in_pdf.pdf
+avginc %>%
+  # adding format arguments to unobserved outcomes
+  mutate(college = cell_spec(round(college, 0), "latex", 
+                             color = c("red", "black"), strikeout = c(T, F)),
+         noncollege = cell_spec(round(noncollege, 0), "latex", 
+                                color = c("black", "red"), strikeout = c(F, T))) %>%
+  rename("College income" = college, "Noncollege income" = noncollege, 
+         "Number of obs" = N) %>%
+  add_row(D = "Mean", `College income` = round(mean(inc[,1]), 0), 
+          `Noncollege income` = round(mean(inc[,2]), 0), `Number of obs` = 100000) %>%
+  select(-D) %>%
+  t() %>% data.frame() %>%
+  rename("Non-attendees" = X1, Attendees = X2, Mean = X3) %>%
+  kable("latex", escape = F, booktabs = T, linesep = "", align = "c", 
+        caption = "Average Observed and Potential Incomes") %>%
+  kable_styling(latex_options = "hold_position") %>%
+  # hold_position keeps the table where it is in the code, instead of floating somewhere else
+  footnote(number = c("Numbers in red are unobserved.",
+                      "All numbers are rounded to the nearest integer."))
+
+# I know it's quite a bunch of code. But if you already have a table that is ready to be printed out, simply do kable(table, "latex"), maybe add some styling arguments if you like.
+```
+
+Now let's do some calculations (Use `` `r "\u0060r expression\u0060"` `` for inline code so that you do not have to type the numbers yourself):
+
+ + $\tau^{ATE} = E[Y_i(1)] - E[Y_i(0)] = `r round(mean(inc[,1]), 0)` - `r round(mean(inc[,2]), 0)` = `r round(mean(inc[,1]) - mean(inc[,2]), 0)`$
+ + $\tau^N = E[Y_i(1)|attendees] - E[Y_i(0)|non\text{-}attendees] = `r round(avginc[2, 2], 0)` - `r round(avginc[1, 3], 0)` = `r round(avginc[2, 2] - avginc[1, 3], 0)`$
+ + $\tau^{ATT} = E[Y_i(1)|attendees] - E[Y_i(0)|attendees] = `r round(avginc[2, 2], 0)` - `r round(avginc[2, 3], 0)` = `r round(avginc[2, 2] - avginc[2, 3], 0)`$
+ + $\tau^{ATNT} = E[Y_i(1)|non\text{-}attendees] - E[Y_i(0)|non\text{-}attendees] = `r round(avginc[1, 2], 0)` - `r round(avginc[1, 3], 0)` = `r round(avginc[1, 2] - avginc[1, 3], 0)`$
+ + Verifying: $Pr(D = 1)\tau^{ATT} + Pr(D = 0)\tau^{ATT} =$ 
+ `r mean(df$D)` $\times `r round(avginc[2, 2] - avginc[2, 3], 0)`$ + `r 1 - mean(df$D)` $\times (`r round(avginc[1, 2] - avginc[1, 3], 0)`)$ = `r round(mean(df$D) * (avginc[2, 2] - avginc[2, 3]) + (1 - mean(df$D)) * (avginc[1, 2] - avginc[1, 3]), 0)` = $\tau^{ATE}$
+
+These numbers vary a lot! Looking at the naïve estimator, we would force everyone into college. However, We already know that there is selection - people self sort into college because they know what is best for them. College attendees and non-attendees are different on average. They would have different average incomes had they all attended college or not. From the density plot, we can see that college attendees are on the two tails of the distribution. This is because the distribution of college attendees' incomes is more spread out.
+
+```{r density plots, fig.align = "center", out.width = "60%", echo = F}
+da <- as.data.frame(cbind(c(inc[,1], inc[,2]), 
+                          c(rep("college", 100000), rep("noncollege", 100000))))
+da$V1 <- as.numeric(as.character(da$V1))
+# the income column somehow turned into factors, my habbit is to turn factors first to characters then to numerics to avoid any possible mistakes
+ggplot(da, aes(x = V1, fill = V2)) + geom_density(alpha = 0.3) +
+  scale_fill_discrete(name = "Income")
+```
+
+## 3. OLS Recap
+Before running regressions, let's review some ideas about OLS.
+
+### OLS Assumptions (Wooldridge, 2000)
+
++ Linear in Parameters: the population model can be written as $Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + ... + \varepsilon_{i}$
++ Random Sampling: we have a random sample of observations $\{(X_{i1}, X_{i2}, ..., X_{ik}, Y_{i}): i = 1, 2, ..., N\}$
++ No Perfect Collinearity: In the sample (and therefore in the population), none of the independent variables is constant, and there are no _exact linear_ relationships among the independent variables.
++ Zero Conditional mean: The error term has an expected value of zero given any values of the independent variables. In other words,
+\[\ E(\varepsilon_i|X_{i1}, ..., X_{ik}) = 0 .\]
+_These four assumptions give us consistent and unbiased estimates._ __*(What does this mean?)*__
++ Homoskedasticity: The error term has the same variance given any value of the explanatory variables. In other words,
+\[\ Var(\varepsilon_i|X_{i1}, ..., X_{ik}) = \sigma^2 .\]
+
+The five assumptions are known as the Gauss-Markov assumptions. Under the five assumptions, OLS estimator $\hat{\beta}$ for $\beta$ is the __best linear unbiased estimator (BLUE)__.  
+
+### Simple Regression with a Dummy
+The coefficients of a bivariate OLS can be obtained by minimizing the squared error
+\[\ \min_{\beta_0, \beta_1} \sum_{i=1}^N (Y_i - \beta_0 - \beta_1 X_i)^2 \]
+In particular, when the independent variable is the treatment dummy, we have
+\begin{align*} 
+E[Y_i|D_i = 1] &= \beta_0 + \beta_1 \times 1 + E(\varepsilon_i | D = 1), \\
+E[Y_i|D_i = 0] &= \beta_0 + \beta_1 \times 0 + E(\varepsilon_i | D = 0), \\
+\Rightarrow E[Y_i|D_i = 1] - E[Y_i|D_i = 0] &= \beta_1 + E(\varepsilon_i | D = 1) - E(\varepsilon_i | D = 0).
+\end{align*}
+The fourth assumption comes in handy, with $E(\varepsilon_i|D_i) = 0$, there will be no selection. This condition basically says that we should capture any variable that is correlated with the treatment and affects $Y_i$.  
+What if we didn't?
+
+### Omitted Variable Bias
+Suppose that the true model is
+\[\ Y_i = \beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \varepsilon_i, \]
+But instead we omitted $X_{i2}$ from our model and instead estimate
+\[\ Y_i = \alpha_0 + \alpha_1 X_{i1} + u_i. \]
+Then from the misspecified model, we have
+\begin{align*} 
+E(\alpha_1) &= E[\frac{Cov(Y_i, X_{i1})}{Var(X_{i1})}] \\
+            &= E[\frac{Cov(\beta_0 + \beta_1 X_{i1} + \beta_2 X_{i2} + \varepsilon_i, X_{i1})}{Var(X_{i1})}] \\
+            &= \beta_1 + \beta_2 \frac{Cov(X_{i1}, X_{i2})}{Var(X_{i1})} + \underbrace{\frac{Cov(\varepsilon_i, X_{i1})}{Var(X_{i1})}}_\textrm{Zero conditional mean}\\
+            &= \beta_1 + \beta_2 \underbrace{\frac{Cov(X_{i1}, X_{i2})}{Var(X_{i1})}}_\textrm{the slope by regressing $X_{i2}$ on $X_{i1}$}\\
+            &\neq \beta_1 \text{ unless } \beta_2 Cov(X_{i1}, X_{i2}) = 0
+\end{align*}
+Again, it tells us not to leave out variables that are correlated with our variable of interest **and** affect the outcome. For example, in the college example, suppose that working experience has a positive effect on income ($\beta_2 > 0$), and people who attend college will have less experience ($Cov(D_i, exper_i) < 0$). If we only regress incomes on college dummy, we would be understating the effect of attending college.
+
+### R and Regressions
+With the simulated data we generated earlier, let's run a simple regression in R. In this section, the package `stargazer` will be used to obtain a nice regression table.
+
+```{r simple regression, results = "asis"}
+# results = "asis": output as-is, i.e., write raw results from R into the output document
+m <- lm(observed ~ D, data = df)
+stargazer(m, title = "A Simple Model",
+          dep.var.labels = "Income", # renaming the dependent variable
+          header = F)                # get rid of the initial comments added by the author
+# You can find a lot of stargazer tutorials, here's one that is pretty organized
+# https://www.jakeruss.com/cheatsheets/stargazer/
+```
+
+Make sure that you know how to read the output!
+\newpage
+
+## 4. More about R Markdown
+
+There are many R Markdown references online. For example, RStudio provides a “Get Started” Tutorial [here](https://rmarkdown.rstudio.com/lesson-1.html).   
+You can transform a .Rmd file to other formats such as PDF, word, html by clicking **Knit**. Specifically, for a PDF document as the output, you need TeX distributions on your computer, which you can download [here](https://www.latex-project.org/get/).
+
+### Now some basic syntax ~~which looks like nonsense~~. For example, the hashtags give us different levels of titles.
+# I am a big title because there is only one # before me!
+*Single star gives you italics,* _so does single underscore._ Similarly, **double stars get you bold,** __so do double underscores.__
+
+1. A numbered list, please put a blank line before you start
+    + Now bullet points
+      * a sublist
+        - a sublist to the sublist
+          - I can do it all day! (Actually don't make it too deeply nested or you might get an error.)
+      + You can use different symbols for the same level, as long as they are indented in the same way. Two whitespaces will be enough.
+      The return/enter key does not change the line.   
+      You need two whitespaces after the last paragraph.
+2. If you are familiar with \LaTeX, it is the same to type some nice equations here  
+    $\text{A equation not centered } y_i = \beta_0 + \beta_1 x_i + \epsilon_i$
+    $$\text{A equation that is centered } y_i = \beta_0 + \beta_1 x_i + \epsilon_i$$
+    Some symbols [and more](https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols):
+    $$\neq, \geq, \leq, \sim, \approx, \equiv, \pm, \to, \infty, \int_{a}^{b}, \sum_a^b, \prod_a^b, \frac{a}{b}...$$
+
+Now you can try to creat a R Markdown file of your own or play with this one.

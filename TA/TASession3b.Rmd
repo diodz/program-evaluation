@@ -1,0 +1,169 @@
+---
+title: "TA Session 3b"
+author: "Jena Manilla"
+date: "April 23, 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+# This document is intended for educational purposes only for
+# Fiona Burlig's PPHA 34600 Program Evaluation Course at the
+# Harris School of Public Policy
+
+# TA Session 3b details the following:
+#
+# 1. Intro to RMarkdown
+# 2. Data Wrangling
+# 3. Regression 101
+# 4. Tables and Graphs
+#
+library(knitr)
+library(tidyverse)
+library(dplyr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. R Markdown
+
+If you've opened this file in R, well done! You are well on your way to using R Markdown, as this is an R Markdown document. If you had trouble opening this document (or you opened it as a PDF), make sure you have R Studio installed.  
+
+### To install R Studio  
+
+1. Go to www.rstudio.com and click on the "Download" button on the top right (above "Pricing".)  
+2. Click on the "Download R Studio Desktop"  
+3. Click on the version recommended for your system, or the latest Windows version, and save the executable file. Run the .exe file and follow the installation instructions.  
+
+RMarkdown is part of R Studio. To open a new R Markdown document, select "File" --> "New File" --> "R Markdown". Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+You can embed an R code chunk like this:
+
+```{r, warning=FALSE, message=FALSE}
+# You can type code or text here! This gray chunk works just like a normal .R file
+# Let's read in some data
+burrito <- read_csv('https://raw.githubusercontent.com/BUSN32100/data_files/master/burrito.csv')
+```
+This is the advantage of R Markdown. The gray chunk above allows you to code, while this white space works for free text. There are lots of ways to format in R Markdown, including *italics* and **bold**. You can also type equations, either in-line like this $y = mx + b$ or on their own line
+$$ y = mx + b $$
+
+Once you're done with your R Markdown file, click the **Knit** button and a document will be generated that includes both text content as well as the output of any embedded R code chunks within the document. 
+ 
+*Big caveat: there is no one right way code! These are only suggestions.*  
+
+## 2. Data Wrangling  
+A lot of this class requires filtering and subsetting dataframes. One helpful tool for this is **pipes**, which looks like this %>%     
+
+When is the pipe operator helpful? Here's an example. Suppose I want to:  
+
+ 1. find keys, 
+ 2. start car, 
+ 3. drive to school, 
+ 4. park.  
+
+I can write this as one line:
+```{r eval=FALSE}
+park(drive(start_car(find("keys")), to = "campus"))
+```
+
+But writing it out using pipes makes it easier to read:
+```{r eval=FALSE}
+find("keys") %>%
+  start_car() %>%
+  drive(to = "campus") %>%
+  park()
+```
+
+The pipes operator is also very helpful for maniplating data sets. Here are some examples of what you can do:  
+```{r, eval=FALSE}
+# Filter based on criteria
+burrito %>% 
+  filter( Burrito == "carnitas", overall >4) #filter for burritos with 
+                                                #carnitas and an overall rating > 4
+
+# Select specific columns.
+burrito %>% 
+  select(Location, Burrito, Meat, Salsa) # Return 4 columns using their name
+
+burrito %>% 
+  select(Location:Salsa) # Return all columns between location and salsa
+
+# Drop columns by adding a minus sign in front of the column name.
+burrito %>% 
+  select(-Location) # This gets rid of location
+
+# Make new columns with the mutate function
+burrito %>% 
+  select(Burrito, overall) %>% # Select two columns
+  mutate(overall_double = overall*2) %>% # Create a new column called overall_double
+  head() # Show the first few rows of the new dataframe
+
+```
+Those examples are really just the tip of the iceberg for the pipes operator! You can find a lot of examples via stack overflow and Google.    
+
+Also, here's a **pro tip**: use `ctrl/cmd + shift + m` as a shortcut.  
+
+## 3. Regression 101  
+
+There are lots of ways to write code for regressions. Here is just one example: 
+```{r, comment=NA, eval=FALSE}
+regH <- lm(overall ~ Hunger, burrito)
+summary(regH)
+coef(summary(regH)) # Isolate just the coefficients from the regression
+coef(summary(regH))["Hunger", c("Estimate", "Pr(>|t|)")] # Isolate treatment effect
+
+```
+
+Here is an example of how to run many regressions at once: 
+```{r, comment=NA, eval=FALSE}
+# Run regression of overall on tortilla, meat and filling
+regs <- lapply(burrito %>% 
+                 select(Tortilla, Meat, Fillings), function(x) lm(overall ~ x, burrito))
+# Let's see what the output is
+regs
+# Call the coefficients on Tortilla
+coef(summary(regs$Tortilla))["x", c("Estimate", "Pr(>|t|)")]
+# Call all the coefficients
+t(sapply(regs, function(x) coef(summary(x))["x", c("Estimate", "Pr(>|t|)")]))
+
+```
+
+
+
+## 4. Tables and Graphs
+
+It's often a good idea to visualize your data. A really great package for this is ggplot.
+```{r}
+# Make sure you install and/or load ggplot
+library(ggplot2)
+
+```
+
+Let's plot the distribution of the overall burrito ratings:
+```{r, fig.width=4,fig.height=4}
+ggplot(data = burrito, mapping = aes(overall)) + geom_histogram(binwidth = .1)
+
+```
+
+And now a scatterplot of fillings vs overall rating, with a line of best fit:
+```{r, warning=FALSE, comment=FALSE}
+ggplot(data = burrito, mapping = aes(x=Fillings, y=overall)) + 
+  geom_point() + geom_smooth(method = lm, se=F)
+```
+
+These are just two simple examples. Play around with colors, titles, different types of plots... there are lots of options!  
+  
+\newpage  
+
+Stargazer is also a very helpful tool for making nice tables. https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf  
+
+For example, here's a table with our burrito regressions from before:
+```{r, warning=FALSE, message=FALSE, comment=NA}
+regs <- lapply(burrito %>% 
+                 select(Tortilla, Meat, Fillings), function(x) lm(overall ~ x, burrito))
+library(stargazer)
+stargazer(regs, type = "text", column.labels = c("Tortilla", "Meat", "Filling"))
+
+```
+

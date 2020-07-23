@@ -1,0 +1,131 @@
+---
+title: 'TA Session 3a'
+author: "2019 Eval TAs"
+date: "4/23/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+# This document is intended for educational purposes only for
+# Fiona Burlig's PPHA 34600 Program Evaluation Course at the
+# Harris School of Public Policy
+
+# TA Session 3 details the following:
+#
+# 1. Intro to SUTVA
+# 2. When SUTVA is Violated
+# 3. Randomized Saturation Design
+# 4. Spillover Causal Effects
+# 5. Runthrough of Problem Set 1
+#
+library(knitr)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Introduction to SUTVA
+
+Stable Unit Treatment Value Assumption, or SUTVA, is an assumption we've been making so far to legitimize all causal estimations in this class. *Formally*, it assumes:
+
+$$If\,\, D_i=D_i^1,\,\,\,\,\, then \,\,Y_i(D) = Y_i(D^1)$$
+
+In other words, treatment status of one unit shouldn't affect the potential outcomes of other units. Another simpler way to say this? No **spillovers** of treatment.
+
+An example of a **spillover** is the following:
+
+Consider the One Laptop per Child (OLPC) program. The intention of this program is to provide students with access to technology in the poorest regions of the world with the aim of improving learning. Cristia et. al (2012) examine the impact of this program on cognitive skills across ~750 schools in poor, rural communities across Peru. 
+
+*How could SUTVA be violated if we randomize at the student level?* 
+
+Suppose we have 750 schools with 100 students within each school. We randomly assign treatment and control across the 75,000 students. This assignment could result in treatment and control subjects being in the same classroom. It is likely in this case that laptops are shared between classmates and so untreated classmates may experience increased cognitive skills (i.e. their potential outcomes are affected by treatment status of other units). 
+
+*To control for this, we decide to randomize at the school level. How could SUTVA be violated if we randomize at the school level?*
+
+Suppose within a given community there are 5 schools. 3 of the schools are assigned to the OLPC program and 2 are not. If students are allowed to take laptops home with them, it is possible that spillovers could occur. Consider the example where a student goes to a treated school, but their neighbor (or friend) goes to an untreated school. It is likely that students participating in the OLPC program will share laptop access with their friend back at home, thus affecting their potential outcome. 
+
+## 2. When SUTVA is Violated
+
+Why are we concerned when SUTVA is violated? We see a systemic bias in our treatment estimate that we can't correct via a fun stats trick. Instead, we only have a few options:
+
+* **Treat you ATE as the upper/lower bound**, depending on direction of expected effect. This is usually a cop-out at the end of an empirical paper when experimental design goes wrong. Instead, be proactive and...
+* **Design an RCT to avoid spillover.** This is typically done by *cluster-randomizing* by village instead of individual, then choosing villages that are far enough apart to avoid spillover.
+
+But what if the spillover effect itself is interesting to you as a policy maker or researcher? From our example above, we may randomize at the student level and use the spillover effect as a proxy for measuring social networks or peer effects within the classroom. 
+
+In this case, we might choose to design an RCT to specifically measure spillovers, in a way that parses these effects from our 'true' direct treatment estimates.
+
+## 3. Randomized Saturation Design
+
+Randomized Saturation Design (RSD) is one of your options when it comes to spillover estimation. RSD has the following two randomization steps across $N$ individuals who live in $C$ clusters:
+
+* First, **randomize clusters into treatment intensities** to compare high-vs-low intensity treatments $\pi_c\in[0, 1]$. This is often done with pre-determined discrete saturation levels and a control $\pi_c=0$
+* Second, **randomize units within these clusters** to compare treatment-vs-control units. In other words, assign $\pi_c*N_c$ units into treatment
+
+This will give us three types of units:
+
+* **Treated Individuals**: $D_{ic}=1$
+* **Pure Controls**: $D_{ic}=0, \pi_c=0$
+* **Within-cluster Control**: $D_{ic}=0, \pi_c > 0$
+
+*How does this work in practice?*
+
+Duflo and Saez (2003) conducted a randomized experiment to look at the role of information and social interactions in employee's decisions to enroll in a retirement plan at a large university. The experiment design is as follows. 
+
+A random sample of employees not yet enrolled in the retirement plan were sent an invitation letter promising $20 for attending a benefits fair. Three groups were created:
+
+* untreated individuals from untreated departments **(pure controls)**
+* untreated individuals from treated departments **(within-cluster control)**
+* treated individuals from treated departments **(treated individuals)**
+
+By comparing, these three groups, we can suss out multiple treatment effects again without bias - huzzah! However, we need one significant assumption to make this work:
+
+$$Y_{ic}\perp D_{jd}$$ for all $d \neq c$
+
+This basically says that there is no *cross-cluster interference* - the only spillovers are the ones we have designed the experiment to study. This is fundamentally important; without this assumption we gain **nothing** from the RSD estimates!
+
+## 4. Spillover Causal Effects
+
+Once we set up this design and assume our assumptions, we're able to get a variety of cool estimates out of the RSD. We can measure:
+
+The **intent to treat (ITT)** as the difference between those offered treatment and pure controls. This is equivalent to the ATE assuming perfect compliance.
+
+$$\tau^{ITT}=E[Y_{ic}|D_{ic}=1, \pi_c=\pi] - E[Y_{ic}|D_{ic}=0, \pi_c=0]$$
+
+The **spillover on the non-treated (SNT)** as the difference between controls in treated clusters and pure controls. Basically, this is the externality of treatment on the community when not treated.
+
+$$\tau^{SNT}=E[Y_{ic}|D_{ic}=0, \pi_c=\pi] - E[Y_{ic}|D_{ic}=0, \pi_c=0]$$
+
+Then, the **total causal effect (TCE)** is simply the weighted sum of these effects, based on treatment intensity $\pi\in[0,1]$. Put another way, it is the overall cluster difference between treated and control clusters.
+
+$$\tau^{TCE}=\pi*\tau^{ITT} + (1-\pi)*\tau^{SNT}$$
+
+If we'd really like to, we can also break down our ITT into the **direct effect of treatment (TUT)** and the **spillover effect of treatment (ST)**
+
+$$\tau^{ITT}=\tau^{TUT}+\tau^{ST}$$
+
+Direct effect of treatment is the ITT without spillovers, and is not a function of intensity $\pi$
+
+$$\tau^{TUT}=E[Y_{ic}|D_{ic}=1, \pi_c=0]-E[Y_{ic}|D_{ic}=0, \pi_c=0]$$
+
+Spillover effect of treatment is the saturation (read $\pi_c$) dependent spillover effect by itself.
+
+$$\tau^{ST}=E[Y_{ic}|D_{ic}=1, \pi_c=\pi]-E[Y_{ic}|D_{ic}=1, \pi_c=0]$$
+
+Here's how this looks and how you might calculate it, using our retirement plan example. 
+
+Duflo and Saez (2003) run the following regression:
+
+$$f_{ij} = \alpha_1 + \mu_1 L_{ij} + \delta_1 D_j + \epsilon_{ij}$$
+Where $f_{ij}$ is attendance at the fair, $L_{ij}$ is whether individual received a letter or not, and $D_j$ is whether the department was assigned treatment or not. 
+```{r, out.width="400px",fig.align='center',echo = FALSE}
+knitr::include_graphics("C:/Users/jmmlocal/Downloads/Capture.png")
+```
+Our coefficients of interest are $\mu_1 = .129$ and $\delta_1 = .102$
+
+We can calculate our treatment effect estimates as follows:
+
+* $\tau^{SNT} = \delta_1 = .102$ 
+* $\tau^{ITT} = \mu_1 + \delta_1 = .231$ 
+* $\tau^{TCE} = 0.5\tau^{ATT} + 0.5\tau^{SNT} = 0.1665$ 
+
+(Note that spillover for the nontreated is the same for the treated in this case, suggesting homogeneous spillover effects)

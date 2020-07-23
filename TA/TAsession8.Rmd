@@ -1,0 +1,173 @@
+---
+title: "TA session 8"
+author: "Yumeng Wang"
+date: "5/30/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.width = 6, fig.height = 4,
+                      results='hide',
+                      warning = FALSE,
+                      cache = TRUE,
+                      digits = 3,
+                      width = 48)
+
+library(tidyverse)
+library(magrittr)
+library(rpart)
+library(rpart.plot)
+library(caret)
+```
+
+## Fuzzy RD
+
+For fuzzy regression discontinuity, we know that
+$$Pr(D_i=1|X_i \ge c) - Pr(D_i=1|x_i < c) = k, where\:0 < k< 1$$
+This implies that with $X_i < c$ (may) get treated; more with $X_i\ge c$ do. This is equivalent to imperfect compliance in the RCT. 
+
+### Fuzzy RD as IV
+
+To estimate treatment effect with a fuzzy RD, we need to account for incomplete change in treatment $D_i$ by estimating:
+
+1. *Reduced Form*: the effect of going from $X_i<c$ to $X_i\ge c$ on outcome $Y_i$
+$$\theta=\lim_{x_{below}}E[Y_i=x]-\lim_{x_{above}}E[Y_i|X_i=x]$$
+$$\hat{\theta}=Y(c<X_i<c+h)-Y(c-h<X_i<c)$$
+with $\hat{\theta}=\theta$ at the threshold only.
+
+2. *First Stage*: the effect of going from $X_i<c$ to $X_i\ge c$ on treatment $D_i$
+$$\gamma=\lim_{x_{below}}E[D_i|X_i=x]-\lim_{x_{above}}E[D_i|X_i=x]$$
+$$\hat{\gamma}=D(c<X_i<c+h)-D(c-h<X_i<c)$$
+
+Put these together, and the fuzzy RD estimator will get you:
+$$\tau^{RD}=\frac{\lim_{x_{below}}E[Y_i|X_i=x]-\lim_{x_{above}}E[Y_i|X_i=x]}{\lim_{x_{below}}E[D_i|X_i=x]-\lim_{x_{above}}E[D_i|X_i=x]}$$
+$$\hat{\tau^{RD}}=\frac{Y(c<X_i<c+h)-Y(c-h<X_i<c)}{D(c<X_i<c+h)-D(c-h<X_i<c)}$$
+$$\hat{\tau^{RD}}=\frac{\hat{\theta}}{\hat{\gamma}}$$
+
+#### Assumptions of Fuzzy RD as IV
+
+1. *First stage*: $E[D_i|X_i\ge c]\ne E[D_i|X_i<c]$ for some $i$
+2. *Independence*: $Y_i(D_i, 1[X_i\ge c]), D_i(X_i \ge c), D_i(X_i < c) \bot 1[X_i \ge c]$
+3. *Exclusion rectriction*: $Y_i(X_i \ge c, D_i)=Y_i(X_i<c, D_i)$ for $D_i \in \{0,1\}$
+4. *Montonicity*: $|D_i(X_i \ge c)-D_i(X_i<c)|\ge0$ for all $i$
+5. *Covariate smoothness*: $E[Y_i(0)|X_i=x]$ and $E[Y_i(0)|X_i=x]$ are continuous in $x$
+
+*With these assumptions, $\tau^{RD}=\tau^{LATE}$*
+
+#### Estimation methods:
+\begin{enumerate}
+\item 2SLS
+  \begin{enumerate}
+  \item First stage: $D_i=\alpha+\gamma[X_i\ge c]+u_i$
+  \item Second stage: $Y_i=\alpha+\tau\hat D_i + \epsilon_i$
+  \end{enumerate}
+
+\item First stage and reduced form:
+
+  \begin{enumerate}
+  \item First stage: $D_i=\alpha+\gamma[X_i\ge c]+u_i$
+  \item Reduced form: $Y_i=\alpha+\theta[X_i \ge x] + \epsilon_i$
+  \end{enumerate}
+\end{enumerate}
+
+Where $\hat{\tau}^{RD}=\frac{\hat{\theta}}{\hat{\gamma}}$. 
+
+From this, we get the LATE for compliers at the threshold within our bandwidth $c$.
+*REMEMBER: Higher-order polynomials (anything with a non-linear term) should not be used in RD.* 
+
+## Big data and machine learning
+
+With big data, we have new data collection methods and can study previously unanswerable questions. We also need to be careful because big data can also be biased. It can have errors and it comes with privacy concerns.
+
+Three types of data:
+\begin{itemize}
+\item Raw, out of the source: we know exactly what we have and have a better chance of understanding the limitations, but it is often not exactly the information that we want.
+\item Processed "in house": we know what we are dealing with and get a fighting chance to understand measurement error and bias, but it takes a lot of time and effort. And we don't always have the right toolkit.
+\item Processed "out of the house": we leverage external expertise in allowing an external party to process the raw data, which may mean less measurement error and is certainly less work. However, we may not know exactly what's happening "underneath the hood".
+\end{itemize}
+
+### Machine learning
+Machine learning is methods trying to generate prediction. It generally asks: what is the best estimate of some unknown Y? Given a dataset with outcome Y and covariates X, what function f(X) best predicts Y? 
+
+#### Machine learning estimate:
+- In-sample prediction 
+  - Use an algorithm to generate the best in-sample prediction.
+  
+- Cross-validation
+  - Split the sample into subsets
+  - Do in sample prediction on one subset, then see how well it predicts Y on the other subset.
+  
+- Repeat
+ - Use the power of computers to cross-validate a bunch of times. 
+ - Pick the final model that does best.
+
+#### Heterogeneity analysis: causal tree
+Makes a series of decisions to divide the data into categories based on the feature set X. The image below is a process graph of causal tree. For each subsample, we generate the estimate results. After getting results from each subsample, we construct a causal forest and test it with a seperate sample.
+![](1.png)
+Source: Using causal tree algorithms with difference in difference methodology : a way to have causal inference in machine learning
+Balsa Fernández, Juan Pablo José. Published 2018. Computer Science.
+
+#### LASSO regression
+When we estimate the treatment effect, we want to impose suitable restrictions on $\hat \beta$ to make them stable and purposeful. Variable selection in LASSO regression are achieved with estimation rather than p-values. 
+
+By "suitable restrictions", I mean $\hat \beta$ should be less variable, yield better prediction and have exact zeros. Since we won't have standard errors from the LASSO regression, exact zeros means the variable does not have effect on Y.
+
+#### Example (Cr: BUS 41201)
+The following example is to estimate the effect of product categories on product reviews. First we run a simple LASSO regression with only product categories as the indepdent variable. Then we run the cross-validation LASSO to choose the penalty.
+
+```{r}
+
+library(gamlr)
+
+data<-read.table("Review_subset.csv",header=TRUE)
+Y<-as.numeric(data$Score==5)
+
+
+xnaref <- function(x){
+	if(is.factor(x))
+		if(!is.na(levels(x)[1]))
+			x <- factor(x,levels=c(NA,levels(x)),exclude=NULL)
+	return(x) }
+
+naref <- function(DF){
+	if(is.null(dim(DF))) return(xnaref(DF))
+	if(!is.data.frame(DF)) 
+		stop("You need to give me a data.frame or a factor")
+	DF <- lapply(DF, xnaref)
+	return(as.data.frame(DF))
+}
+
+
+data$Prod_Category<-naref(data$Prod_Category)
+
+products<-data.frame(data$Prod_Category)
+
+x_cat<-sparse.model.matrix(~., data=products)[,-1]
+
+colnames(x_cat)<-levels(data$Prod_Category)[-1]
+
+lasso1<- gamlr(x_cat, 	
+               y=Y, 
+               standardize=FALSE,
+               family="binomial",
+               lambda.min.ratio=1e-3)
+plot(lasso1)
+```
+
+In the graph above, Lambda is the penalty that we set. We can see that with different penalties, we would select different number of vaviables that have non-zero impact on Y. When the penalty is rather small, we select almost all variables involved. When the penalty is rather big, we select only a few variables. 
+
+
+#### Cross-validation
+For cross-validation, we use bootstrapped cross-validation with training samples. Using corss-validation for LASSO regression, we could find the "best" penalty under different standards. 
+
+```{r}
+set.seed(31)
+cv.fit <- cv.gamlr(x_cat,
+				   y=Y,
+				   lambda.min.ratio=1e-3,
+				   family="binomial",
+				   verb=TRUE)
+
+plot(cv.fit)
+```

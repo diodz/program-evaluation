@@ -1,0 +1,214 @@
+---
+title: 'TA Session #9'
+author: "null"
+date: "June, 2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(plm)
+library(haven)
+library(readr)
+library(stargazer)
+library(MatchIt)
+library(AER)
+library(lfe)
+library(plm)
+```
+
+## Randomized Control Trials (RCT)
+
+#### Checking for balance (via Regression)
+
+Let's use the data from PS1. We want to check for balance in *baseline wages, baseline sales, baseline employees, and baseline owner (female).* The treatment variable is *burlig_trt*
+
+```{r}
+# Read data
+rm(list=ls())
+ps1_data <- read_csv("ps1_data.csv")
+
+# Run regression of covariates on treatment to check for balance
+balance_wages <- lm(baseline_wages ~ burlig_trt, data = ps1_data)
+balance_sales <- lm(baseline_sales ~ burlig_trt, data = ps1_data)
+balance_employees <- lm(baseline_employees ~ burlig_trt, data = ps1_data)
+balance_owner_female <- lm(baseline_owner_female ~ burlig_trt, data = ps1_data)
+
+#Use stargazer to summarize regression outputs
+stargazer(balance_wages, balance_sales, balance_employees, balance_owner_female, type = "text")
+```
+
+
+## 2. Matching
+
+#### 2.1 Exact Matching
+
+This matching method shows how to split the dataset into cells by taking unique combinations of your choice of covariates.
+
+```{r}
+# Read data
+rm(list=ls())
+ps2_data <- read_csv("ps2_data.csv")
+
+# Clean data
+ps2_data$farmer_birth_year[which(ps2_data$farmer_birth_year=="nineteen seventy-two")] <- 1972
+ps2_data$farmer_birth_year[which(ps2_data$farmer_birth_year=="nineteen seventy-three")] <- 1973
+
+# (1) create a "weight" column. weight = 1 for each observation 
+# (2) group by variables to match
+df_ps2 <- ps2_data %>%
+  mutate(weight = 1) %>%
+  group_by(fiona_farmer, farmer_birth_year) %>%
+  summarise(profits = mean(profits_2016),
+            weight = sum(weight))
+
+# Check for Treatment and Control matches
+treated <- df_ps2 %>%
+  filter(fiona_farmer == 1)
+
+untreated <- df_ps2 %>%
+  filter(fiona_farmer == 0)
+
+# Filter out unmatched units
+df_ps2 <- df_ps2 %>%
+  group_by(farmer_birth_year) %>%
+  filter(n()>1)
+
+# check again
+treated <- df_ps2 %>%
+  filter(fiona_farmer == 1)
+
+untreated <- df_ps2 %>%
+  filter(fiona_farmer == 0)
+
+# Estimate ATE
+
+data <- cbind(treated, untreated)
+
+# Difference in treatment effect
+data$TE <- data$profits - data$profits1
+  
+# For how many observations?
+data$weight_total <- data$weight + data$weight1
+
+# Apply Matching's ATE Formula
+
+data$ATE <- data$TE * (data$weight_total / sum(data$weight_total))
+
+# What is the ATE?
+ATE <- sum(data$ATE)
+ATE
+
+```
+
+## 3. Instrumental Variables (IV)
+
+#### 3.1 2SLS
+
+Be careful that the standard error in 2SLS is *not correct*. We will get the correct standard error in the next method.
+
+```{r first_stage}
+# Read data
+rm(list=ls())
+card <- read_csv("card.csv")
+
+# First stage
+first <- lm(educ ~ nearc4 + exper + expersq, data = card)
+summary(first)
+
+# Save predicted values
+card$fit_first <- fitted.values(first)
+```
+
+```{r second_stage}
+# Second Stage
+second <- lm(lwage ~ fit_first + exper + expersq, data = card)
+summary(second)
+```
+
+IV estimate can also be calculated using first stage regression and reduced form:
+
+```{r reduced_form}
+# Reduced form
+theta <- coef(lm(lwage ~ nearc4 + exper + expersq, data = card))
+gamma <- coef(lm(educ ~ nearc4 + exper + expersq, data = card))
+tau <- theta / gamma
+tau
+
+```
+
+#### 3.2 ivreg
+
+There is a package in R *"AER"*. You can use the *ivreg* function to get the IV estimate with the correct standard error. 
+
+```{r}
+
+iv <- ivreg(lwage ~ educ + exper + expersq |
+  nearc4 + exper + expersq, # don't forget to also put covariates here
+data = card
+)
+summary(iv)
+```
+
+
+## 4. Difference in Difference (DiD)
+
+
+```{r}
+rm(list=ls())
+evdata <- read.csv("evdata_sample.csv")
+
+# DiD by simply comparing means
+
+# Treated units before and after
+trt_after<- evdata %>%
+  filter(evdata$treat == 1 & evdata$post == 1)
+
+trt_before <- evdata %>%
+  filter(evdata$treat == 1 & evdata$post == 0)
+                       
+# Control units before and after
+ctrl_after<- evdata %>%
+  filter(evdata$treat == 0 & evdata$post == 1)
+
+ctrl_before <- evdata %>%
+  filter(evdata$treat == 0 & evdata$post == 0)
+
+# Now, first difference for treated and control
+Treated_mean <- mean(trt_after$electricity_use) - mean(trt_before$electricity_use)
+control_mean <- mean(ctrl_after$electricity_use) - mean(ctrl_before$electricity_use)
+
+# Now the Difference in Difference
+DID <- Treated_mean - control_mean
+DID
+
+###############################################################################
+
+# DiD using regression (no fixed effects)?coeftest
+DiD_Reg <- lm(electricity_use ~ treat + post + treat*post, data = evdata)
+summary(DiD_Reg)
+
+```
+
+The coefficient for the *interaction term* will be our DiD estimate.
+
+## 5. Fixed Effects
+
+```{r}
+# Generate the treatment status variable
+evdata$D <- ifelse(is.na(evdata$ev_purchase_year) | (evdata$year<2013), 0, 1)
+
+# Fixed effects regression using plm
+fe <- plm(electricity_use ~ D,
+          data = evdata,
+          model = "within", # setting for de-meaining within individual fixed effect model
+          index = c('hh_id', 'year'), # specify the individual and time index
+          effect = "twoways") 
+summary(fe)
+coeftest(fe, vcov=vcovHC(fe, type="HC0", cluster="group")) # Get the clustered std.Error
+```
+

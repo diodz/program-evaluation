@@ -1,0 +1,102 @@
+---
+title: 'TA Session #6'
+author: "Marissa Block & Stephen Stapleton"
+date: "May 11, 2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(foreign)
+library(plyr)
+library(stargazer)
+library(readstata13)
+library(lfe)
+```
+
+### 1.0 Panel Data
+
+So far, we've focused on data across units. With **panel data**, we'll be adding in time. This is helpful because we can let unit $i$ serve as a 'control' for itself - $i$ is more similar to $i$ than any given $j$, after all!
+
+So, when we estimate $\tau^{ATE}$:
+$$\tau^{ATE}=E[Y_t(D_t=1)-Y_t(D_t=0)$$
+Supposing that unit $i$ gets treated in only period 2 ($t=1$). Any time-invariant unobservable characteristics $U_i$of the individual get washed out:
+$$\hat{\tau}^{TS}={Y}_{t=1}-{Y}_{t=0}=\tau(D_{i,t=1}-D_{i,t=0})+\beta(U_i-U_i)=\tau(D_{i,t=1}-D_{i,t=0})$$
+Basically, we can get an unbiased estimator without matching nonsense, since $i$ can *be* a control of itself.
+
+#### 1.1 Time Series Assumptions
+
+But, there's a catch: we'll need a big assumption. ***The counterfactual trend must be zero**, or in english, we don't have *time-variant* characteristics affecting our treatment unit. **This is untestable**. But, we can combine this time-varied control technique to get one of the 'bread and butters' of program evaulation.
+
+### 2.0 Diff-in-Diff Estimation
+
+Let's combine this *with-unit, across time* comparison with an *across-unit, within time* comparison we used for our naive estimator. By doing this, we can estimate our *time-variant* characteristics might vary in our treatment groups. In other words, we can solve for the missing counterfactual (!!!). This is our **difference-in-difference** estimator.
+
+To present why this happens, consider that $Y_{it}$ outcome may be broken down into a treatment effect, as well as *individual-variant* characteristics $U_i$ and *time-variant* characteristics $S_t$. Observe the DiD estimator fix our problems:
+$$Y_{it}=\tau D_{it}+\beta U_i + \delta S_t$$
+$$Y_{jt}=\beta U_j + \delta S_t$$
+$$\hat{\tau}^{DD}=(Y_{i,t=1}-Y_{i,t=0})-(Y_{j,t=1}-Y_{j,t=0})$$
+$$\hat{\tau}^{DD}=[\tau(D_{i,t=1}-D_{i,t=0})+\beta(U_i-U_i) + \delta(S_{t=1}-S_{t=0})]-[\beta(U_j-U_j) + \delta(S_{t=1}-S_{t=0})]$$
+$$\hat{\tau}^{DD}=\tau(D_{i,t=1}-D_{i,t=0})$$
+
+#### 2.1 DiD Assumptions
+
+But to wrap this up, what simple assumption did I make to do this subtraction of time-variant effects? I assumed **parallel trends**, where the *time-variant* trends in the treatment and control **are assumed to be the same**.
+
+You might ask: why is this any better than our time series then? Well, we can test this assumption! Looking at pre-experiment trends, we can validate our assumption, making this a **far** stroger estimator.
+
+Ok, what does this look like irl? Letting $Treat$ and $Post$ be binaries for whether a unit was treated and whether the observation is in the post period: 
+$$Y_i=\beta_0+\tau(Treat_i\times Post_{it})+\beta_2 Treat_i + \beta_3 Post_t + \beta_4 X_{it} + \epsilon_{it}$$
+where $\hat\tau$ is our DiD estimate, and $X_{it}$ are other controls (yes, we can still have those here).
+
+### Coding Example: Ban-the-Box
+
+Let's take a look at an example. Ban-the-Box is an effort to ban employer requests that you reveal past criminal activity on your job application. Many proponents expect such efforts to increase the hiring of minority candidates, particularly African-Americans, who have a higher statistical likelihood of having a criminal record. The theory here is that removing the box would eliminate this barrier to hiring, and put all candidates on a more equal playing field.
+
+Much of the evaluation work into this issue has found this not to be the case. Data here is from Agan and Starr's paper, which finds that rather than increasing minority hiring, such efforts may actually widen the hiring gap. To test this, they take a look at the following model, which uses callbacks for a candidate as an output:
+
+$$Callback_{it}=\alpha+\beta_1 Box_t + \beta_2 White_i + \beta_3(Box_t \times White_i) + \beta X_i + \epsilon_{it} $$
+
+Here, whether the candidate is African-American or Caucasian over time between a pre- and post-BTB period is used to estimate the effect of BTB. Take a look at the code process below:
+
+```{r, warning = FALSE}
+
+# Read data, create variable key
+raw <- read.dta13('AganStarrQJEData.dta')
+var.labels <- attr(raw,"var.labels")
+data.key <- data.frame(var.name=names(raw),var.labels)
+rm(var.labels)
+
+# Remove 'remover = -1' from all analysis
+raw <- subset(raw, raw$remover != -1)
+
+# Create subset for Box apps in pre-BTB period
+pre <- subset(raw, raw$crimbox == 1 & raw$pre == 1)
+
+# Conduct balance test on crime record
+reg1b <- lm(crime ~ white + nj + center + ged + empgap, data = pre)
+
+stargazer(reg1b, type = 'text', title = 'Balance Test on Criminal Record, Pre-Period')
+
+# CREATE DIFF-IN-DIFF REGRESSION
+
+# Create subset of Box apps
+box <- subset(raw, remover == 1)
+
+# Regress on full pre sample with fixed effects, controls, and clustered SEs
+reg4d <- felm(response ~ crimbox + white + crimbox*white + ged + empgap | center, cluster = 'center', data = box)
+
+stargazer(reg4d, type = 'text', title = '4(d): Pre and Post-BTB Regression on Response with Clustered Standard Errors')
+```
+
+We should use clustered standard errors, as we are providing fixed effects for our 'center' variable, tied to geographical location. It is likely that the error terms of of those stores in close proximity are likely to correlated, due to similar prevailing attitudes towards applicants which may bias our estimation. In clustering, we reduce the standard error present in the model, and thus achieve slightly more precise estimates.
+
+The crimbox coefficient is not significant, implying that there was no statistically significant change in hire rates between pre and post-BTB periods.
+
+The white coefficient is indeed significant, implying that when the box is in effect, we see an increase in response rate for white applicants.
+
+The interaction variable is also significant and negative, implying that when the box is not in effect (pre-BTB), most of the statistical discrimination seen in our white coefficient is no longer present. As a result, we might conclude 'Ban the Box' policies had a detrimental impact on employment for black applicants. 
+
+This might be the the result of statistical discrimination on the part of firms, who began using race as a proxy for criminal record in the post-BTB period.

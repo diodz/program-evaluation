@@ -1,0 +1,261 @@
+---
+title: "TA Session 4"
+author: "TA's 2020"
+date: "May 3rd, 2020"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# This document is intended for educational purposes only for
+# Fiona Burlig's PPHA 34600 Program Evaluation Course at the
+# Harris School of Public Policy
+
+# TA Session 4 details the following:
+# 1 Matching
+# 1.1 Motivation to use matching techniques
+# 1.2 Exact Matching
+# 1.3 Brief Introduction to other matching methods
+# 2 Instrumental Varibale
+# 2.1 Endogeneity Problem
+# 2.2 Math explanation for IV
+# 2.3 Requirements for a valid IV
+# 2.4 Two Stage Least Squares (2SLS) and Reduced form
+# 2.5 Education and Earning example to get IV estimate
+
+library(tidyverse)
+library(knitr)
+library(readr)
+library(stargazer)
+card <- read_csv("card.csv")
+```
+
+## 1.Matching
+### 1.1 Motivation to use matching methods
+Previously, the generic framework to estimate treatment effects is to specify a parametric functional form:
+$$Y_{i} = \beta_{0} + \beta_{1}\times D_{i} + \alpha\times X_{i} + u_{i}$$
+To some extent, we are implicitly assuming for a (linear) functional form, and the treatment effects are constant($\beta_{1}$) across the population of interest. Neither of these two assumptions hold water in most cases. However, with matching methods, we can group our observations based on whether they share exactly same or similar characteristics (X's). **Nonparametric estimates can be made, (e.g taking the mean difference)**, and **the functional form is irrelevant**. In other words, matching methods are more flexible, and are able to capture heterogeneous treatment effects.
+
+In many ways, matching is a very intuitive estimator: Compare two identical people, treat one and leave the other untreated. The difference must be the the treatment effect. "There are two important assumptions to make, to make the matching method a theoretically feasible approach to estimating treatment effects:
+
+**Common Support Assumption (CSA)**: For all the possible X's, we should be able to observe both the treated and untreated. In other words, for any given $X^{0}$, when we have a sufficiently large sample, we should be able to see both the treated and untreated. Under this circumstance, we can observe both the treated and untreated in a given cell, and then the treatment effects in that cell can be estimated.
+$$0 < Pr(D_{i} | X = x^{0}) < 1, \forall x^{0}$$
+
+**Conditional Independence Assumption (CIA)**: the potential outcomes of a given individual are orthogonal to the treatment, conditional on all the X's. In other words, for any given $X$, whether being treated will not affect an individual's potential outcome. Only with this assumption made,  can we safely say the observed outcomes of the matched counterparts are good estimates of the selve's counterfacts.
+$$(Y_{1,i}, Y_{0,i}) \perp D_{i}|X$$
+Here we present an example of how matching works and how to check if matching succeeds in R:
+```{r Matching, warning=FALSE, message=FALSE}
+# Matching example
+library(MatchIt) # This is the package commonly used to do data preprocessing in R
+set.seed(1234)
+card$college <- ifelse(card$educ>12, 1, 0)
+card_cov <- c('lwage', 'age', 'IQ')
+# We want to estimate the ATE of going to college on log(wage)
+
+summary(lm(lwage ~ college + age + IQ, data = card))
+
+# First, we check the covariate and outcome means in the two groups
+card %>%
+  group_by(college) %>%
+  select(one_of(card_cov)) %>%
+  summarise_all(funs(mean(., na.rm = T)))
+```
+The background variables are seemingly different between the two groups.
+```{r example continued}
+# Second, we do use the exact method to match the data
+card_nomissed <- card %>%  # MatchIt does not allow missing values
+  select(lwage, college, one_of(card_cov)) %>% na.omit()
+
+mod_match <- matchit(college ~ age + IQ, #formula: treat ~ x1+x2+...(background variables)
+                     method = "exact", # set the matching method you want to use
+                     data = card_nomissed) 
+df_m <- match.data(mod_match)
+# Do the balance test on the two groups
+df_m %>%
+  group_by(college) %>%
+  select(one_of(card_cov)) %>%
+  summarise_all(funs(mean(., na.rm = T)))
+# To do the balance more formally using regressions
+summary(lm(age~college, data = df_m), type='text')
+summary(lm(IQ~college, data = df_m), type='text')
+
+```
+We can see that the matching did well on age, but not so well on IQ. This balance check helps us see if we succeed on doing matching. Ideally, we should not be able to reject the null hypothesis of mean difference for each covariate. 
+
+You can go [here](https://sejdemyr.github.io/r-tutorials/statistics/tutorial8.html) to go over the entire process of doing matching estimation in R.
+
+### 1.2 Exact Matching
+Please refer to Slide7_page18. The procedures of exact matching unfolds as:
+
+* a) Divide data into cells uniquely defined by the covariates
+* b) For each value of $X = x$ (each cell), calculate $\bar{Y}_{T}$ and $\bar{Y}_{U}$
+* c) Calculate $\bar{Y}_{T} - \bar{Y}_{U}$ for each $X = x$
+* d) Estimate $\tau^{ATE}$ as a weighted average of the results in step c).
+
+Remember to use different weights when estimating ATE versus ATT versus ATN:
+
+* When estimating ATE, the weight should be the counts of observations in a cell over the total counts of observations.
+
+$$\hat{\tau}^{ATE} = \sum_{k=1}^{N} \frac{N_{k}}{N} \hat{\tau}_{k}$$
+
+* When estimating ATT, the weight should be the counts of treated in a cell over the total counts of treated individuals. 
+
+$$\hat{\tau}^{ATT} = \sum_{k=1}^{N_{T}} \frac{N_{k, T}}{N_{T}} \hat{\tau}_{k}$$
+
+* When estimating ATN, the weight should be the counts of untreated in a cell over the total counts of untreated individuals.
+
+$$\hat{\tau}^{ATN} = \sum_{k=1}^{N_{U}} \frac{N_{k, U}}{N_{U}} \hat{\tau}_{k}$$
+
+Notice that the cell estimates remain unchanged. What distinguished these three estimates are **weights**. However, we should always caution ourselves how big are the cell sizes. The cell size could be so small that there are no enough available observations to make the cell estimation. The method could be jeopardized when the data is marked with super high dimensionality, or when the variables are continuous.
+
+#### 1.2.1 Exact matching using ddply
+
+The function `ddply` from the `library (plyr)` splits up the dataset into cells uniquely defined by the specified covariates. This function is useful to perform exact matching when we cannot use the `Matchit` package.    
+
+```{r exact_match_plyr, warning=FALSE, message=FALSE}
+
+library(MatchIt)
+match <- matchit(fiona_farmer)
+  
+```
+
+### 1.3 Other matching estimators:
+The principle of all matching methods is: for a given data point, apply a criterion to determine the "nearest" counterparts, then use the counterparts' outcomes as the counterfacts to make the estimation. Here is a menu of some popular matching criteria:
+
+* Propensity Score Matching: estimate the propensity score first using a logistic regression
+
+* Bandwidth Matching (Slide 7, pp29-30)
+
+* K Nearest Neighbors (Slide 7, pp27-28)
+
+* Kernel Estimator: making estimates at a point (the kernel) by taking the weighted average of its surroundings. The weight can vary based on what density functions you employ. Some commonly used density functions include [Epanechnikov Density](https://en.wikipedia.org/wiki/Kernel_(statistics)) and Gaussian Density function.
+
+
+## 2. Instrumental Variable
+
+### 2.1 Endogeneity Problem
+When there is endogeneity problem (the following cases) in the regression model, the model will have $cov(x,u)\neq0$, which means we will have bias in estimating the treatment effect.
+
+* Omitted Variable Bias
+* Measurement error on Y
+* Reverse Causality (Simultaneity)
+For example we are trying to measure the effect of education on earnings in the following equation
+$$log(wage)=\beta_0+\beta_1education+\beta_2experience+\beta_3(experience)^2+u$$
+
+Since *selection on observables* requires strong assumptions and we are not able to observe and measure everything that influences wage, there is OVB in the model and $cov(education,u)\neq0$. It is not possible to have an consistent estimate for the effect of education.
+
+We can use IV estimator to get the quasi-random variation in treatment variable.
+
+
+### 2.2 Math explanation for IV
+For a simple model
+$$Y_i=\alpha+\tau D_i+\beta X_i+\epsilon_i$$
+We separate $D_i$ into two parts $D_i=B_i\epsilon_i+C_i$ with $cov(C_i,\epsilon_i)=0$. Then we can rewrite the model as
+$$Y_i=\alpha+\tau C_i+\beta X_i+(1+\tau B_i)\epsilon_i$$
+In reality, we do not observe the components of $D_i$, so the best thing we can do is to use an IV. The idea behind IV is to find a variable Z which is correlated with C, the exogenous part of $D_i$, and is uncorrelated with $\epsilon$.
+
+### 2.3 Requirements for a valid IV
+As we mentioned above, it is not possible to get the treatment effect of education (educ) on earnings(log(wage)), therefore, we use an IV of *whether someone grew up near a 4-year college (nearc4)* to get the IV estimate. How do we know if _*nearc4*_ is a good IV? We need it to satisfy the following restrictions:
+
+#### *Exclusion restriction $cov(Z_i,\epsilon_i)=0$*
+
+* IV is *not* correlated with $\epsilon$. Because we want to recover the quasi-random part of variation in $D_i$, which means we don't want our IV to be correlated with the outcome variable to get the endogeneity problem.
+* By satisfying exclusion restriction, IV does not directly affect $Y_i$, it only affects $Y_i$ through $D_i$.
+* This is fundamentally *untestable*!! Because $\epsilon$ is *not observable*!
+
+In the education example, the first restriction that *whether someone grew up near a 4-year college (nearc4)* needs to satisfy to be a valid IV is that it is not directly correlated with earnings, but it can affect earnings through education. This is *not testable*. But we would assume whether someone grew up near a 4-year college can't directly affect someone's earning. It only makes sense when the environment you grow up affects earnings through educational attainment.
+
+#### *Instrument Condition (Relevance) $cov(Z_i,D_i)\neq0$*
+
+* IV must be *correlated* with the treatment.
+* If the correlation is too weak, it might not be a strong IV.
+* If the IV and $D_i$ is too closely correlated, the exclusion restriction might fail.
+
+In the education example, the first restriction that *whether someone grew up near a 4-year college (nearc4)* needs to satisfy to be a valid IV is that it needs to be correlated with *education (educ)*. Usually we use F-test in First Stage to test for this assumption, we have an example for this in 2.5.1, here let's check the covariance first.
+```{r}
+# Get the covariance of educ and nearc4
+cov(card$educ, card$nearc4)
+```
+And we can see from the output above that education (educ) and whether someone grew up near a 4-year college (nearc4) are positively correlated.
+
+### 2.4 Two Stage Least Squares (2SLS) and Reduced form
+The IV estimator (effect of treatment) is actually 
+$$\hat{\tau}^{IV}=\frac{cov(Z_i,Y_i)}{cov(Z_i,D_i)}$$
+
+#### 2.4.1 First stage
+* Regress endogenous $D_i$ on all exogenous variables: $D_i=\gamma Z_i+\beta X_i+\eta_i$
+* And store predicted value $\hat{D_i}$. It checks instrument condition.
+* $\hat{\gamma}$ is the *effect of instrument on the treatment*.
+
+#### 2.4.2 Second stage
+* Regress outcome Y_i on predicted $\hat{D_i}$ and other Xs: $Y_i=\tau \hat{D_i}+\delta X_i+\epsilon_i$
+* $\hat{\tau}$ in this equation is our *IV estimate*. *The effect of our treatment on outcomes*.
+* Attention: the standard error is *wrong* here! (Use canned routine).
+
+#### 2.4.3 Reduced form
+* Regress $Y_i$ on instrument $Z_i$: $Y_i=\alpha+\theta Z_i+\pi Xi+\eta_i$
+* This does $\color{red}{\text{not}}$ recover $\hat{\tau}^{IV}$. But $\hat{\theta}$ tells you the *effect of instrument on outcome*.
+$$\hat{\tau}^{IV}=\frac{\hat{\theta}}{\hat{\gamma}}$$
+The IV estimate is just the *effect of the instrument on outcome, weighted by how much the instrument moves treatment*.
+
+### 2.5 Education and Earning example to get IV estimate
+If we just run the original regression $$log(wage)=\beta_0+\beta_1education+\beta_2experience+\beta_3(experience)^2+u$$, we will get a biased estimate because of endogeneity problem.
+```{r}
+biased_reg <- lm(lwage~educ+exper+expersq, data = card)
+biased_estimate <- biased_reg$coefficients[[2]]
+cat("The biased effect of education on earning in the original model is",biased_estimate)
+summary(biased_reg)
+```
+
+#### 2.5.1 First stage
+In this step, we can run the following model to estimate the *effect of instrument on treatment*, which is the effect of whether someone grew up near a 4-year college (nearc4) on education. In this step, we also *save the predicted value of education* in this regression to use it in the second stage.
+$$education=\gamma_0+\gamma_1near\ college+\gamma_2experience+\gamma_3(experience)^2+u$$
+```{r first_stage}
+# First stage
+first <- lm(educ~nearc4+exper+expersq, data = card)
+predict_educ <- fitted(first)
+gamma <- first$coefficients[[2]]
+cat("The effect of instrument on treatment is",gamma)
+summary(first)
+```
+This step also shows that whether someone grew up near a 4-year college (nearc4) is positively correlated with education. And by checking the F-statistic 778.4, it is larger than 20, by rule of thumb, we know the instrument condition is satisfied.
+
+#### 2.5.2 Second Stage
+In this step, we we can run the following model to estimate the *effect of our treatment on outcomes*, which is the effect of exogenous part of education on earnings, also the IV estimator.
+$$log(wage)=\beta_0+\beta_1predicted\_education+\beta_2experience+\beta_3(experience)^2+u$$
+```{r second_stage}
+# Second Stage
+second <- lm(lwage~predict_educ+exper+expersq, data = card)
+tau_IV <- second$coefficients[[2]]
+cat("The effect of treatment on outcome is", tau_IV)
+summary(second)
+```
+Therefore, we can see that the IV estimate is very different from what we got in the original regression, which is negatively biased.
+
+#### 2.5.3 Reduced form
+What we can also do besides the 2SLS is the reduced form regression, which is estimating the *effect of instrument on outcomes*, which is the effect of whether someone grew up near a 4-year college (nearc4) on earnings.
+$$log(wage)=\theta_0+\theta_1near\ college+\theta_2experience+\theta_3(experience)^2+u$$
+```{r reduced_form}
+# Reduced form
+reduced_form <- lm(lwage~nearc4+exper+expersq, data = card)
+theta <- reduced_form$coefficients[[2]]
+cat("The effect of instrument on outcome is", theta)
+summary(reduced_form)
+```
+We can see that whether someone grew up near a 4-year college (nearc4) is positively correlated with the earnings. *But this is not the IV estimator*. If we use the coefficient of first stage and reduced form, it is also possible to get the same IV estimator:
+```{r}
+theta/gamma
+```
+
+#### 2.5.4 The AER package
+
+```{r IV_aer, warning=FALSE, message=FALSE}
+library(AER)
+
+iv <- ivreg(lwage ~ educ + exper + expersq | nearc4 + exper + expersq, data = card)
+print(summary(iv))
+```
+
+
+

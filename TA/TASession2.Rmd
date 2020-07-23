@@ -1,0 +1,59 @@
+---
+title: 'TA session 2: Balance Test'
+author: "borui sun"
+date: "4/20/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library(haven)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(broom)
+
+ftp_ar <- read_dta("ftp_ar.dta")
+
+# t.test
+t.test(ftp_ar$yr2adc~ ftp_ar$e) %>% tidy() %>% kable()
+
+pre_ra_rest<-c("yr2adc", "yradc", "yr2rec","yrrec", "yrkrec", "yr2fs", "yrfs", 
+               "yr2rfs","yrrfs", "yrkrfs", "sumpadc","yr2kemp","yrkemp","yr2emp","yremp")
+
+balance_test <- cbind(e = ftp_ar$e,
+                      ftp_ar[, pre_ra_rest]) %>%
+  {sapply(.[, -1], function(i) t.test(i~.$e))} %>%
+  t() %>% data.frame() %>% select(p.value); balance_test %>% kable()
+
+balance_test %>% filter(p.value < 0.05) %>% kable()
+
+
+# regression
+lm(ftp_ar$yr2adc ~ ftp_ar$e) %>% summary() %>% tidy() %>% kable()
+
+balance_test <- cbind(e = ftp_ar$e,
+                      ftp_ar[, pre_ra_rest]) %>%
+  {map(.[, -1], function(i) lm(i~.$e))} %>%  
+  {map(., summary)} %>%
+  sapply(`[`, "coefficients") %>%
+  sapply(function(x) x[2,])%>%
+  t()%>%
+  data.frame()%>%
+  rownames_to_column()%>%
+  mutate_if(is.character, ~gsub(".coefficients", "", x=.))%>%
+  `colnames<-`(c("var","Estimate","standard_error","t-statistics","Pr(>|t|)")) ; balance_test %>% kable()
+
+balance_test %>%
+  filter(`Pr(>|t|)` < 0.05) # filter out the ones that are statistically significant at 0.1 level
+
+# implement controls 
+lm(ftp_ar$yremp ~ ftp_ar$e) %>% summary() %>% tidy() %>% kable()
+lm(ftp_ar$yremp ~ ftp_ar$e + ftp_ar$male) %>% summary() %>% tidy() %>% kable()
+
+```
