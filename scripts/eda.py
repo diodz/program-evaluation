@@ -5138,3 +5138,59 @@ plt.show()
 # Write results to a csv file
 results = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:20:29.411286
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Clean and preprocess data
+data = data.dropna()
+X = data['independent_variable'].values.reshape(-1, 1)
+y = data['dependent_variable']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate predictions
+predictions = model.predict(X)
+
+# Visualize data and regression line
+plt.scatter(X, y)
+plt.plot(X, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Analysis')
+plt.show()
+# Change made on 2024-06-26 21:20:32.911268
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+url = 'https://example.com/data.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions
+predictions = model.predict(X)
+
+# Visualize results
+plt.scatter(data['GDP'], data['inflation_rate'], color='blue')
+plt.plot(data['GDP'], predictions, color='red')
+plt.title('Relationship between GDP and Inflation Rate')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.show()
