@@ -5298,3 +5298,80 @@ intercept = model.intercept_
 
 print('Coefficient:', coef)
 print('Intercept:', intercept)
+# Change made on 2024-06-26 21:20:57.650798
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import requests
+
+# Load data from a public database
+url = 'https://example.com/data.csv'
+data = pd.read_csv(url)
+
+# Explore the data
+print(data.head())
+
+# Perform some economic analysis
+# For example, let's predict the GDP based on some indicators like population and unemployment rate
+X = data[['Population', 'Unemployment Rate']]
+y = data['GDP']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Calculate the Mean Squared Error
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+
+# Visualize the results
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual GDP')
+plt.ylabel('Predicted GDP')
+plt.title('Actual vs Predicted GDP')
+plt.show()
+
+# Perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Change made on 2024-06-26 21:21:55.603833
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Define independent and dependent variables
+X = data[['education', 'unemployment_rate']]
+y = data['log_gdp']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients and intercept
+print("Coefficients: ", model.coef_)
+print("Intercept: ", model.intercept_)
+
+# Run OLS regression
+X = sm.add_constant(X)
+model_ols = sm.OLS(y, X).fit()
+print(model_ols.summary())
