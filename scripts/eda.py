@@ -5375,3 +5375,26 @@ print("Intercept: ", model.intercept_)
 X = sm.add_constant(X)
 model_ols = sm.OLS(y, X).fit()
 print(model_ols.summary())
+# Change made on 2024-06-26 21:21:59.089228
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+# Load dataset from a public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+
+# Define independent and dependent variables
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Add constant term to the independent variables
+X = sm.add_constant(X)
+
+# Fit OLS regression model
+model = sm.OLS(y, X).fit()
+
+# Print summary of the regression results
+print(model.summary())
