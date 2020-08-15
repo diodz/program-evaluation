@@ -5398,3 +5398,47 @@ model = sm.OLS(y, X).fit()
 
 # Print summary of the regression results
 print(model.summary())
+# Change made on 2024-06-26 21:22:04.831927
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+
+# Generate predictions
+X_test = sm.add_constant(X_test)
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = np.mean((y_test - y_pred) ** 2)
+r2 = model.rsquared
+
+# Fit a linear regression model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X_train, y_train)
+
+# Generate predictions
+y_pred_sklearn = model_sklearn.predict(X_test)
+
+# Evaluate the model
+mse_sklearn = np.mean((y_test - y_pred_sklearn) ** 2)
+r2_sklearn = model_sklearn.score(X_test, y_test)
+
+# Print results
+print(f'Statsmodels - Mean Squared Error: {mse}, R-squared: {r2}')
+print(f'Sklearn - Mean Squared Error: {mse_sklearn}, R-squared: {r2_sklearn}')
