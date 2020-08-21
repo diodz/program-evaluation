@@ -5475,3 +5475,29 @@ mse = mean_squared_error(y_test, predictions)
 
 # Print results
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:22:12.429340
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load economic data from a public database
+data = pd.read_csv('https://url_to_public_database/economic_data.csv')
+
+# Data pre-processing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+Y = data['economic_growth']
+
+# Linear regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(Y, X).fit()
+print(model.summary())
+
+# Machine learning model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, Y)
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
+```
