@@ -5501,3 +5501,38 @@ model_sklearn.fit(X, Y)
 print("Intercept:", model_sklearn.intercept_)
 print("Coefficients:", model_sklearn.coef_)
 ```
+# Change made on 2024-06-26 21:22:16.425328
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Feature engineering
+X['GDP_squared'] = X['GDP'] ** 2
+
+# Model building using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Model evaluation
+print(model.summary())
+
+# Model building using sklearn
+model_sk = LinearRegression()
+model_sk.fit(X, y)
+
+# Predictions
+predictions = model_sk.predict(X)
+
+# Save predictions to a new column in the dataframe
+data['predicted_inflation'] = predictions
+
+# Export data with predictions to a new csv file
+data.to_csv('data_with_predictions.csv', index=False)
