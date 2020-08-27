@@ -5576,3 +5576,68 @@ results = pd.DataFrame({
     'Predicted': predictions
 })
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:22:25.599029
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from public database
+data = pd.read_csv('public_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data['log_income'] = np.log(data['income'])
+
+# Split data into training and testing sets
+X = data[['age', 'education']]
+y = data['log_income']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict on the testing set
+y_pred = model.predict(X_test)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print('Mean Squared Error:', mse)
+
+# Conduct statistical analysis
+X_train = sm.add_constant(X_train)
+model_stats = sm.OLS(y_train, X_train).fit()
+print(model_stats.summary())
+# Change made on 2024-06-26 21:22:29.236952
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://url/to/public/database.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Make predictions
+predictions = lm.predict(X)
+
+# Print coefficients
+print("Coefficients: ", lm.coef_)
+
+# Fit a OLS model
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
