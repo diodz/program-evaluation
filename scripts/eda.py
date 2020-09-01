@@ -5641,3 +5641,41 @@ print("Coefficients: ", lm.coef_)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:22:34.128907
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+
+# Split the dataset into training and testing sets
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Print the coefficients of the model
+print('Coefficients:', model.coef_)
+
+# Use the model to make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model using R-squared
+r_squared = model.score(X_test, y_test)
+print('R-squared:', r_squared)
+
+# Perform additional statistical analysis using statsmodels
+X_train = sm.add_constant(X_train)
+sm_model = sm.OLS(y_train, X_train).fit()
+print(sm_model.summary())
+```
