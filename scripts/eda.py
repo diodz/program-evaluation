@@ -5679,3 +5679,46 @@ X_train = sm.add_constant(X_train)
 sm_model = sm.OLS(y_train, X_train).fit()
 print(sm_model.summary())
 ```
+# Change made on 2024-06-26 21:22:40.387811
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data analysis
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate Mean Squared Error
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print('Mean Squared Error:', mse)
+
+# Plot actual vs predicted values
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs Predicted Economic Growth')
+plt.show()
+
+# Run linear regression with statsmodels for further analysis
+X_train_sm = sm.add_constant(X_train)
+model_sm = sm.OLS(y_train, X_train_sm).fit()
+print(model_sm.summary())
