@@ -5722,3 +5722,40 @@ plt.show()
 X_train_sm = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train_sm).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:22:45.934157
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Preprocess the data
+data = data.dropna() # Remove missing values
+
+# Feature engineering
+data['log_gdp'] = np.log(data['gdp']) # Create a new feature by taking the log of GDP
+
+# Define the independent and dependent variables
+X = data[['log_gdp', 'population']]
+y = data['unemployment_rate']
+
+# Fit a linear regression model using statsmodels
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Print the regression results
+print(model.summary())
+
+# Fit a linear regression model using scikit-learn
+model_sklearn = LinearRegression().fit(X, y)
+
+# Print the coefficients
+print("Coefficients:", model_sklearn.coef_)
+
+# Make predictions using the model
+predictions = model_sklearn.predict(X)
+
+# Evaluate the model performance
+rmse = np.sqrt(np.mean((y - predictions)**2))
+print("Root Mean Squared Error:", rmse)
