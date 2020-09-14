@@ -5795,3 +5795,35 @@ print('Mean Squared Error:', mse)
 # Write results to a csv file
 results = pd.DataFrame({'Actual': y, 'Predicted': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:22:55.865812
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+df = pd.read_csv('https://www.exampledata.com/economic_data.csv')
+
+# Explore the dataset
+print(df.head())
+print(df.describe())
+
+# Data preprocessing
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Linear Regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Model evaluation
+print('R-squared:', model.score(X_test, y_test))
+
+# OLS regression using statsmodels
+X_train = sm.add_constant(X_train)
+model_sm = sm.OLS(y_train, X_train).fit()
+print(model_sm.summary())
