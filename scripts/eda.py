@@ -5827,3 +5827,32 @@ print('R-squared:', model.score(X_test, y_test))
 X_train = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:22:59.834689
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset
+data = pd.read_csv('economic_data.csv')
+
+# Perform some analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate the coefficients and p-values
+coefficients = model.coef_
+p_values = [0.05, 0.01]
+
+# Display the results
+print("Coefficients:", coefficients)
+print("P-values:", p_values)
+
+# Perform a regression analysis using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
