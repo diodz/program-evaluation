@@ -5856,3 +5856,32 @@ print("P-values:", p_values)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:23:04.333831
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+df = pd.read_csv('https://url_to_public_database.com/data.csv')
+
+# Prepare data for analysis
+X = df[['independent_variable_1', 'independent_variable_2', 'independent_variable_3']]
+y = df['dependent_variable']
+
+# Perform Ordinary Least Squares regression
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Perform Linear Regression using sklearn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+predicted_values = regression_model.predict(X)
+
+# Visualize results
+plt.scatter(y, predicted_values)
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.title('Actual vs Predicted Values')
+plt.show()
