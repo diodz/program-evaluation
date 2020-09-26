@@ -5885,3 +5885,33 @@ plt.xlabel('Actual Values')
 plt.ylabel('Predicted Values')
 plt.title('Actual vs Predicted Values')
 plt.show()
+# Change made on 2024-06-26 21:23:08.995030
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Print model coefficients
+print("Intercept:", model.intercept_)
+print("Coefficients:", model.coef_)
+
+# Use statsmodels for more detailed analysis
+X_train = sm.add_constant(X_train)
+model_sm = sm.OLS(y_train, X_train).fit()
+print(model_sm.summary())
