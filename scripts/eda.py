@@ -5915,3 +5915,36 @@ print("Coefficients:", model.coef_)
 X_train = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:23:14.181225
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetching data from a public database
+data = fetch_openml(name='eurostat', version=2)
+
+# Preprocessing the data
+df = pd.DataFrame(data['data'], columns=data['feature_names'])
+df['date'] = pd.to_datetime(df['date'])
+df.set_index('date', inplace=True)
+df.dropna(inplace=True)
+
+# Time series analysis using ARIMA model
+model = ARIMA(df['GDP'], order=(1, 1, 1))
+results = model.fit()
+
+# Predicting future GDP values
+forecast = results.forecast(steps=12)
+
+# Linear regression analysis
+X = df[['unemployment_rate', 'inflation']]
+y = df['GDP']
+lm = LinearRegression()
+lm.fit(X, y)
+predictions = lm.predict(X)
+
+# Print the results
+print("ARIMA Forecasted GDP for Next 12 months:", forecast)
+print("Linear Regression Predictions for GDP:", predictions)
