@@ -5948,3 +5948,35 @@ predictions = lm.predict(X)
 # Print the results
 print("ARIMA Forecasted GDP for Next 12 months:", forecast)
 print("Linear Regression Predictions for GDP:", predictions)
+# Change made on 2024-06-26 21:23:20.057371
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database
+data = fetch_openml(data_id='300', as_frame=True)
+df = data.frame
+
+# Data preprocessing
+X = df.drop(columns=['target_variable'])
+y = df['target_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on test data
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, predictions)
+
+# Print results
+print('Mean Squared Error:', mse)
