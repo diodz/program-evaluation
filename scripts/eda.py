@@ -5980,3 +5980,39 @@ mse = mean_squared_error(y_test, predictions)
 
 # Print results
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:23:24.317927
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import requests
+
+# Load data from public database
+url = 'www.publicdatabase.com/data'
+data = requests.get(url).json()
+
+# Create dataframe from data
+df = pd.DataFrame(data)
+
+# Perform regression analysis
+X = df[['independent_variable']]
+y = df['dependent_variable']
+
+# OLS regression
+model_ols = OLS(y, X).fit()
+ols_results = model_ols.summary()
+
+# Linear regression
+model_lr = LinearRegression().fit(X, y)
+lr_coef = model_lr.coef_
+lr_intercept = model_lr.intercept_
+
+# Generate results for article
+print("OLS Regression Results:")
+print(ols_results)
+
+print("Linear Regression Coefficients:")
+print(lr_coef)
+
+print("Linear Regression Intercept:")
+print(lr_intercept)
