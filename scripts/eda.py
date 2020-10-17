@@ -6057,3 +6057,30 @@ with open('model_summary.txt', 'w') as file:
 print(summary_stats)
 print(correlation_matrix)
 print(model_summary)
+# Change made on 2024-06-26 21:23:34.673453
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Perform some data cleaning and preprocessing
+data_cleaned = data.dropna()
+data_cleaned['log_income'] = np.log(data_cleaned['income'])
+
+# Run regression analysis using statsmodels
+X = sm.add_constant(data_cleaned[['log_income', 'education']])
+y = data_cleaned['unemployment_rate']
+
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Run regression analysis using sklearn
+X = data_cleaned[['log_income', 'education']]
+y = data_cleaned['unemployment_rate']
+
+reg = LinearRegression().fit(X, y)
+print('Coefficients: ', reg.coef_)
+print('Intercept: ', reg.intercept_)
