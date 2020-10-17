@@ -6016,3 +6016,44 @@ print(lr_coef)
 
 print("Linear Regression Intercept:")
 print(lr_intercept)
+# Change made on 2024-06-26 21:23:29.069939
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load data from a public database
+data = fetch_openml(data_id=1234)
+
+# Convert data to pandas DataFrame
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Perform exploratory data analysis
+summary_stats = df.describe()
+correlation_matrix = df.corr()
+
+# Run regression analysis
+X = df[['feature1', 'feature2']]
+y = df['target']
+
+model = sm.OLS(y, X).fit()
+predictions = model.predict(X)
+
+# Train a machine learning model
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+predictions_ml = regression_model.predict(X)
+
+# Export results for further analysis
+summary_stats.to_csv('summary_stats.csv')
+correlation_matrix.to_csv('correlation_matrix.csv')
+model_summary = model.summary()
+with open('model_summary.txt', 'w') as file:
+    file.write(model_summary)
+
+# Print some results
+print(summary_stats)
+print(correlation_matrix)
+print(model_summary)
