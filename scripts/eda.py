@@ -6123,3 +6123,37 @@ X_with_const = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_with_const).fit()
 print(model_sm.summary())
 ```
+# Change made on 2024-06-26 21:23:46.640012
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+# Remove missing values
+data = data.dropna()
+
+# Feature engineering
+data['log_gdp'] = np.log(data['gdp'])
+
+# Perform regression analysis
+X = data[['log_gdp', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Using OLS from statsmodel
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Using Linear Regression from sklearn
+lr = LinearRegression()
+lr.fit(X, y)
+print(lr.coef_)
+
+# Export results to a CSV file
+results = pd.DataFrame({'feature': X.columns, 'coefficients': lr.coef_})
+results.to_csv('regression_results.csv', index=False)
+```
