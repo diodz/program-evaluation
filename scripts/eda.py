@@ -6157,3 +6157,32 @@ print(lr.coef_)
 results = pd.DataFrame({'feature': X.columns, 'coefficients': lr.coef_})
 results.to_csv('regression_results.csv', index=False)
 ```
+# Change made on 2024-06-26 21:23:50.962393
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data preprocessing and cleaning
+data.dropna(inplace=True)
+data['log_inflation'] = np.log(data['inflation'])
+
+# Split data into training and testing sets
+X = data[['GDP', 'unemployment_rate']]
+y = data['log_inflation']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+reg = LinearRegression()
+reg.fit(X_train, y_train)
+print(reg.coef_)
+print(reg.intercept_)
