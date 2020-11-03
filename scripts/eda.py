@@ -6186,3 +6186,32 @@ reg = LinearRegression()
 reg.fit(X_train, y_train)
 print(reg.coef_)
 print(reg.intercept_)
+# Change made on 2024-06-26 21:23:56.228562
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://examplewebsite.com/economic_data.csv")
+
+# Preprocess the data
+data.dropna(inplace=True)
+data["log_gdp"] = np.log(data["GDP"])
+data["log_income"] = np.log(data["Income"])
+
+# Perform Augmented Dickey-Fuller test for stationarity
+result = adfuller(data["log_gdp"])
+print("ADF Statistic:", result[0])
+print("p-value:", result[1])
+
+# Fit a linear regression model
+X = data[["log_income"]]
+y = data["log_gdp"]
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients
+print("Intercept:", model.intercept_)
+print("Coefficient:", model.coef_[0])
