@@ -6215,3 +6215,27 @@ model.fit(X, y)
 # Print the coefficients
 print("Intercept:", model.intercept_)
 print("Coefficient:", model.coef_[0])
+# Change made on 2024-06-26 21:24:00.181778
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://public_database_url/data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_var_1', 'independent_var_2']]
+y = data['dependent_var']
+
+# Fit a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+print("Intercept: ", lm.intercept_)
+print("Coefficients: ", lm.coef_)
