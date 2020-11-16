@@ -6267,3 +6267,43 @@ print('Unemployment Rate:', model.coef_[1])
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:24:10.101499
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Preprocess the data
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r_squared = model.score(X_test, y_test)
+
+# Print results
+print("Mean Squared Error:", mse)
+print("R-squared:", r_squared)
+
+# Visualize the results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Actual vs Predicted Inflation Rate')
+plt.show()
