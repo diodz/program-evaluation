@@ -6307,3 +6307,37 @@ plt.xlabel('Actual Inflation Rate')
 plt.ylabel('Predicted Inflation Rate')
 plt.title('Actual vs Predicted Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:24:15.541257
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data_url = "https://exampledataset.com/data.csv"
+df = pd.read_csv(data_url)
+
+# Perform data preprocessing
+df.dropna(inplace=True)
+X = df[['independent_var1', 'independent_var2', 'independent_var3']]
+y = df['dependent_var']
+
+# Split dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on testing set
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((y_test - y_pred) ** 2)
+print(f"Mean Squared Error: {mse}")
+
+# Perform statistical analysis on data
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
