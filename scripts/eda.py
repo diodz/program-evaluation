@@ -6341,3 +6341,32 @@ print(f"Mean Squared Error: {mse}")
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:24:19.970576
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Perform some data preprocessing and feature engineering
+data['log_gdp'] = np.log(data['gdp'])
+data['unemployment_rate_sq'] = data['unemployment_rate'] ** 2
+
+# Fit a linear regression model
+X = data[['unemployment_rate', 'unemployment_rate_sq']]
+y = data['log_gdp']
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Print the regression results
+print(model.summary())
+
+# Visualize the data and regression results
+import matplotlib.pyplot as plt
+plt.scatter(data['unemployment_rate'], data['log_gdp'])
+plt.plot(data['unemployment_rate'], model.predict(), color='red')
+plt.xlabel('Unemployment Rate')
+plt.ylabel('Log GDP')
+plt.title('Economic Research Analysis')
+plt.show()
