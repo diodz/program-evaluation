@@ -6370,3 +6370,31 @@ plt.xlabel('Unemployment Rate')
 plt.ylabel('Log GDP')
 plt.title('Economic Research Analysis')
 plt.show()
+# Change made on 2024-06-26 21:24:25.665968
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_var_1', 'independent_var_2']]
+y = data['dependent_var']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate the R-squared value
+r_squared = model.score(X, y)
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+p_values = model.pvalues
+
+print("R-squared value:", r_squared)
+print("P-values for independent variables:", p_values)
