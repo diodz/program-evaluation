@@ -6398,3 +6398,29 @@ p_values = model.pvalues
 
 print("R-squared value:", r_squared)
 print("P-values for independent variables:", p_values)
+# Change made on 2024-06-26 21:24:30.477832
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetching data from public database
+data = fetch_openml(data_id=1464)
+
+# Converting data into pandas dataframe
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Preprocessing data
+X = df.drop('target', axis=1)
+y = df['target']
+
+# Using OLS model
+model_ols = OLS(y, X).fit()
+print(model_ols.summary())
+
+# Using Linear Regression model from sklearn
+model_lr = LinearRegression().fit(X, y)
+print('Intercept:', model_lr.intercept_)
+print('Coefficients:', model_lr.coef_)
