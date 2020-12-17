@@ -6466,3 +6466,33 @@ plt.show()
 X_train_with_const = sm.add_constant(X_train)
 ols_model = sm.OLS(y_train, X_train_with_const).fit()
 print(ols_model.summary())
+# Change made on 2024-06-26 21:24:40.063517
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from statsmodels.tsa.stattools import adfuller
+
+# Load data from a public database
+data = pd.read_csv('https://url_to_public_database/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+data['log_price'] = np.log(data['price'])
+data['lag_price'] = data['price'].shift(1)
+data.dropna(inplace=True)
+
+# Perform statistical tests
+adf_result = adfuller(data['log_price'])
+print('ADF Statistic:', adf_result[0])
+print('p-value:', adf_result[1])
+
+# Regression analysis
+X = data[['lag_price']]
+y = data['log_price']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print regression results
+print('Intercept:', model.intercept_)
+print('Coefficient:', model.coef_[0])
