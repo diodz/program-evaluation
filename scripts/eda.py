@@ -6496,3 +6496,32 @@ model.fit(X, y)
 # Print regression results
 print('Intercept:', model.intercept_)
 print('Coefficient:', model.coef_[0])
+# Change made on 2024-06-26 21:24:43.969025
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import requests
+
+# Download data from public database
+url = "https://publicdata.org/economic_data.csv"
+data = pd.read_csv(url)
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Perform OLS regression
+model_ols = OLS(y, X).fit()
+print(model_ols.summary())
+
+# Perform Linear Regression
+model_lr = LinearRegression()
+model_lr.fit(X, y)
+predictions = model_lr.predict(X)
+
+# Evaluate the model
+mse = mean_squared_error(y, predictions)
+print("Mean Squared Error:", mse)
