@@ -6525,3 +6525,89 @@ predictions = model_lr.predict(X)
 # Evaluate the model
 mse = mean_squared_error(y, predictions)
 print("Mean Squared Error:", mse)
+# Change made on 2024-06-26 21:24:48.686678
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database
+data = fetch_openml('diabetes')
+
+# Convert dataset to pandas dataframe
+df = pd.DataFrame(data.data, columns=data.feature_names)
+
+# Add target variable to dataframe
+df['target'] = data.target
+
+# Perform some exploratory data analysis
+print(df.head())
+print(df.describe())
+
+# Create a simple linear regression model
+X = df.drop('target', axis=1)
+y = df['target']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Get model coefficients
+print("Intercept:", model.intercept_)
+print("Coefficients:", model.coef_)
+
+# Use statsmodels to get more in-depth regression statistics
+X = sm.add_constant(X)  # Add constant term for intercept
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Additional analysis and visualization can be added here
+
+# Write results to a csv file
+df.to_csv('research_results.csv')
+# Change made on 2024-06-26 21:24:53.547024
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Perform some exploratory data analysis
+print(data.head())
+print(data.describe())
+
+# Check for missing values
+print(data.isnull().sum())
+
+# Visualize the data
+plt.scatter(data['GDP'], data['Unemployment'])
+plt.xlabel('GDP')
+plt.ylabel('Unemployment')
+plt.title('Scatter plot of GDP vs Unemployment')
+plt.show()
+
+# Perform linear regression
+X = data['GDP'].values.reshape(-1,1)
+y = data['Unemployment'].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Fit a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
