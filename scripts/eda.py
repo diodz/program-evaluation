@@ -6611,3 +6611,33 @@ print("Mean Squared Error:", mse)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:24:57.856904
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform exploratory data analysis
+mean = np.mean(data['value'])
+std_dev = np.std(data['value'])
+correlation = np.corrcoef(data['value'], data['another_value'])
+
+# Test for stationarity using Augmented Dickey-Fuller test
+result = adfuller(data['value'])
+stationary = result[1] <= 0.05
+
+# Fit a linear regression model
+X = data[['variable1', 'variable2']]
+y = data['target_variable']
+model = LinearRegression()
+model.fit(X, y)
+
+# Generate predictions using the model
+predictions = model.predict(X)
+
+# Write results to a CSV file
+results = pd.DataFrame({'Prediction': predictions})
+results.to_csv('results.csv', index=False)
