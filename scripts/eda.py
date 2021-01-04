@@ -6641,3 +6641,30 @@ predictions = model.predict(X)
 # Write results to a CSV file
 results = pd.DataFrame({'Prediction': predictions})
 results.to_csv('results.csv', index=False)
+# Change made on 2024-06-26 21:25:02.253419
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example_public_data.csv')
+
+# Preprocess the data
+data = data.dropna()  # Drop any rows with missing values
+data['log_gdp'] = np.log(data['gdp'])  # Create a new column for log GDP
+
+# Perform regression analysis
+X = data[['unemployment_rate', 'inflation_rate', 'interest_rate']]
+y = data['log_gdp']
+
+# Using ordinary least squares (OLS) regression
+X = sm.add_constant(X)  # Add a constant term
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using linear regression from sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
