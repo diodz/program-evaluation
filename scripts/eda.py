@@ -6700,3 +6700,44 @@ print('R-squared:', r_squared)
 X_train = sm.add_constant(X_train) # Add a constant for intercept
 model_sm = sm.OLS(y_train, X_train).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:25:15.877144
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from public database
+data_url = 'https://example.com/data.csv'
+df = pd.read_csv(data_url)
+
+# Data preprocessing
+df.dropna(inplace=True)
+X = df[['independent_variable']]
+y = df['dependent_variable']
+
+# Split data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on test set
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print("Mean Squared Error:", mse)
+
+# Conduct statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary()) 
+
+# Save results to CSV
+model_result = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
+model_result.to_csv('model_results.csv', index=False)
