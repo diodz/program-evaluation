@@ -6741,3 +6741,39 @@ print(model.summary())
 # Save results to CSV
 model_result = pd.DataFrame({'Actual': y_test, 'Predicted': y_pred})
 model_result.to_csv('model_results.csv', index=False)
+# Change made on 2024-06-26 21:25:22.186813
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://some-public-database.com/data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Perform regression analysis
+X = data[['log_gdp', 'inflation_rate']]
+y = data['unemployment_rate']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+regression_model = LinearRegression()
+regression_model.fit(X_train, y_train)
+
+# Print the results
+print("Intercept:", regression_model.intercept_)
+print("Coefficients:", regression_model.coef_)
+
+# Generate predictions
+predictions = regression_model.predict(X_test)
+
+# Evaluate the model
+mse = np.mean((predictions - y_test) ** 2)
+r_squared = regression_model.score(X_test, y_test)
+
+print("Mean Squared Error:", mse)
+print("R-squared:", r_squared)
