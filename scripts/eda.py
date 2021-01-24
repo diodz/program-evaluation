@@ -6817,3 +6817,32 @@ print('Mean Squared Error:', mse)
 X_train_sm = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train_sm).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:25:33.305821
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Check for missing values
+missing_values = data.isnull().sum()
+
+# Drop rows with missing values
+data = data.dropna()
+
+# Perform regression analysis
+X = data[['GDP', 'unemployment_rate']]
+Y = data['inflation_rate']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(Y, X).fit()
+print(model.summary())
+
+# Using scikit-learn
+model = LinearRegression()
+model.fit(X, Y)
+print('Intercept:', model.intercept_)
+print('Coefficients:', model.coef_)
