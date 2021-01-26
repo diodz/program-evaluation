@@ -6846,3 +6846,79 @@ model = LinearRegression()
 model.fit(X, Y)
 print('Intercept:', model.intercept_)
 print('Coefficients:', model.coef_)
+# Change made on 2024-06-26 21:25:39.319563
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://www.publicdatabase.com/sample_data.csv')
+
+# Data preprocessing
+data = data.dropna()
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+
+# Visualize results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Actual vs Predicted Inflation Rate')
+plt.show()
+
+# Run OLS regression
+X = sm.add_constant(X)
+ols_model = sm.OLS(y, X).fit()
+print(ols_model.summary())
+# Change made on 2024-06-26 21:25:43.643819
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a multiple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Conduct hypothesis testing on the coefficients
+X = sm.add_constant(X) # add intercept term
+model = sm.OLS(y, X).fit()
+print(model.summary())
