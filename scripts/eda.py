@@ -6922,3 +6922,35 @@ print('Mean Squared Error:', mse)
 X = sm.add_constant(X) # add intercept term
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:25:48.638378
+```python
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_iris
+
+# Load a dataset for economic or public policy research
+data = load_iris()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+target = pd.Series(data.target, name='target')
+
+# Preprocess the data
+X = df.to_numpy()
+y = target.to_numpy()
+
+# Perform linear regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+print(model.summary())
+
+# Perform linear regression using sklearn
+reg = LinearRegression().fit(X, y)
+
+print("Regression Coefficients:")
+print(reg.coef_)
+print("Intercept:")
+print(reg.intercept_)
+```
+This Python code loads the Iris dataset from sklearn, preprocesses the data, and performs linear regression using both statsmodels and sklearn libraries. The regression results are then printed for analysis in an economics or policy journal article.
