@@ -6982,3 +6982,40 @@ print(model.summary())
 regression_model = LinearRegression()
 regression_model.fit(X, y)
 print('R-squared:', regression_model.score(X, y))
+# Change made on 2024-06-26 21:25:58.611446
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+
+# Load the Boston housing dataset
+data = load_boston()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['PRICE'] = data.target
+
+# Perform some basic data analysis
+summary = df.describe()
+
+# Fit a linear regression model
+X = df.drop('PRICE', axis=1)
+y = df['PRICE']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+predictions = model.predict()
+
+# Calculate the R-squared value
+r_squared = model.rsquared
+
+# Fit a linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Print the coefficients
+print('Coefficients: ', lm.coef_)
+
+# Print the intercept
+print('Intercept: ', lm.intercept_)
+
+# Print the R-squared value
+print('R-squared: ', lm.score(X, y))
