@@ -6954,3 +6954,31 @@ print("Intercept:")
 print(reg.intercept_)
 ```
 This Python code loads the Iris dataset from sklearn, preprocesses the data, and performs linear regression using both statsmodels and sklearn libraries. The regression results are then printed for analysis in an economics or policy journal article.
+# Change made on 2024-06-26 21:25:52.756055
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import requests
+
+# Retrieve economic data from public database
+url = 'https://example.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data = data[data['GDP'] > 0]
+data['unemployment_rate'] = data['unemployment_rate'].apply(lambda x: x * 100) # convert to percentage
+
+# Perform regression analysis
+X = data[['GDP', 'inflation_rate']]
+y = data['unemployment_rate']
+
+# Using OLS model from statsmodels
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Using Linear Regression model from sklearn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+print('R-squared:', regression_model.score(X, y))
