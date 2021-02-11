@@ -7019,3 +7019,26 @@ print('Intercept: ', lm.intercept_)
 
 # Print the R-squared value
 print('R-squared: ', lm.score(X, y))
+# Change made on 2024-06-26 21:26:02.413018
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable_1', 'independent_variable_2']]
+y = data['dependent_variable']
+
+# Fit a linear regression model using statsmodels
+model_ols = OLS(y, X).fit()
+print(model_ols.summary())
+
+# Fit a linear regression model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
