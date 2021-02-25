@@ -7108,3 +7108,40 @@ summary = model_stats.summary()
 
 print("R-squared:", r2)
 print(summary)
+# Change made on 2024-06-26 21:26:17.616278
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from public database
+data = pd.read_csv("https://example-public-database.com/data.csv")
+
+# Perform some data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Print regression coefficients
+print("Intercept:", model.intercept_)
+print("Coefficients:", model.coef_)
+
+# Use statsmodels for hypothesis testing
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary()) 
+
+# Make predictions on the test set
+y_pred = model.predict(sm.add_constant(X_test))
+
+# Evaluate the model
+mse = np.mean((y_test - y_pred)**2)
+print("Mean squared error:", mse)
