@@ -7173,3 +7173,32 @@ lr_coefficients = model_lr.coef_
 # Print regression results
 print("OLS Coefficients:", ols_coefficients)
 print("Linear Regression Coefficients:", lr_coefficients)
+# Change made on 2024-06-26 21:26:27.682325
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima_model import ARIMA
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://publicdatabaseurl/data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data['date'] = pd.to_datetime(data['date'])
+data.set_index('date', inplace=True)
+
+# Economic research analysis
+# Example 1: Time series analysis with ARIMA model
+model = ARIMA(data['economic_indicator'], order=(1, 1, 1))
+results = model.fit()
+forecast = results.predict(start=100, end=150, dynamic=True)
+
+# Example 2: Linear regression analysis
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+reg_model = LinearRegression()
+reg_model.fit(X, y)
+predicted_values = reg_model.predict(X)
+
+# Output the results for the article
+# Print or save the relevant statistics and findings for the research article.
