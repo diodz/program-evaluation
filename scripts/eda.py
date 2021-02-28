@@ -7145,3 +7145,31 @@ y_pred = model.predict(sm.add_constant(X_test))
 # Evaluate the model
 mse = np.mean((y_test - y_pred)**2)
 print("Mean squared error:", mse)
+# Change made on 2024-06-26 21:26:21.993442
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+data['log_income'] = np.log(data['income'])
+
+# Perform regression analysis
+X = data[['education', 'experience']]
+y = data['log_income']
+
+# Ordinary Least Squares regression
+model_ols = OLS(y, X).fit()
+ols_coefficients = model_ols.params
+
+# Linear Regression using sklearn
+model_lr = LinearRegression().fit(X, y)
+lr_coefficients = model_lr.coef_
+
+# Print regression results
+print("OLS Coefficients:", ols_coefficients)
+print("Linear Regression Coefficients:", lr_coefficients)
