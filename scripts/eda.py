@@ -7202,3 +7202,39 @@ predicted_values = reg_model.predict(X)
 
 # Output the results for the article
 # Print or save the relevant statistics and findings for the research article.
+# Change made on 2024-06-26 21:26:32.463494
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+data = pd.read_csv('https://url-to-public-database.com/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print(f'Mean Squared Error: {mse}')
+
+# Perform regression analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
