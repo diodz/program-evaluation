@@ -7238,3 +7238,37 @@ print(f'Mean Squared Error: {mse}')
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:26:38.168813
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database
+data = fetch_openml(name='economics', version=1)
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Split dataset into training and testing sets
+X = df.drop('target', axis=1)
+y = df['target']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Perform statistical analysis
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
