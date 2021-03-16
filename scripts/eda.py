@@ -7272,3 +7272,37 @@ print('Mean Squared Error:', mse)
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:26:42.351000
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Perform regression analysis
+regression_model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Print summary of regression results
+print(regression_model.summary())
+
+# Use sklearn for prediction
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+# Make predictions
+predictions = model_sklearn.predict(X)
+
+# Save predictions to a new column in the dataset
+data['predictions'] = predictions
+
+# Export dataset with predictions to CSV file
+data.to_csv('output_data.csv', index=False)
+```
