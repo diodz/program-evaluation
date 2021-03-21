@@ -7306,3 +7306,29 @@ data['predictions'] = predictions
 # Export dataset with predictions to CSV file
 data.to_csv('output_data.csv', index=False)
 ```
+# Change made on 2024-06-26 21:26:46.433975
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetching the dataset from a public database
+data = fetch_openml(data_id=1)
+
+# Creating a pandas dataframe from the dataset
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Performing OLS regression analysis
+X = df.drop(columns='target')
+y = df['target']
+ols_model = OLS(y, X).fit()
+ols_summary = ols_model.summary()
+print(ols_summary)
+
+# Performing Linear Regression analysis using sklearn
+lr_model = LinearRegression()
+lr_model.fit(X, y)
+print(f'Intercept: {lr_model.intercept_}')
+print(f'Coefficients: {lr_model.coef_}')
