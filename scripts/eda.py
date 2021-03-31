@@ -7332,3 +7332,80 @@ lr_model = LinearRegression()
 lr_model.fit(X, y)
 print(f'Intercept: {lr_model.intercept_}')
 print(f'Coefficients: {lr_model.coef_}')
+# Change made on 2024-06-26 21:26:51.829930
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Data preprocessing
+data = data.dropna()
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Run a simple regression analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+# Change made on 2024-06-26 21:26:56.717323
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import pandas_datareader.data as web
+import datetime
+
+# Fetching economic data
+start_date = datetime.datetime(2000, 1, 1)
+end_date = datetime.datetime(2021, 1, 1)
+
+# Fetching GDP data
+gdp = web.DataReader("GDP", "fred", start_date, end_date)
+
+# Fetching unemployment rate data
+unemployment_rate = web.DataReader("UNRATE", "fred", start_date, end_date)
+
+# Merging economic data
+economic_data = pd.merge(gdp, unemployment_rate, left_index=True, right_index=True)
+
+# Performing linear regression on the data
+X = economic_data["GDP"].values.reshape(-1, 1)
+y = economic_data["UNRATE"].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+predictions = model.predict(X_test)
+
+# Evaluating the model
+mse = mean_squared_error(y_test, predictions)
+
+print("Mean Squared Error:", mse)
+
+# Running additional analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
