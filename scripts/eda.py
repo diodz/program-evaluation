@@ -7409,3 +7409,33 @@ print("Mean Squared Error:", mse)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:27:01.163291
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load economic data from a public database
+data = pd.read_csv('economic_data.csv')
+
+# Perform data analysis and modeling
+X = data[['unemployment_rate', 'gdp_growth_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients and intercept
+coefficients = model.coef_
+intercept = model.intercept_
+
+# Check the significance of the variables
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+p_values = model.pvalues
+
+# Display the results
+print('Coefficients:', coefficients)
+print('Intercept:', intercept)
+print('P-values:', p_values)
