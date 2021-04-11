@@ -7439,3 +7439,48 @@ p_values = model.pvalues
 print('Coefficients:', coefficients)
 print('Intercept:', intercept)
 print('P-values:', p_values)
+# Change made on 2024-06-26 21:27:07.991053
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from a public database
+df = pd.read_csv('https://example_public_database.com/data.csv')
+
+# Preprocess data by selecting relevant columns and handling missing values
+df = df[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+df = df.dropna()
+
+# Split data into features and target variable
+X = df[['Unemployment Rate', 'Inflation Rate']]
+y = df['GDP']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+predictions = model.predict(X_test)
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, predictions)
+
+# Print the results
+print(f'Mean Squared Error: {mse}')
+
+# Visualize the relationship between unemployment rate, inflation rate, and GDP
+fig, ax = plt.subplots()
+ax.scatter(df['Unemployment Rate'], df['GDP'], label='Unemployment Rate')
+ax.scatter(df['Inflation Rate'], df['GDP'], label='Inflation Rate')
+ax.legend()
+plt.xlabel('Rate')
+plt.ylabel('GDP')
+plt.title('Relationship between Economic Indicators and GDP')
+plt.show()
