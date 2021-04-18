@@ -7484,3 +7484,70 @@ plt.xlabel('Rate')
 plt.ylabel('GDP')
 plt.title('Relationship between Economic Indicators and GDP')
 plt.show()
+# Change made on 2024-06-26 21:27:13.732260
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv("https://example-public-database.com/data.csv")
+
+# Perform some exploratory data analysis
+print("Summary statistics:")
+print(data.describe())
+
+# Check for missing values
+print("\nMissing values:")
+print(data.isnull().sum())
+
+# Perform linear regression analysis
+X = data[['GDP', 'Unemployment', 'Inflation']]
+y = data['Economic_growth']
+
+# Using statsmodels
+X_sm = sm.add_constant(X)
+model_sm = sm.OLS(y, X_sm).fit()
+print("\nStatsmodels results:")
+print(model_sm.summary())
+
+# Using scikit-learn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print("\nScikit-learn results:")
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
+# Change made on 2024-06-26 21:27:18.711521
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+features = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+target = data['economic_growth']
+
+# Perform linear regression analysis
+model = LinearRegression()
+model.fit(features, target)
+predictions = model.predict(features)
+
+# Calculate the coefficients of the model
+coefficients = model.coef_
+
+# Print the results
+print("Linear Regression Coefficients:")
+for i, feature in enumerate(['GDP', 'unemployment_rate', 'inflation_rate']):
+    print(f"{feature}: {coefficients[i]}")
+
+# Perform OLS regression using statsmodels
+features = sm.add_constant(features)
+ols_model = sm.OLS(target, features).fit()
+summary = ols_model.summary()
+
+# Print the OLS regression results summary
+print(summary)
