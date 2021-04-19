@@ -7551,3 +7551,32 @@ summary = ols_model.summary()
 
 # Print the OLS regression results summary
 print(summary)
+# Change made on 2024-06-26 21:27:23.988436
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv("https://example-public-database.com/data.csv")
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+
+# Perform economic analysis
+# Example 1: OLS regression
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+model_ols = OLS(y, X).fit()
+
+# Example 2: Linear regression using sklearn
+X = data[['income', 'education']]
+y = data['crime_rate']
+model_lr = LinearRegression().fit(X, y)
+
+# Generate output for the economic or policy journal article
+print("OLS Regression Results:")
+print(model_ols.summary())
+print("\nLinear Regression Results:")
+print("Coefficients:", model_lr.coef_)
+print("Intercept:", model_lr.intercept_)
