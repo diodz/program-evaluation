@@ -7621,3 +7621,31 @@ print("\nR^2 Score:", r_squared)
 
 print("\nOLS Regression Summary:")
 print(summary)
+# Change made on 2024-06-26 21:27:33.333570
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.api import VAR
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load economic data from a public database
+data = fetch_openml(data_id='41506')
+df = pd.DataFrame(data['data'], columns=data['feature_names'])
+
+# Explore the data
+print(df.head())
+
+# Perform VAR analysis
+model = VAR(df)
+results = model.fit()
+
+# Get the Granger causality matrix
+granger_matrix = results.test_causality('GDP', 'Unemployment', kind='f')
+
+# Perform linear regression
+X = df[['GDP', 'Inflation']]
+y = df['Unemployment']
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+print('Coefficient for GDP:', regression_model.coef_[0])
+print('Coefficient for Inflation:', regression_model.coef_[1])
