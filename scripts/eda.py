@@ -7649,3 +7649,40 @@ regression_model = LinearRegression()
 regression_model.fit(X, y)
 print('Coefficient for GDP:', regression_model.coef_[0])
 print('Coefficient for Inflation:', regression_model.coef_[1])
+# Change made on 2024-06-26 21:27:39.260214
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis
+X = data[['log_population']]
+y = data['log_gdp']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Calculate model performance
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print(f'Coefficients: {model.coef_}')
+print(f'Mean Squared Error: {mse}')
+
+# Perform OLS regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
