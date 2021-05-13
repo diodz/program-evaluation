@@ -7754,3 +7754,31 @@ X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
 ```
+# Change made on 2024-06-26 21:27:53.617523
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://examplewebsite.com/data.csv')
+
+# Clean and prepare data
+data.dropna(inplace=True)
+
+# Perform OLS regression
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Perform linear regression using scikit-learn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+# Print coefficients
+print("Coefficients from sklearn:", model_sklearn.coef_)
