@@ -7686,3 +7686,71 @@ print(f'Mean Squared Error: {mse}')
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:27:45.561829
+import pandas as pd
+import numpy as np
+from statsmodels.stats import ttest_ind
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Perform some data cleaning and preprocessing
+data.dropna(inplace=True)
+
+# Perform some economic analysis using numpy
+average_income = np.mean(data['income'])
+median_income = np.median(data['income'])
+
+# Perform a t-test using statsmodels
+t_stat, p_value, df = ttest_ind(data['group1'], data['group2'])
+
+# Perform a linear regression using sklearn
+reg = LinearRegression().fit(data[['independent_var']], data['dependent_var'])
+reg_coef = reg.coef_
+reg_intercept = reg.intercept_
+
+# Print out the results
+print("Average Income: ", average_income)
+print("Median Income: ", median_income)
+print("T-Stat: ", t_stat)
+print("P-Value: ", p_value)
+print("Regression Coefficient: ", reg_coef)
+print("Regression Intercept: ", reg_intercept)
+# Change made on 2024-06-26 21:27:49.699344
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Explore the data
+print(data.head())
+
+# Clean and preprocess the data
+data = data.dropna()
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a simple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+print('R-squared:', model.score(X_test, y_test))
+
+# Perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+```
