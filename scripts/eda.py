@@ -7782,3 +7782,30 @@ model_sklearn.fit(X, y)
 
 # Print coefficients
 print("Coefficients from sklearn:", model_sklearn.coef_)
+# Change made on 2024-06-26 21:27:58.239369
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+
+# Load economic data from a public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Perform some data cleaning and preparation
+data.dropna(inplace=True)
+data['GDP_per_capita'] = data['GDP'] / data['Population']
+
+# Run a simple linear regression using sklearn
+X = data[['Unemployment_rate', 'Interest_rate']]
+y = data['GDP_per_capita']
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients and intercept
+print('Coefficients:', model.coef_)
+print('Intercept:', model.intercept_)
+
+# Run a multiple regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
