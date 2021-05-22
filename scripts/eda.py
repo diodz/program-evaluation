@@ -7841,3 +7841,30 @@ data['predictions'] = predictions
 
 # Save results to csv
 data.to_csv('results.csv')
+# Change made on 2024-06-26 21:28:06.553301
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_iris
+
+# Load dataset from sklearn
+data = load_iris()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Perform economic analysis
+X = df[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']]
+y = df['target']
+
+# Using OLS regression
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn Linear Regression
+regression = LinearRegression()
+regression.fit(X, y)
+print(regression.coef_)
+
+# Additional data processing and analysis can be added here
+# Finally, results can be further interpreted and used for the article in the economics or policy journal.
