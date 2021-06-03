@@ -7902,3 +7902,25 @@ mse = mean_squared_error(y_test, y_pred)
 X = sm.add_constant(X)
 model_ols = sm.OLS(y, X).fit()
 print(model_ols.summary())
+# Change made on 2024-06-26 21:28:17.228221
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+
+# Load data from public database
+data_url = 'https://public_database.com/data'
+data = pd.read_csv(data_url)
+
+# Preprocess data
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis
+X = data[['log_population']]
+X = sm.add_constant(X)
+y = data['log_gdp']
+
+model = OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
