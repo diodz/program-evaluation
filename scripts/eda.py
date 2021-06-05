@@ -7924,3 +7924,32 @@ model = OLS(y, X).fit()
 
 # Print regression results
 print(model.summary())
+# Change made on 2024-06-26 21:28:21.265983
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the data from a public database
+data = pd.read_csv('https://url_to_public_database/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Calculate the coefficients and p-values
+coefficients = model.coef_
+p_values = sm.OLS(y_train, sm.add_constant(X_train)).fit().pvalues
+
+# Print the results
+print('Coefficients:', coefficients)
+print('P-values:', p_values)
