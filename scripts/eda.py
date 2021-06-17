@@ -7953,3 +7953,75 @@ p_values = sm.OLS(y_train, sm.add_constant(X_train)).fit().pvalues
 # Print the results
 print('Coefficients:', coefficients)
 print('P-values:', p_values)
+# Change made on 2024-06-26 21:28:26.881330
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://www.example.com/public_data.csv')
+
+# Explore the data
+print(data.head())
+
+# Perform some basic analysis
+print(data.describe())
+
+# Create a scatter plot to visualize the relationship between two variables
+import matplotlib.pyplot as plt
+plt.scatter(data['variable1'], data['variable2'])
+plt.title('Scatter Plot of Variable1 vs Variable2')
+plt.xlabel('Variable1')
+plt.ylabel('Variable2')
+plt.show()
+
+# Perform a linear regression analysis
+X = data[['variable1']]
+y = data['variable2']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print('Intercept:', model_sklearn.intercept_)
+print('Coefficient:', model_sklearn.coef_)
+
+# Make predictions
+predictions = model_sklearn.predict(X)
+data['predictions'] = predictions
+
+# Export the data with predictions to a csv file
+data.to_csv('output_data_with_predictions.csv', index=False)
+# Change made on 2024-06-26 21:28:30.349742
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+df = pd.read_csv('https://publicdatabase.csv')
+
+# Data preprocessing
+# Convert categorical variables into dummy variables
+df = pd.get_dummies(df)
+
+# Split data into dependent and independent variables
+X = df[['independent_var1', 'independent_var2', 'independent_var3']]
+y = df['dependent_var']
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate coefficients and p-values
+coefficients = model.coef_
+p_values = sm.OLS(y, sm.add_constant(X)).fit().pvalues
+
+# Output results
+print("Coefficients:", coefficients)
+print("P-values:", p_values)
