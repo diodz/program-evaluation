@@ -8025,3 +8025,39 @@ p_values = sm.OLS(y, sm.add_constant(X)).fit().pvalues
 # Output results
 print("Coefficients:", coefficients)
 print("P-values:", p_values)
+# Change made on 2024-06-26 21:28:34.813425
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv("https://publicdata.gov/economic_data.csv")
+
+# Perform some data analysis
+correlation_matrix = data.corr()
+print("Correlation Matrix:")
+print(correlation_matrix)
+
+# Fit a linear regression model
+X = data[['GDP', 'Unemployment']]
+y = data['Inflation']
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Make predictions
+predictions = lm.predict(X)
+
+# Generate a scatter plot
+plt.scatter(data['GDP'], data['Inflation'], color='blue')
+plt.plot(data['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation')
+plt.title('Relationship between GDP and Inflation')
+plt.show()
+
+# Perform OLS regression
+X = np.column_stack((np.ones(len(data)), data[['GDP', 'Unemployment']]))
+model = OLS(y, X).fit()
+print(model.summary())
