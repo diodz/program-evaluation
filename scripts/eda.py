@@ -8061,3 +8061,32 @@ plt.show()
 X = np.column_stack((np.ones(len(data)), data[['GDP', 'Unemployment']]))
 model = OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:28:39.171301
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+df = pd.read_csv('https://exampledataset.com')
+
+# Clean and preprocess the data
+df.dropna(inplace=True)
+df['log_income'] = np.log(df['income'])
+df['sqrt_expenses'] = np.sqrt(df['expenses'])
+
+# Perform statistical analysis
+X = df[['log_income', 'age', 'education']]
+y = df['expenses']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Perform machine learning analysis
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Predict expenses for a new observation
+new_observation = np.array([np.log(50000), 30, 16]).reshape(1, -1)
+predicted_expenses = lm.predict(new_observation)
+print('Predicted expenses for new observation:', predicted_expenses)
