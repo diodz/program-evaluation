@@ -8090,3 +8090,41 @@ lm.fit(X, y)
 new_observation = np.array([np.log(50000), 30, 16]).reshape(1, -1)
 predicted_expenses = lm.predict(new_observation)
 print('Predicted expenses for new observation:', predicted_expenses)
+# Change made on 2024-06-26 21:28:43.973737
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://url-to-public-database.com/data.csv')
+
+# Perform some exploratory data analysis
+summary_stats = data.describe()
+correlation_matrix = data.corr()
+
+# Run a linear regression model
+X = data[['independent_variable_1', 'independent_variable_2']]
+y = data['dependent_variable']
+
+model = sm.OLS(y, X).fit()
+model_summary = model.summary()
+
+# Alternatively, use sklearn for linear regression
+sk_model = LinearRegression()
+sk_model.fit(X, y)
+sk_model_coefs = sk_model.coef_
+sk_model_intercept = sk_model.intercept_
+
+# Export results to a CSV file
+model_summary.to_csv('regression_results.csv')
+
+# Visualize the data and regression results
+import matplotlib.pyplot as plt
+
+plt.scatter(data['independent_variable_1'], y)
+plt.plot(data['independent_variable_1'], model.predict(X), color='red')
+plt.xlabel('Independent Variable 1')
+plt.ylabel('Dependent Variable')
+plt.title('Regression Analysis Results')
+plt.show()
