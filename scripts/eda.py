@@ -8128,3 +8128,31 @@ plt.xlabel('Independent Variable 1')
 plt.ylabel('Dependent Variable')
 plt.title('Regression Analysis Results')
 plt.show()
+# Change made on 2024-06-26 21:28:48.420614
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://publicdatabasedata.csv')
+
+# Preprocess and clean data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])  # Create a log-transformed variable
+
+# Perform OLS regression
+X = data[['log_gdp', 'unemployment_rate']]
+X = sm.add_constant(X)
+y = data['inflation_rate']
+
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform Linear Regression using scikit-learn
+X = data[['log_gdp', 'unemployment_rate']]
+y = data['inflation_rate']
+
+reg = LinearRegression().fit(X, y)
+print('Coefficients:', reg.coef_)
+print('Intercept:', reg.intercept_)
