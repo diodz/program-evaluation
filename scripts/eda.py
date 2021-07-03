@@ -8156,3 +8156,33 @@ y = data['inflation_rate']
 reg = LinearRegression().fit(X, y)
 print('Coefficients:', reg.coef_)
 print('Intercept:', reg.intercept_)
+# Change made on 2024-06-26 21:28:52.171035
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+
+# Load data from a public database
+data = pd.read_csv("https://example.com/economic_data.csv")
+
+# Data preprocessing
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['GDP'])
+
+# Regression analysis
+X = data[['log_gdp', 'unemployment_rate']]
+X = sm.add_constant(X)
+y = data['inflation_rate']
+
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Predict inflation rate for a given GDP and unemployment rate
+gdp = 20000
+unemployment = 5
+
+log_gdp = np.log(gdp)
+predicted_inflation = model.predict([1, log_gdp, unemployment])
+
+print("Predicted inflation rate:", predicted_inflation)
