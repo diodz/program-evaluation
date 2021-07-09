@@ -8186,3 +8186,46 @@ log_gdp = np.log(gdp)
 predicted_inflation = model.predict([1, log_gdp, unemployment])
 
 print("Predicted inflation rate:", predicted_inflation)
+# Change made on 2024-06-26 21:29:01.373679
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+# Make predictions
+predictions = lm.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+
+# Visualize data and regression line
+plt.scatter(X_test, y_test, color='blue')
+plt.plot(X_test, predictions, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Model')
+plt.show()
+
+# Run OLS regression
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
