@@ -8229,3 +8229,34 @@ plt.show()
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:29:05.414654
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+
+# Load dataset from public database
+df = pd.read_csv('https://example.com/dataset.csv')
+
+# Exploratory data analysis
+print(df.head())
+print(df.describe())
+
+# Data preprocessing
+X = df.drop(['target_variable'], axis=1)
+y = df['target_variable']
+
+# Model building using sklearn
+model = LinearRegression()
+model.fit(X, y)
+pred = model.predict(X)
+
+# Evaluate the model
+r2 = r2_score(y, pred)
+print('R-squared:', r2)
+
+# Model building using statsmodels
+X = sm.add_constant(X)
+model_sm = sm.OLS(y, X).fit()
+print(model_sm.summary())
