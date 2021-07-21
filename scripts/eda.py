@@ -8260,3 +8260,40 @@ print('R-squared:', r2)
 X = sm.add_constant(X)
 model_sm = sm.OLS(y, X).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:29:10.370063
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset from a public database
+url = 'https://data.gov/dataset/economic_indicators.csv'
+data = pd.read_csv(url)
+
+# Perform some data preprocessing
+data.dropna(inplace=True)
+X = data[['unemployment_rate', 'inflation_rate']]
+y = data['GDP_growth']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+
+# Output the results
+print('Mean Squared Error:', mse)
+
+# Run a regression analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
