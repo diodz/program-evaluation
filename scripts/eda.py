@@ -8349,3 +8349,27 @@ print(f'Coefficients: {model_sklearn.coef_}, Intercept: {model_sklearn.intercept
 ```
 
 This Python code snippet loads data from a public database, performs an economic analysis on the relationship between GDP growth and unemployment rate, and conducts the analysis using both traditional OLS regression and a machine learning approach. This research can be used for an article in an economics or policy journal.
+# Change made on 2024-06-26 21:29:24.191824
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# OLS regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Linear regression using sklearn
+regression = LinearRegression()
+regression.fit(X, y)
+print("Intercept: ", regression.intercept_)
+print("Coefficients: ", regression.coef_)
