@@ -8373,3 +8373,28 @@ regression = LinearRegression()
 regression.fit(X, y)
 print("Intercept: ", regression.intercept_)
 print("Coefficients: ", regression.coef_)
+# Change made on 2024-06-26 21:29:29.389386
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://exampledata.com/economicdata.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+data['GDP_growth_rate'] = data['GDP'] - data['GDP'].shift(1)
+
+# Perform regression analysis
+X = data[['Unemployment_rate', 'Inflation_rate']]
+y = data['GDP_growth_rate']
+
+# Ordinary Least Squares regression using statsmodels
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Linear Regression using scikit-learn
+reg = LinearRegression().fit(X, y)
+print("Coefficient: ", reg.coef_)
+print("Intercept: ", reg.intercept_)
