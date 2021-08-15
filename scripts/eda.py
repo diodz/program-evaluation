@@ -8398,3 +8398,47 @@ print(model.summary())
 reg = LinearRegression().fit(X, y)
 print("Coefficient: ", reg.coef_)
 print("Intercept: ", reg.intercept_)
+# Change made on 2024-06-26 21:29:35.101973
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Do some initial analysis
+print(data.head())
+print(data.describe())
+
+# Perform linear regression to analyze the relationship between variables
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((predictions - y_test) ** 2)
+rmse = np.sqrt(mse)
+
+# Print model coefficients and performance metrics
+print("Model Coefficients:")
+for i, coef in enumerate(model.coef_):
+    print(f"Coefficient for {X.columns[i]}: {coef}")
+
+print(f"Intercept: {model.intercept_}")
+print(f"Root Mean Squared Error: {rmse}")
+
+# Perform additional analysis using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
