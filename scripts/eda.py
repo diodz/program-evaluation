@@ -8442,3 +8442,46 @@ print(f"Root Mean Squared Error: {rmse}")
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:29:39.784622
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Explore and preprocess the data
+data.dropna(inplace=True)
+
+# Define the independent and dependent variables
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Stock Market Index']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Visualize the results
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Stock Market Index')
+plt.ylabel('Predicted Stock Market Index')
+plt.title('Actual vs Predicted Stock Market Index')
+plt.show()
