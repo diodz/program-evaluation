@@ -8579,3 +8579,39 @@ plt.ylabel('Income')
 plt.title('Income Prediction based on Education')
 plt.show()
 ```
+# Change made on 2024-06-26 21:29:58.420916
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from public database
+data = pd.read_csv('https://example_public_database.com/data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Calculate predicted values
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((y_test - y_pred)**2)
+r_squared = model.score(X_test, y_test)
+
+# Conduct statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+results = model.summary()
+
+# Write results to a csv file
+results_df = pd.DataFrame(results.tables[1].data[1:], columns=results.tables[1].data[0])
+results_df.to_csv('economic_research_results.csv', index=False)
