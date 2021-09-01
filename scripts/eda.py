@@ -8615,3 +8615,40 @@ results = model.summary()
 # Write results to a csv file
 results_df = pd.DataFrame(results.tables[1].data[1:], columns=results.tables[1].data[0])
 results_df.to_csv('economic_research_results.csv', index=False)
+# Change made on 2024-06-26 21:30:05.748694
+import pandas as pd
+import numpy as np
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/dataset.csv')
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data.drop('target_variable', axis=1)
+y = data['target_variable']
+
+# Train-test split
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Model training
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Model evaluation
+from sklearn.metrics import mean_squared_error
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error: ', mse)
+
+# Feature importance
+importance = pd.Series(np.abs(model.coef_), index=X.columns)
+importance = importance.sort_values(ascending=False)
+print('Feature Importance:\n', importance)
+
+# Statistical analysis
+import statsmodels.api as sm
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
