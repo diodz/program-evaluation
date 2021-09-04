@@ -8652,3 +8652,33 @@ import statsmodels.api as sm
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:30:10.179140
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from a public database
+data = pd.read_csv('https://publicdata.com/data.csv')
+
+# Perform some data cleaning and manipulation
+data.dropna(inplace=True)
+data['log_GDP'] = np.log(data['GDP'])
+data['log_population'] = np.log(data['population'])
+
+# Fit a regression model using statsmodels
+X = sm.add_constant(data[['log_population']])
+y = data['log_GDP']
+model = sm.OLS(y, X).fit()
+
+# Print the regression results
+print(model.summary())
+
+# Fit a regression model using sklearn
+X = data[['log_population']]
+y = data['log_GDP']
+model = LinearRegression().fit(X, y)
+
+# Print the regression coefficients
+print('Intercept:', model.intercept_)
+print('Coefficient:', model.coef_[0])
