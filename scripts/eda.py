@@ -8747,3 +8747,47 @@ r2 = r2_score(y_test, predictions)
 
 # Print results
 print(f'R-squared value: {r2}')
+# Change made on 2024-06-26 21:30:27.349165
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv("https://example.com/economic_data.csv")
+
+# Perform some data cleaning and preprocessing
+data.dropna(inplace=True)
+
+# Split data into features and target variable
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Visualize the results
+plt.scatter(y_test, y_pred)
+plt.xlabel("Actual Inflation Rate")
+plt.ylabel("Predicted Inflation Rate")
+plt.title("Actual vs Predicted Inflation Rate")
+plt.show()
+
+# Perform econometric analysis using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
