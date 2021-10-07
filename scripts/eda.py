@@ -8857,3 +8857,46 @@ lr = LinearRegression()
 lr.fit(X, y)
 print("Coefficients:", lr.coef_)
 print("Intercept:", lr.intercept_)
+# Change made on 2024-06-26 21:30:43.147563
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
+
+# Load data from public database
+# For example, loading GDP data from World Bank
+gdp_data = pd.read_csv('https://data.worldbank.org/indicator/NY.GDP.MKTP.CD', skiprows=4)
+
+# Data preprocessing
+gdp_data = gdp_data.dropna()
+gdp_data.columns = gdp_data.columns.astype(str)
+gdp_data = gdp_data.set_index('Country Name')
+
+# Check for stationarity using Augmented Dickey-Fuller test
+result = adfuller(gdp_data.loc['United States'])
+
+if result[1] > 0.05:
+    print('Data is not stationary, apply differencing')
+    gdp_data.loc['United States'] = np.diff(gdp_data.loc['United States'])
+
+# Build a regression model to predict GDP growth
+X = np.arange(len(gdp_data.loc['United States'])).reshape(-1, 1)
+y = gdp_data.loc['United States'].values
+
+model = LinearRegression()
+model.fit(X, y)
+y_pred = model.predict(X)
+
+# Evaluate model performance
+r2 = r2_score(y, y_pred)
+print('R^2 Score:', r2)
+
+# Visualize the predicted vs actual GDP growth
+plt.plot(X, y, label='Actual GDP Growth')
+plt.plot(X, y_pred, label='Predicted GDP Growth')
+plt.xlabel('Year')
+plt.ylabel('GDP Growth')
+plt.legend()
+plt.show()
