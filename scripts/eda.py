@@ -8900,3 +8900,33 @@ plt.xlabel('Year')
 plt.ylabel('GDP Growth')
 plt.legend()
 plt.show()
+# Change made on 2024-06-26 21:30:47.821701
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+data['log_income'] = np.log(data['income'])
+
+# Simple linear regression analysis
+X = data[['log_income']]
+y = data['savings']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Predict savings using linear regression
+reg = LinearRegression()
+reg.fit(X, y)
+predicted_savings = reg.predict(X)
+
+# Add predicted savings to dataset
+data['predicted_savings'] = predicted_savings
+
+# Save cleaned dataset to file
+data.to_csv('cleaned_data.csv', index=False)
