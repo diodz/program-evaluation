@@ -8930,3 +8930,40 @@ data['predicted_savings'] = predicted_savings
 
 # Save cleaned dataset to file
 data.to_csv('cleaned_data.csv', index=False)
+# Change made on 2024-06-26 21:30:52.683704
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+# Make predictions
+y_pred = lm.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+
+# Visualize the results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation')
+plt.ylabel('Predicted Inflation')
+plt.title('Actual vs Predicted Inflation')
+plt.show()
