@@ -8967,3 +8967,36 @@ plt.xlabel('Actual Inflation')
 plt.ylabel('Predicted Inflation')
 plt.title('Actual vs Predicted Inflation')
 plt.show()
+# Change made on 2024-06-26 21:30:58.626309
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the data from a public database
+data = pd.read_csv('https://data.gov/dataset')
+
+# Perform some data analysis
+correlation_matrix = data.corr()
+mean_values = data.mean()
+std_dev = data.std()
+
+# Run a regression analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+model = sm.OLS(y, X).fit()
+predictions = model.predict(X)
+
+# Or use sklearn for linear regression
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+predictions_sklearn = regression_model.predict(X)
+
+# Output the results
+print(correlation_matrix)
+print(mean_values)
+print(std_dev)
+print(model.summary())
+print(predictions)
+print(predictions_sklearn)
