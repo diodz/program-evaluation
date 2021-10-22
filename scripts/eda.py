@@ -9000,3 +9000,38 @@ print(std_dev)
 print(model.summary())
 print(predictions)
 print(predictions_sklearn)
+# Change made on 2024-06-26 21:31:03.227549
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://www.publicdatabase.com/data.csv')
+
+# Perform data preprocessing and feature engineering
+data['log_gdp'] = np.log(data['gdp'])
+data['dummy_region'] = pd.get_dummies(data['region'])
+
+# Declare independent and dependent variables
+X = data[['log_gdp', 'dummy_region']]
+y = data['unemployment_rate']
+
+# Fit OLS regression model
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Output regression results
+print(model.summary())
+
+# Fit linear regression model
+lr_model = LinearRegression()
+lr_model.fit(X, y)
+
+# Predict unemployment rates using linear regression model
+predicted_unemployment = lr_model.predict(X)
+
+# Save predicted unemployment rates to dataset
+data['predicted_unemployment'] = predicted_unemployment
+
+# Export dataset with predictions
+data.to_csv('predicted_data.csv')
