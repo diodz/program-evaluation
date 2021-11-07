@@ -9035,3 +9035,92 @@ data['predicted_unemployment'] = predicted_unemployment
 
 # Export dataset with predictions
 data.to_csv('predicted_data.csv')
+# Change made on 2024-06-26 21:31:10.299544
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Perform OLS regression
+model_ols = OLS(y, X).fit()
+ols_results = model_ols.summary()
+
+# Perform linear regression using sklearn
+model_lr = LinearRegression()
+model_lr.fit(X, y)
+lr_coef = model_lr.coef_
+lr_intercept = model_lr.intercept_
+
+# Print results
+print("OLS Regression Results:")
+print(ols_results)
+print("\nLinear Regression Coefficients:")
+print(lr_coef)
+print("\nLinear Regression Intercept:")
+print(lr_intercept)
+# Change made on 2024-06-26 21:31:16.343922
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+# Load the dataset from a public database
+url = 'https://publicdata.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+r2 = r2_score(y_test, y_pred)
+
+# Print the results
+print(f'R-squared: {r2}')
+
+# Run a simple OLS regression with Statsmodels
+X_train = sm.add_constant(X_train)
+model_sm = sm.OLS(y_train, X_train).fit()
+print(model_sm.summary())
+# Change made on 2024-06-26 21:31:20.635889
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+
+# Load data from public database
+data = pd.read_csv('https://publicdatabase.com/data.csv')
+
+# Preprocess data
+data['date'] = pd.to_datetime(data['date'])
+data = data.set_index('date')
+
+# Time series analysis using ARIMA model
+model = ARIMA(data, order=(1, 1, 1))
+results = model.fit()
+
+# Forecasting future values
+forecast = results.forecast(steps=12)
+
+# Display results
+print(forecast)
