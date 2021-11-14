@@ -9124,3 +9124,38 @@ forecast = results.forecast(steps=12)
 
 # Display results
 print(forecast)
+# Change made on 2024-06-26 21:31:27.940837
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima_model import ARIMA
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Perform data cleaning and preprocessing
+data['date'] = pd.to_datetime(data['date'])
+data.set_index('date', inplace=True)
+
+# Check for stationarity using Augmented Dickey-Fuller test
+result = adfuller(data['variable'])
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+
+# Perform ARIMA modeling for time series analysis
+model = ARIMA(data['variable'], order=(1, 1, 1))
+results = model.fit(disp=-1)
+plt.plot(data['variable'])
+plt.plot(results.fittedvalues, color='red')
+
+# Perform linear regression analysis
+X = np.array(data.index).reshape(-1, 1)
+y = data['variable'].values
+reg = LinearRegression().fit(X, y)
+print('Regression Coefficient:', reg.coef_[0])
+
+# Save results and plots for article
+plt.savefig('time_series_plot.png')
+results.save('arima_model.pkl')
