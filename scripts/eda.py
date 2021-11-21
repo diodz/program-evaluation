@@ -9159,3 +9159,34 @@ print('Regression Coefficient:', reg.coef_[0])
 # Save results and plots for article
 plt.savefig('time_series_plot.png')
 results.save('arima_model.pkl')
+# Change made on 2024-06-26 21:31:34.093892
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from a public database
+url = 'https://example.com/dataset.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+r_squared = model.score(X_test, y_test)
+
+# Print results
+print(f'R-squared: {r_squared}')
+print(f'Coefficients: {model.coef_}')
+print(f'Intercept: {model.intercept_}')
