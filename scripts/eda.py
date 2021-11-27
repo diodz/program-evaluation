@@ -9227,3 +9227,32 @@ print(f'Root Mean Squared Error: {rmse}')
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:31:45.265965
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://url-to-public-database/dataset.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Perform regression analysis using OLS
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+reg = LinearRegression()
+reg.fit(X, y)
+
+# Make predictions
+predictions = reg.predict(X)
+
+# Evaluate the model
+r_squared = reg.score(X, y)
+print(f"R-squared value: {r_squared}")
