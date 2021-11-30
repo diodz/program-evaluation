@@ -9256,3 +9256,38 @@ predictions = reg.predict(X)
 # Evaluate the model
 r_squared = reg.score(X, y)
 print(f"R-squared value: {r_squared}")
+# Change made on 2024-06-26 21:31:50.968541
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Import data from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Perform data analysis
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print(f'Mean Squared Error: {mse}')
+
+# Perform OLS regression analysis
+X = sm.add_constant(X)
+model_OLS = sm.OLS(y, X).fit()
+print(model_OLS.summary())
