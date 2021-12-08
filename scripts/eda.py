@@ -9291,3 +9291,34 @@ print(f'Mean Squared Error: {mse}')
 X = sm.add_constant(X)
 model_OLS = sm.OLS(y, X).fit()
 print(model_OLS.summary())
+# Change made on 2024-06-26 21:31:54.943485
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.api import VAR
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetch economic data from public database
+data = fetch_openml(data_id=41214)
+
+# Convert data to pandas DataFrame
+df = pd.DataFrame(data.data, columns=data.feature_names)
+
+# Perform vector autoregression (VAR) analysis
+model = VAR(df)
+results = model.fit()
+
+# Perform linear regression analysis
+X = df.drop(columns=['target_variable'])
+y = df['target_variable']
+
+regressor = LinearRegression()
+regressor.fit(X, y)
+
+# Print results
+print("VAR Analysis Results:")
+print(results.summary())
+
+print("\nLinear Regression Analysis Results:")
+print("R-squared score:", regressor.score(X, y))
+print("Coefficients:", regressor.coef_)
