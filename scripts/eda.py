@@ -9322,3 +9322,65 @@ print(results.summary())
 print("\nLinear Regression Analysis Results:")
 print("R-squared score:", regressor.score(X, y))
 print("Coefficients:", regressor.coef_)
+# Change made on 2024-06-26 21:31:59.476496
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['consumer_spending']
+
+# Fit a simple linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print model coefficients
+print("Coefficients: ", model.coef_)
+
+# Perform OLS regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Visualize the relationship between GDP and consumer spending
+plt.scatter(data['GDP'], data['consumer_spending'])
+plt.xlabel('GDP')
+plt.ylabel('Consumer Spending')
+plt.title('GDP vs Consumer Spending')
+plt.show()
+# Change made on 2024-06-26 21:32:04.083411
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Fit OLS model
+model_ols = OLS(y, X).fit()
+
+# Print OLS results
+print(model_ols.summary())
+
+# Fit Linear Regression model
+model_lr = LinearRegression()
+model_lr.fit(X, y)
+
+# Print coefficients
+print(f'Coefficients: {model_lr.coef_}')
+
+# Perform additional analysis and data visualization as needed
+
+# Use the results for your economics or public policy research article.
