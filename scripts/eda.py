@@ -9384,3 +9384,46 @@ print(f'Coefficients: {model_lr.coef_}')
 # Perform additional analysis and data visualization as needed
 
 # Use the results for your economics or public policy research article.
+# Change made on 2024-06-26 21:32:10.788768
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import seaborn as sns
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Perform some data cleaning and preprocessing
+data = data.dropna()
+data['population_density'] = data['population'] / data['area']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(data[['population_density', 'GDP_per_capita']], data['unemployment_rate'], test_size=0.2, random_state=42)
+
+# Fit linear regression model using statsmodels
+X_train_sm = sm.add_constant(X_train)
+model = OLS(y_train, X_train_sm).fit()
+print(model.summary())
+
+# Fit linear regression model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model_sklearn.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Visualize data
+sns.regplot(x='GDP_per_capita', y='unemployment_rate', data=data)
+plt.title('Relationship between GDP per capita and unemployment rate')
+plt.xlabel('GDP per capita')
+plt.ylabel('Unemployment rate')
+plt.show()
