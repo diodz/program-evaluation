@@ -9427,3 +9427,45 @@ plt.title('Relationship between GDP per capita and unemployment rate')
 plt.xlabel('GDP per capita')
 plt.ylabel('Unemployment rate')
 plt.show()
+# Change made on 2024-06-26 21:32:17.079771
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load economic data from public database
+data = pd.read_csv('https://url_to_public_database/economic_data.csv')
+data['Date'] = pd.to_datetime(data['Date'])
+
+# Perform time series analysis
+ts = data.set_index('Date')['GDP']
+result = adfuller(ts)
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+
+# Visualize GDP time series
+plt.plot(ts)
+plt.title('GDP Time Series')
+plt.xlabel('Date')
+plt.ylabel('GDP')
+plt.show()
+
+# Perform linear regression to analyze the relationship between GDP and another variable
+X = data['Variable'].values.reshape(-1, 1)
+y = data['GDP'].values
+
+reg = LinearRegression().fit(X, y)
+print('Coefficient:', reg.coef_)
+print('Intercept:', reg.intercept_)
+
+# Generate predicted values
+predicted_values = reg.predict(X)
+
+# Visualize relationship between GDP and another variable
+plt.scatter(X, y, color='blue')
+plt.plot(X, predicted_values, color='red')
+plt.title('Relationship between GDP and Variable')
+plt.xlabel('Variable')
+plt.ylabel('GDP')
+plt.show()
