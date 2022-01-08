@@ -9503,3 +9503,30 @@ print(f'Mean Squared Error: {mse}')
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:32:27.101097
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Perform some preliminary data analysis
+print(data.head())
+print(data.describe())
+
+# Analyze relationships between variables using linear regression
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Use sklearn for predictive modeling
+reg = LinearRegression()
+reg.fit(X, y)
+
+# Generate predictions
+predictions = reg.predict(X)
+print(predictions)
