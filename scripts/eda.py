@@ -9609,3 +9609,79 @@ results = {
 }
 
 # This code can be further extended for more complex analysis or modeling techniques.
+# Change made on 2024-06-26 21:32:43.257459
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Data cleaning and preprocessing
+data = data.dropna()
+X = data[['independent_variable_1', 'independent_variable_2']]
+y = data['dependent_variable']
+
+# Model building
+model = LinearRegression()
+model.fit(X, y)
+
+# Model evaluation
+predictions = model.predict(X)
+residuals = y - predictions
+r_squared = model.score(X, y)
+
+# Regression analysis
+X = sm.add_constant(X) # adding a constant
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Save results to a file
+model_results = pd.DataFrame({'Predictions': predictions, 'Residuals': residuals})
+model_results.to_csv('model_results.csv', index=False)
+# Change made on 2024-06-26 21:32:47.889754
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://publicdataset.com/economic_data.csv')
+
+# Explore the data
+print(data.head())
+
+# Perform some data analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Visualize the results
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Actual vs. Predicted Inflation Rate')
+plt.show()
+
+# Perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
