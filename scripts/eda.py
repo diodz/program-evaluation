@@ -9685,3 +9685,67 @@ X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
 
+# Change made on 2024-06-26 21:32:56.451440
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load the dataset from a public database
+data = pd.read_csv('https://data.gov/example_dataset.csv')
+
+# Clean and preprocess the data as needed
+data = data.dropna()
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+
+# Get the model summary
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+regression_model = LinearRegression()
+regression_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = regression_model.predict(sm.add_constant(X_test))
+
+# Evaluate the model performance
+print('Mean Squared Error:', np.mean((y_pred - y_test) ** 2))
+print('R-squared:', regression_model.score(X_test, y_test))
+# Change made on 2024-06-26 21:33:00.426019
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean and preprocess the data
+data = data.dropna()
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis using statsmodels OLS
+X = data[['log_population']]
+X = sm.add_constant(X)
+y = data['log_gdp']
+
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Perform regression analysis using sklearn Linear Regression
+X = data[['population']]
+y = data['gdp']
+
+reg = LinearRegression().fit(X, y)
+print('Coefficients:', reg.coef_)
+print('Intercept:', reg.intercept_)
