@@ -9749,3 +9749,64 @@ y = data['gdp']
 reg = LinearRegression().fit(X, y)
 print('Coefficients:', reg.coef_)
 print('Intercept:', reg.intercept_)
+# Change made on 2024-06-26 21:33:04.940622
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data_url = 'https://publicdata.org/data/economic_data.csv'
+df = pd.read_csv(data_url)
+
+# Perform some exploratory data analysis
+print(df.head())
+print(df.describe())
+print(df.info())
+
+# Data preprocessing
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation']
+
+# Train a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Train a linear regression model using sklearn
+reg = LinearRegression().fit(X, y)
+print('Intercept:', reg.intercept_)
+print('Coefficients:', reg.coef_)
+# Change made on 2024-06-26 21:33:09.277799
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Fetch data from public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Clean and preprocess the data
+data = data.dropna()
+data['log_gdp'] = np.log(data['gdp'])
+data['log_income'] = np.log(data['income'])
+
+# Fit OLS regression model
+X = data[['log_income']]
+y = data['log_gdp']
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Display regression results
+print(model.summary())
+
+# Fit linear regression model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+# Predict log GDP for a new value of log income
+new_log_income = np.log(50000)
+predicted_log_gdp = model_sklearn.predict([[new_log_income]])
+
+print(f'Predicted log GDP for log income $50,000: {predicted_log_gdp[0]}')
+```
