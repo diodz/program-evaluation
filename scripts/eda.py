@@ -9810,3 +9810,36 @@ predicted_log_gdp = model_sklearn.predict([[new_log_income]])
 
 print(f'Predicted log GDP for log income $50,000: {predicted_log_gdp[0]}')
 ```
+# Change made on 2024-06-26 21:33:14.400311
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.api import VAR
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetching dataset from OpenML
+data = fetch_openml(data_id=42182)
+
+# Convert dataset to pandas dataframe
+df = pd.DataFrame(data.data, columns=data.feature_names)
+
+# Performing linear regression
+X = df[['feature1', 'feature2']]
+y = df['target']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Getting coefficient values
+coef_values = model.coef_
+
+# Performing Vector Autoregression (VAR) model
+model_var = VAR(df)
+results_var = model_var.fit()
+
+# Getting Granger causality results
+causality_results = results_var.test_causality('feature1', 'feature2')
+
+# Printing results
+print("Linear Regression Coefficients:", coef_values)
+print("Granger Causality Test Results:", causality_results)
