@@ -9843,3 +9843,74 @@ causality_results = results_var.test_causality('feature1', 'feature2')
 # Printing results
 print("Linear Regression Coefficients:", coef_values)
 print("Granger Causality Test Results:", causality_results)
+# Change made on 2024-06-26 21:33:22.545707
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Perform some preliminary analysis
+print(data.head())
+print(data.describe())
+
+# Data preprocessing
+X = data[['independent_var_1', 'independent_var_2']]
+y = data['dependent_var']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+reg = LinearRegression()
+reg.fit(X_train, y_train)
+
+# Make predictions
+y_pred = reg.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Conduct statistical analysis
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary()) 
+
+# Further analysis and interpretation of the results...
+# Change made on 2024-06-26 21:33:27.366921
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load economic data from public database
+data = pd.read_csv('https://publicdatabase.csv')
+
+# Explore the data
+print(data.head())
+
+# Check for stationarity using Augmented Dickey-Fuller test
+result = adfuller(data['GDP'])
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+
+# Fit a linear regression model
+X = data[['Unemployment Rate']]
+y = data['GDP']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Predict GDP using unemployment rate
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mse = np.mean((predictions - y_test)**2)
+print('Mean Squared Error:', mse)
