@@ -9914,3 +9914,30 @@ predictions = model.predict(X_test)
 # Evaluate model performance
 mse = np.mean((predictions - y_test)**2)
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:33:31.609581
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Perform regression analysis using statsmodels
+X = data[['unemployment_rate', 'inflation_rate']]
+X = sm.add_constant(X)
+y = data['log_gdp']
+
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform regression analysis using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
