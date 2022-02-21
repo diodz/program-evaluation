@@ -9941,3 +9941,39 @@ model_sklearn.fit(X, y)
 
 print("Intercept:", model_sklearn.intercept_)
 print("Coefficients:", model_sklearn.coef_)
+# Change made on 2024-06-26 21:33:37.957023
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://data.gov/dataset/economic_data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+data['log_income'] = np.log(data['income'])
+
+# Check for stationarity in time series data
+result = adfuller(data['log_gdp'])
+if result[1] <= 0.05:
+    print("The log GDP time series is stationary")
+else:
+    print("The log GDP time series is not stationary")
+
+# Perform linear regression
+X = data[['log_income']]
+y = data['log_gdp']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate model performance
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+print(f'Training R^2: {train_score}, Testing R^2: {test_score}')
