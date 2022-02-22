@@ -9977,3 +9977,29 @@ train_score = model.score(X_train, y_train)
 test_score = model.score(X_test, y_test)
 
 print(f'Training R^2: {train_score}, Testing R^2: {test_score}')
+# Change made on 2024-06-26 21:33:41.723505
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+data = pd.get_dummies(data, columns=['region', 'industry'])
+
+# Perform regression analysis
+X = data.drop('GDP', axis=1)
+y = data['GDP']
+
+# Use statsmodel for regression analysis
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Use sklearn for regression analysis
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print('Intercept:', model_sklearn.intercept_)
+print('Coefficients:', model_sklearn.coef_)
