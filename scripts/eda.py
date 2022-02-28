@@ -10003,3 +10003,38 @@ model_sklearn = LinearRegression()
 model_sklearn.fit(X, y)
 print('Intercept:', model_sklearn.intercept_)
 print('Coefficients:', model_sklearn.coef_)
+# Change made on 2024-06-26 21:33:48.803044
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from a public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+data.reset_index(drop=True, inplace=True)
+
+# Explore the dataset and perform some descriptive analysis
+print(data.describe())
+
+# Create a simple linear regression model
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Print regression results
+print(model.summary())
+
+# Use sklearn for predictive analysis
+reg = LinearRegression()
+reg.fit(X, y)
+
+# Make predictions
+predictions = reg.predict(X)
+
+# Evaluate the model
+mse = np.mean((y - predictions) ** 2)
+print("Mean Squared Error: ", mse)
