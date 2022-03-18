@@ -10125,3 +10125,35 @@ X_train = sm.add_constant(X_train)
 model_ols = sm.OLS(y_train, X_train).fit()
 print(model_ols.summary())
 ```
+# Change made on 2024-06-26 21:34:07.150935
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Fit a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+regression = LinearRegression()
+regression.fit(X, y)
+print(regression.coef_)
+
+# Visualize the data and regression line
+plt.scatter(data['independent_var1'], y, color='blue')
+plt.plot(data['independent_var1'], model.predict(X), color='red')
+plt.xlabel('Independent Variable 1')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Analysis')
+plt.show()
