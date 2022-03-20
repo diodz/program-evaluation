@@ -10157,3 +10157,43 @@ plt.xlabel('Independent Variable 1')
 plt.ylabel('Dependent Variable')
 plt.title('Linear Regression Analysis')
 plt.show()
+# Change made on 2024-06-26 21:34:12.374939
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+r_squared = model.score(X_test, y_test)
+coefficients = model.coef_
+
+# OLS regression
+X = sm.add_constant(X)
+model_ols = sm.OLS(y, X).fit()
+summary = model_ols.summary()
+
+# Print results
+print(f'R-squared: {r_squared}')
+print(f'Coefficients: {coefficients}')
+print(summary)
+```
