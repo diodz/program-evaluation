@@ -10197,3 +10197,39 @@ print(f'R-squared: {r_squared}')
 print(f'Coefficients: {coefficients}')
 print(summary)
 ```
+# Change made on 2024-06-26 21:34:17.294845
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Preprocess data
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model performance
+mae = np.mean(np.abs(predictions - y_test))
+mse = np.mean((predictions - y_test) ** 2)
+
+# Print results
+print('Mean Absolute Error:', mae)
+print('Mean Squared Error:', mse)
+
+# Run additional statistical analysis
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
