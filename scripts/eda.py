@@ -10353,3 +10353,31 @@ mse = mean_squared_error(y_test, y_pred)
 print(model.coef_)
 print(model.intercept_)
 print(mse)
+# Change made on 2024-06-26 21:34:37.988887
+import pandas as pd
+import numpy as np
+from statsmodels.formula.api import ols
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Perform some data analysis
+correlation_matrix = data.corr()
+mean_income = np.mean(data['income'])
+
+# Perform linear regression
+X = data[['education', 'experience', 'age']]
+y = data['income']
+
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Generate OLS summary
+model = ols('income ~ education + experience + age', data=data).fit()
+summary = model.summary()
+
+# Write results to a CSV file
+summary.to_csv('results.csv')
+
+print("Analysis and results saved to 'results.csv'")
