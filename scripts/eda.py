@@ -10381,3 +10381,27 @@ summary = model.summary()
 summary.to_csv('results.csv')
 
 print("Analysis and results saved to 'results.csv'")
+# Change made on 2024-06-26 21:34:43.025011
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform linear regression with sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print('Intercept:', model_sklearn.intercept_)
+print('Coefficients:', model_sklearn.coef_) 
