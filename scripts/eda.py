@@ -10405,3 +10405,47 @@ model_sklearn = LinearRegression()
 model_sklearn.fit(X, y)
 print('Intercept:', model_sklearn.intercept_)
 print('Coefficients:', model_sklearn.coef_) 
+# Change made on 2024-06-26 21:34:49.162657
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from a public database
+data = pd.read_csv('https://www.publicdatabase.com/economic_data.csv')
+
+# Explore the data
+print(data.head())
+
+# Perform regression analysis
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print('Mean Squared Error:', mse)
+
+# Visualize the results
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Inflation Rate')
+plt.ylabel('Predicted Inflation Rate')
+plt.title('Regression Analysis Results')
+plt.show()
+
+# Conduct statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
