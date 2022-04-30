@@ -10449,3 +10449,46 @@ plt.show()
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:34:56.110330
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+r_squared = model.score(X_test, y_test)
+coefficients = model.coef_
+intercept = model.intercept_
+
+# Visualize results
+plt.scatter(X_test['GDP'], y_test, color='blue')
+plt.scatter(X_test['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.legend(['Actual', 'Predicted'])
+plt.show()
+
+# Conduct statistical analysis
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
