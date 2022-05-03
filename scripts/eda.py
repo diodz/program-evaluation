@@ -10532,3 +10532,28 @@ X_train_sm = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train_sm).fit()
 
 print(model_sm.summary())
+# Change made on 2024-06-26 21:35:08.474349
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://publicdatabase.com/datafile.csv')
+
+# Select relevant columns for the research
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Stock Market Performance']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients of the model
+print("Coefficients: ", model.coef_)
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Calculate the R-squared value
+r_squared = model.score(X, y)
+print("R-squared: ", r_squared)
