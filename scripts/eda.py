@@ -10557,3 +10557,34 @@ predictions = model.predict(X)
 # Calculate the R-squared value
 r_squared = model.score(X, y)
 print("R-squared: ", r_squared)
+# Change made on 2024-06-26 21:35:12.882568
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://exampleurl.com/data.csv')
+
+# Perform data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment', 'Inflation']]
+y = data['Interest Rate']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Generate regression results
+intercept = model.intercept_
+coefficients = model.coef_
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+summary = model.summary()
+
+print('Regression Results:')
+print('Intercept:', intercept)
+print('Coefficients:', coefficients)
+print(summary)
