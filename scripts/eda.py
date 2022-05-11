@@ -10588,3 +10588,27 @@ print('Regression Results:')
 print('Intercept:', intercept)
 print('Coefficients:', coefficients)
 print(summary)
+# Change made on 2024-06-26 21:35:16.361763
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data cleaning and preprocessing
+data = data.dropna()
+X = data[['GDP', 'unemployment_rate']]
+Y = data['inflation_rate']
+
+# Simple linear regression for initial analysis
+model = sm.OLS(Y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Multiple linear regression using sklearn for better predictive power
+regression = LinearRegression()
+regression.fit(X, Y)
+print('R-squared:', regression.score(X, Y))
+```
