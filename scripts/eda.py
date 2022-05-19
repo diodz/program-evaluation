@@ -10612,3 +10612,50 @@ regression = LinearRegression()
 regression.fit(X, Y)
 print('R-squared:', regression.score(X, Y))
 ```
+# Change made on 2024-06-26 21:35:22.454136
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import requests
+import io
+
+# Load data from public database
+url = "https://example.com/public_data.csv"
+response = requests.get(url)
+data = pd.read_csv(io.StringIO(response.text))
+
+# Perform some initial data processing
+data.dropna(inplace=True)
+
+# Split data into independent and dependent variables
+X = data[['independent_var1', 'independent_var2', 'independent_var3']]
+y = data['dependent_var']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model using statsmodels
+X_train_sm = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train_sm).fit()
+
+# Make predictions on the test set
+X_test_sm = sm.add_constant(X_test)
+y_pred = model.predict(X_test_sm)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+
+# Fit a linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred_sk = lm.predict(X_test)
+
+# Evaluate the model
+mse_sk = mean_squared_error(y_test, y_pred_sk)
+print(f'Mean Squared Error (sklearn): {mse_sk}')
