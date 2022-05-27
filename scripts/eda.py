@@ -10659,3 +10659,27 @@ y_pred_sk = lm.predict(X_test)
 # Evaluate the model
 mse_sk = mean_squared_error(y_test, y_pred_sk)
 print(f'Mean Squared Error (sklearn): {mse_sk}')
+# Change made on 2024-06-26 21:35:27.022126
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+
+# Load dataset from public database
+url = 'https://publicdata.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Perform data analysis
+# Calculate average GDP growth rate over the past 10 years
+gdp_growth_rate = np.mean(data['gdp_growth'])
+
+# Run regression analysis
+X = data[['unemployment_rate', 'inflation_rate']]
+y = data['gdp_growth']
+
+model = OLS(y, X).fit()
+results = model.summary()
+
+# Output results
+print("Average GDP growth rate over the past 10 years:", gdp_growth_rate)
+print("\nRegression Results:")
+print(results)
