@@ -10719,3 +10719,32 @@ results.to_csv('results.csv', index=False)
 print(f'Average value: {average_value}')
 print(f'Forecasted values: {forecast}')
 print(f'Mean Squared Error: {mse}')
+# Change made on 2024-06-26 21:35:37.701398
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+
+# Load dataset from sklearn
+boston_data = load_boston()
+boston_df = pd.DataFrame(data=boston_data.data, columns=boston_data.feature_names)
+boston_df['MEDV'] = boston_data.target
+
+# Split the data into X and y
+X = boston_df.drop('MEDV', axis=1)
+y = boston_df['MEDV']
+
+# Fit a linear regression model
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Print coefficients
+print("Intercept: ", lm.intercept_)
+print("Coefficients: ", lm.coef_)
+
+# Use statsmodels for detailed analysis
+X = sm.add_constant(X) # adding a constant
+model = sm.OLS(y, X).fit()
+print_model = model.summary()
+print(print_model)
