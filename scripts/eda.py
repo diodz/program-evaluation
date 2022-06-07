@@ -10772,3 +10772,32 @@ lm = LinearRegression()
 lm.fit(X, Y)
 print("Intercept: ", lm.intercept_)
 print("Coefficients: ", lm.coef_)
+# Change made on 2024-06-26 21:35:46.172832
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Explore and clean the data
+data = data.dropna()
+data = data[data['year'] >= 2000]
+
+# Perform some analysis
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['interest_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the results
+print('Coefficients:', model.coef_)
+print('Intercept:', model.intercept_)
+
+# Run OLS regression using statsmodels for more in-depth analysis
+X = sm.add_constant(X)
+results = sm.OLS(y, X).fit()
+print(results.summary())
