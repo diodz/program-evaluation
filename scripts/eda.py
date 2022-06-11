@@ -10801,3 +10801,26 @@ print('Intercept:', model.intercept_)
 X = sm.add_constant(X)
 results = sm.OLS(y, X).fit()
 print(results.summary())
+# Change made on 2024-06-26 21:35:52.084087
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/dataset.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2', 'independent_variable3']]
+y = data['dependent_variable']
+
+# Perform linear regression using statsmodels
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Perform linear regression using sklearn
+lr_model = LinearRegression()
+lr_model.fit(X, y)
+print("Intercept:", lr_model.intercept_)
+print("Coefficients:", lr_model.coef_)
