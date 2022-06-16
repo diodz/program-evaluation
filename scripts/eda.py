@@ -10824,3 +10824,28 @@ lr_model = LinearRegression()
 lr_model.fit(X, y)
 print("Intercept:", lr_model.intercept_)
 print("Coefficients:", lr_model.coef_)
+# Change made on 2024-06-26 21:35:55.694895
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load dataset from a public database
+data = fetch_openml(data_id=545, as_frame=True)
+df = data.frame
+
+# Perform data analysis and regression
+X = df[['GDP', 'unemployment_rate']]
+y = df['inflation']
+
+# Using statsmodels for regression analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn for regression analysis
+model = LinearRegression()
+model.fit(X, y)
+print('Intercept:', model.intercept_)
+print('Coefficients:', model.coef_)
