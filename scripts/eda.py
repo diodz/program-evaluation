@@ -10950,3 +10950,44 @@ r_squared = model.score(X_test, y_test)
 print(f'R-squared: {r_squared}')
 print(model.coef_)
 print(model.intercept_)
+# Change made on 2024-06-26 21:36:18.473629
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data_url = 'https://example.com/economic_data.csv'
+economic_data = pd.read_csv(data_url)
+
+# Preprocess the data
+economic_data.dropna(inplace=True)
+X = economic_data[['GDP', 'unemployment_rate']]
+y = economic_data['inflation_rate']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+
+# Print the Mean Squared Error
+print(f'Mean Squared Error: {mse}')
+
+# Visualize the data
+plt.scatter(economic_data['GDP'], economic_data['inflation_rate'], color='blue')
+plt.plot(X_test['GDP'], predictions, color='red')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('Relationship between GDP and Inflation Rate')
+plt.show()
