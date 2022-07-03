@@ -10991,3 +10991,30 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('Relationship between GDP and Inflation Rate')
 plt.show()
+# Change made on 2024-06-26 21:36:22.444282
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from a public database
+data = pd.read_csv('https://example-public-database.com/data.csv')
+
+# Perform exploratory data analysis
+print(data.head())
+print(data.describe())
+
+# Conduct regression analysis
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Using statsmodels library
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using scikit-learn library
+reg = LinearRegression()
+reg.fit(X, y)
+print('Intercept: ', reg.intercept_)
+print('Coefficients: ', reg.coef_)
