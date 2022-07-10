@@ -11018,3 +11018,27 @@ reg = LinearRegression()
 reg.fit(X, y)
 print('Intercept: ', reg.intercept_)
 print('Coefficients: ', reg.coef_)
+# Change made on 2024-06-26 21:36:26.702531
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# load data from a public database
+data = pd.read_csv('https://public_database_url.com/data.csv')
+
+# data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation']]
+y = data['economic_growth']
+
+# perform linear regression using statsmodels
+X = sm.add_constant(X) # adding a constant for the intercept
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# perform linear regression using sklearn
+reg = LinearRegression()
+reg.fit(X, y)
+print('Intercept:', reg.intercept_)
+print('Coefficients:', reg.coef_)
