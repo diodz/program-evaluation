@@ -11042,3 +11042,88 @@ reg = LinearRegression()
 reg.fit(X, y)
 print('Intercept:', reg.intercept_)
 print('Coefficients:', reg.coef_)
+# Change made on 2024-06-26 21:36:32.337675
+import pandas as pd
+import numpy as np
+from statsmodels.formula.api import ols
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://publicdatabase.csv')
+
+# Explore data
+print(data.head())
+print(data.info())
+print(data.describe())
+
+# Preprocess data (e.g. handle missing values, encode categorical variables, etc.)
+data.dropna(inplace=True)
+data = pd.get_dummies(data, columns=['categorical_var'])
+
+# Split data into train and test sets
+X = data.drop('target_variable', axis=1)
+y = data['target_variable']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Perform linear regression
+regression_model = LinearRegression()
+regression_model.fit(X_train, y_train)
+
+# Evaluate model performance
+train_score = regression_model.score(X_train, y_train)
+test_score = regression_model.score(X_test, y_test)
+
+print(f'Training score: {train_score}')
+print(f'Test score: {test_score}')
+
+# Generate insights
+results = ols('target_variable ~ var1 + var2', data=data).fit()
+print(results.summary())
+# Change made on 2024-06-26 21:36:38.817685
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+# Assuming dataset contains variables related to economic indicators and policy measures
+
+data = pd.read_csv('https://publicdatabase.com/sampledata.csv')
+
+# Perform exploratory data analysis
+print(data.head())
+print(data.describe())
+
+# Define independent and dependent variables
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Policy Measure']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model performance
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
+
+# Visualize results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Policy Measure')
+plt.ylabel('Predicted Policy Measure')
+plt.title('Actual vs Predicted Policy Measure')
+plt.show()
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
