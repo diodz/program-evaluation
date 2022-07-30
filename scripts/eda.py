@@ -11127,3 +11127,67 @@ plt.show()
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:36:42.620642
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean the data
+data = data.dropna()
+
+# Perform statistical analysis
+X = data[['GDP', 'Unemployment']]
+y = data['Inflation']
+
+# Use OLS regression model
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Use sklearn linear regression model
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+r_squared = regression_model.score(X, y)
+coefficients = regression_model.coef_
+
+print("R-squared:", r_squared)
+print("Coefficients:", coefficients)
+# Change made on 2024-06-26 21:36:48.576648
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load the dataset from a public database
+data = pd.read_csv('https://publicdatabase.com/economic_data.csv')
+
+# Perform some data preprocessing and cleaning
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
+
+# Perform some additional analysis using statistical models
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train)
+results = model.fit()
+print(results.summary())
