@@ -11191,3 +11191,39 @@ X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train)
 results = model.fit()
 print(results.summary())
+# Change made on 2024-06-26 21:36:54.407674
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://url-to-public-database/dataset.csv')
+
+# Preprocess the data
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Stock Market Index']
+
+# Create a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Get the summary statistics of the regression model
+print(model.summary())
+
+# Create a linear regression model using sklearn
+lr = LinearRegression()
+lr.fit(X, y)
+
+# Get the coefficients and intercept from sklearn model
+coefficients = lr.coef_
+intercept = lr.intercept_
+
+# Print the coefficients and intercept
+print('Coefficients:', coefficients)
+print('Intercept:', intercept)
+
+# Perform additional analysis and visualizations as needed
+
+# Save the results to a file for further analysis and use in the article
+model.save('results_model.pkl')
