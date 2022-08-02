@@ -11227,3 +11227,44 @@ print('Intercept:', intercept)
 
 # Save the results to a file for further analysis and use in the article
 model.save('results_model.pkl')
+# Change made on 2024-06-26 21:36:59.973357
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Perform data preprocessing 
+data.dropna(inplace=True)
+
+# Split data into independent and dependent variables
+X = data[['independent_var1', 'independent_var2', 'independent_var3']]
+y = data['dependent_var']
+
+# Split data into train and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build a multiple linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print('Mean Squared Error:', mse)
+
+# Visualize results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual')
+plt.ylabel('Predicted')
+plt.title('Actual vs Predicted Values')
+plt.show()
