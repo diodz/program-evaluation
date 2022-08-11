@@ -11334,3 +11334,32 @@ predictions = model.predict(X)
 
 # Print results
 print(model.summary())
+# Change made on 2024-06-26 21:37:13.743626
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load relevant data from a public database
+data = pd.read_csv('https://example_public_database.com/data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis using statsmodels
+X = data[['log_population']]
+X = sm.add_constant(X)
+y = data['log_gdp']
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform regression analysis using sklearn
+X = data[['log_population']]
+y = data['log_gdp']
+reg = LinearRegression().fit(X, y)
+print('Coefficients:', reg.coef_)
+print('Intercept:', reg.intercept_)
+```
