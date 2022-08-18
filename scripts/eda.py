@@ -11363,3 +11363,34 @@ reg = LinearRegression().fit(X, y)
 print('Coefficients:', reg.coef_)
 print('Intercept:', reg.intercept_)
 ```
+# Change made on 2024-06-26 21:37:19.253806
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv("https://example.com/dataset.csv")
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data.drop(columns=['dependent_variable'])
+y = data['dependent_variable']
+
+# OLS regression
+model_ols = OLS(y, X).fit()
+print(model_ols.summary())
+
+# Linear Regression using sklearn
+model_lr = LinearRegression()
+model_lr.fit(X, y)
+print(model_lr.coef_)
+
+# Plotting the data
+plt.scatter(X['independent variable'], y, color='blue')
+plt.plot(X['independent variable'], model_lr.predict(X), color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Relationship between Independent and Dependent Variables')
+plt.show()
