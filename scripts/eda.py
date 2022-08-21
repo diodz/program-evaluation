@@ -11394,3 +11394,32 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Relationship between Independent and Dependent Variables')
 plt.show()
+# Change made on 2024-06-26 21:37:23.271041
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Data cleaning and preprocessing
+data.dropna(inplace=True)
+data["log_gdp"] = np.log(data["gdp"])
+X = data[["log_gdp", "unemployment_rate"]]
+y = data["inflation_rate"]
+
+# Fit a linear regression model using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Fit a linear regression model using scikit-learn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+# Print coefficients
+print("Intercept:", model_sklearn.intercept_)
+print("Coefficients:", model_sklearn.coef_)
