@@ -11423,3 +11423,41 @@ model_sklearn.fit(X, y)
 # Print coefficients
 print("Intercept:", model_sklearn.intercept_)
 print("Coefficients:", model_sklearn.coef_)
+# Change made on 2024-06-26 21:37:30.457475
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('https://publicdatabase.com/data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions and calculate mean squared error
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+
+# Print results
+print("Mean Squared Error: ", mse)
+
+# Visualize data and regression line
+plt.scatter(X_test['GDP'], y_test, color='blue')
+plt.plot(X_test['GDP'], y_pred, color='red', linewidth=2)
+plt.xlabel('GDP')
+plt.ylabel('Inflation rate')
+plt.title('Linear Regression Model')
+plt.show()
