@@ -11461,3 +11461,71 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation rate')
 plt.title('Linear Regression Model')
 plt.show()
+# Change made on 2024-06-26 21:37:37.044506
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Assume we have a dataset on GDP, unemployment rate, and inflation rate
+data = {
+    'Year': [2010, 2011, 2012, 2013, 2014, 2015],
+    'GDP': [10000, 11000, 12000, 13000, 14000, 15000],
+    'Unemployment Rate': [9, 8, 7, 6, 5, 4],
+    'Inflation Rate': [2, 2.5, 3, 2.8, 2.2, 2]
+}
+
+df = pd.DataFrame(data)
+
+# correlation analysis
+corr_matrix = df.corr()
+
+# regression analysis
+X = df[['Unemployment Rate', 'Inflation Rate']]
+y = df['GDP']
+
+# OLS regression
+model_ols = OLS(y, X).fit()
+ols_results = model_ols.summary()
+
+# Linear regression
+model_linear = LinearRegression().fit(X, y)
+linear_coef = model_linear.coef_
+linear_intercept = model_linear.intercept_
+
+# Analysis results
+print("Correlation Matrix:")
+print(corr_matrix)
+print("\nOLS Regression Results:")
+print(ols_results)
+print("\nLinear Regression Coefficients:")
+print(linear_coef)
+print("Linear Regression Intercept:")
+print(linear_intercept)
+# Change made on 2024-06-26 21:37:42.634214
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://publicdata.org/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate', 'Inflation Rate']]
+y = data['Stock Market Index']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print the coefficients
+print("Coefficients: ", model.coef_)
+
+# Perform OLS regression with statsmodels
+X = sm.add_constant(X)
+ols_model = sm.OLS(y, X).fit()
+
+# Print summary of OLS regression
+print(ols_model.summary())
