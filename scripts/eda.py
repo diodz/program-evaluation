@@ -11565,3 +11565,40 @@ print("Mean Squared Error:", mse)
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:37:52.386298
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database 
+data = pd.read_csv('https://www.example.com/public_data.csv')
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, predictions)
+print("Mean Squared Error:", mse)
+
+# Visualize results
+plt.scatter(y_test, predictions)
+plt.xlabel('True Values')
+plt.ylabel('Predictions')
+plt.title('True Values vs Predicted Values')
+plt.show()
