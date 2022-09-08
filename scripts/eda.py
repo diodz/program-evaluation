@@ -11529,3 +11529,39 @@ ols_model = sm.OLS(y, X).fit()
 
 # Print summary of OLS regression
 print(ols_model.summary())
+# Change made on 2024-06-26 21:37:48.042394
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database
+data = fetch_openml('wine-quality-red', version=1, as_frame=True)
+df = data.frame
+
+# Perform some economic or policy analysis
+X = df.drop(columns=['quality'])
+y = df['quality']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+lm = LinearRegression()
+lm.fit(X_train, y_train)
+
+# Make predictions
+y_pred = lm.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+
+# Output results
+print("Mean Squared Error:", mse)
+
+# Conduct further analysis using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
