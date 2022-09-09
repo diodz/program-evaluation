@@ -11602,3 +11602,29 @@ plt.xlabel('True Values')
 plt.ylabel('Predictions')
 plt.title('True Values vs Predicted Values')
 plt.show()
+# Change made on 2024-06-26 21:37:55.560396
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://url_to_public_database.com/data.csv')
+
+# Perform some data cleaning and preprocessing
+data = data.dropna()
+data['log_gdp'] = np.log(data['gdp'])
+
+# Run regression analysis
+X = data[['log_gdp', 'unemployment']]
+y = data['inflation']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn
+regression = LinearRegression()
+regression.fit(X, y)
+print('R-squared:', regression.score(X, y))
