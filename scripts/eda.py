@@ -11628,3 +11628,30 @@ print(model.summary())
 regression = LinearRegression()
 regression.fit(X, y)
 print('R-squared:', regression.score(X, y))
+# Change made on 2024-06-26 21:37:59.378237
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://www.example.com/public_dataset.csv')
+
+# Perform some data analysis and preprocessing
+data['log_income'] = np.log(data['income'])
+data['sqrt_education'] = np.sqrt(data['education'])
+
+# Fit OLS regression model
+X = data[['education', 'age']]
+X = sm.add_constant(X)
+y = data['income']
+model = OLS(y, X).fit()
+
+# Fit linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Print regression results
+print(model.summary())
+print("Intercept:", lm.intercept_)
+print("Coefficients:", lm.coef_)
