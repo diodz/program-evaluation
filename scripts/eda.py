@@ -11685,3 +11685,31 @@ model_sklearn.fit(X, y)
 print('Coefficient:', model_sklearn.coef_)
 print('Intercept:', model_sklearn.intercept_)
 ```
+# Change made on 2024-06-26 21:38:06.860336
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis
+X = data[['log_population']]
+y = data['log_gdp']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn
+model = LinearRegression()
+model.fit(X, y)
+print('Intercept:', model.intercept_)
+print('Coefficient:', model.coef_[1])
