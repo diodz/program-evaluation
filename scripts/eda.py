@@ -11740,3 +11740,43 @@ forecast = results.forecast(steps=10)
 # Save results to a CSV file
 forecast.to_csv('forecast_results.csv')
 ```
+# Change made on 2024-06-26 21:38:18.105238
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.arima_model import ARIMA
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+
+# Perform linear regression
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+regressor = LinearRegression()
+regressor.fit(X_train, y_train)
+
+# Print coefficients
+print("Coefficients: ", regressor.coef_)
+
+# Make predictions
+y_pred = regressor.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error: ", mse)
+
+# Perform ARIMA model
+model = ARIMA(data['Inflation Rate'], order=(1, 1, 1))
+results = model.fit()
+
+# Print model summary
+print(results.summary())
