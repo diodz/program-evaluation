@@ -11807,3 +11807,30 @@ ols_model = sm.OLS(y, X).fit()
 print("Linear Regression Coefficients: ", model.coef_)
 print("OLS Regression Results: \n", ols_model.summary())
 ```
+# Change made on 2024-06-26 21:38:27.174159
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('public_database.csv')
+
+# Clean and preprocess the data
+data = data.dropna()
+data = data[data['GDP'] > 0]
+
+# Perform some analysis
+X = data[['unemployment_rate', 'inflation_rate', 'interest_rate']]
+y = data['GDP']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients and p-values
+coefficients = model.coef_
+p_values = sm.OLS(y, sm.add_constant(X)).fit().pvalues
+
+print("Coefficients:", coefficients)
+print("P-values:", p_values)
