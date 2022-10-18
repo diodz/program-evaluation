@@ -11856,3 +11856,36 @@ print(model_ols.summary())
 model_lr = LinearRegression().fit(X, y)
 print('Intercept:', model_lr.intercept_)
 print('Coefficients:', model_lr.coef_)
+# Change made on 2024-06-26 21:38:35.810137
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+url = 'https://publicdata.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Clean the data and prepare it for analysis
+data.dropna(inplace=True)
+data = data[data['GDP'] > 0]
+data['unemployment_rate'] = data['unemployment_rate'] / 100
+
+# Perform OLS regression to analyze the relationship between GDP and unemployment rate
+X = data['GDP']
+y = data['unemployment_rate']
+
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Perform linear regression using sklearn to predict future unemployment rates based on GDP
+reg = LinearRegression()
+reg.fit(X, y)
+
+future_GDP = np.array([20000, 22000, 24000]).reshape(-1, 1)
+future_unemployment_rate = reg.predict(np.hstack((np.ones((future_GDP.shape[0], 1)), future_GDP)))
+print('Predicted future unemployment rates based on GDP:')
+print(future_unemployment_rate)
