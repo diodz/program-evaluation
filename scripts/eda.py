@@ -11889,3 +11889,28 @@ future_GDP = np.array([20000, 22000, 24000]).reshape(-1, 1)
 future_unemployment_rate = reg.predict(np.hstack((np.ones((future_GDP.shape[0], 1)), future_GDP)))
 print('Predicted future unemployment rates based on GDP:')
 print(future_unemployment_rate)
+# Change made on 2024-06-26 21:38:39.465418
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledataset.com')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Multiple linear regression model
+model = sm.OLS(y, sm.add_constant(X)).fit()
+
+# Get model summary
+print(model.summary())
+
+# Predict economic growth using sklearn
+reg = LinearRegression().fit(X, y)
+predicted_growth = reg.predict([[5000, 5.2, 2.4]])
+
+print("Predicted economic growth: ", predicted_growth)
