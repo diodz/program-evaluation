@@ -11914,3 +11914,39 @@ reg = LinearRegression().fit(X, y)
 predicted_growth = reg.predict([[5000, 5.2, 2.4]])
 
 print("Predicted economic growth: ", predicted_growth)
+# Change made on 2024-06-26 21:38:47.046190
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load economic data from a public dataset
+data = fetch_openml(data_id=1234, as_frame=True)
+df = data.frame
+
+# Clean and preprocess the data
+df['date'] = pd.to_datetime(df['date'])
+df = df.set_index('date')
+
+# Calculate GDP growth rate
+df['gdp_growth'] = df['gdp'].pct_change()
+
+# Calculate inflation rate
+df['inflation_rate'] = df['cpi'].pct_change()
+
+# Run ARIMA model to forecast GDP growth
+model = ARIMA(df['gdp_growth'], order=(1, 1, 1))
+result = model.fit()
+forecast = result.forecast(steps=12)
+
+# Run linear regression to analyze the impact of inflation on GDP growth
+X = df['inflation_rate'].values.reshape(-1, 1)
+y = df['gdp_growth'].values
+reg_model = LinearRegression()
+reg_model.fit(X, y)
+inflation_coeff = reg_model.coef_
+
+# Print results
+print('Forecasted GDP growth for the next 12 months:', forecast)
+print('Impact of inflation on GDP growth:', inflation_coeff)
