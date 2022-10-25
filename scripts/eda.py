@@ -11950,3 +11950,36 @@ inflation_coeff = reg_model.coef_
 # Print results
 print('Forecasted GDP growth for the next 12 months:', forecast)
 print('Impact of inflation on GDP growth:', inflation_coeff)
+# Change made on 2024-06-26 21:38:51.138790
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/your_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Fit linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Get regression coefficients and statistics
+coefficients = lm.coef_
+intercept = lm.intercept_
+r_squared = lm.score(X, y)
+
+# Fit linear regression model using statsmodels for more detailed statistics
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+summary = model.summary()
+
+# Generate output for article
+print("Regression Coefficients: ", coefficients)
+print("Intercept: ", intercept)
+print("R-squared: ", r_squared)
+print(summary)
