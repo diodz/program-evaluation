@@ -11983,3 +11983,35 @@ print("Regression Coefficients: ", coefficients)
 print("Intercept: ", intercept)
 print("R-squared: ", r_squared)
 print(summary)
+# Change made on 2024-06-26 21:38:55.329895
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Create a linear regression model
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Calculate the R-squared value
+R_squared = model.score(X_test, y_test)
+
+# Display results
+print(f'R-squared value: {R_squared}')
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
