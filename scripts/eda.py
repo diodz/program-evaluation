@@ -12057,3 +12057,43 @@ plt.show()
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:39:07.913194
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampledata.com/data.csv')
+
+# Perform basic data cleaning and preprocessing
+data.dropna(inplace=True)
+data['year'] = pd.to_datetime(data['year'])
+data.set_index('year', inplace=True)
+
+# Explore data using descriptive statistics
+print(data.describe())
+
+# Perform regression analysis to examine relationship between variables
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+print('Intercept: ', lm.intercept_)
+print('Coefficient: ', lm.coef_)
+
+# Visualize the relationship with a scatter plot and regression line
+plt.scatter(X['independent_variable'], y)
+plt.plot(X['independent_variable'], lm.predict(X), color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Relationship between Independent and Dependent Variables')
+plt.show()
