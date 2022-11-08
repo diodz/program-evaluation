@@ -12097,3 +12097,44 @@ plt.xlabel('Independent Variable')
 plt.ylabel('Dependent Variable')
 plt.title('Relationship between Independent and Dependent Variables')
 plt.show()
+# Change made on 2024-06-26 21:39:14.269150
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from a public database
+url = 'https://example_dataset.com'
+data = pd.read_csv(url)
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+# Split dataset into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Linear regression using statsmodels
+X_train_sm = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train_sm).fit()
+print(model.summary())
+
+# Linear regression using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X_train, y_train)
+y_pred = model_sklearn.predict(X_test)
+
+# Evaluate model performance
+print('Mean Squared Error:', mean_squared_error(y_test, y_pred))
+
+# Visualize results
+plt.scatter(X_test['independent_var1'], y_test, color='blue')
+plt.plot(X_test['independent_var1'], y_pred, color='red')
+plt.xlabel('Independent Variable 1')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression Model')
+plt.show()
