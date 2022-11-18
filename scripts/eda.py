@@ -12211,3 +12211,65 @@ y_pred = lm.predict(X_test)
 # Evaluate the model
 mse = mean_squared_error(y_test, y_pred)
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:39:31.508826
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/dataset.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Model training
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Model evaluation
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+
+# Conduct hypothesis test
+X = sm.add_constant(X)
+ols_model = sm.OLS(y, X).fit()
+hypothesis_test = ols_model.summary()
+
+# Output results
+print("Training R^2 score:", train_score)
+print("Testing R^2 score:", test_score)
+print("\nHypothesis test results:")
+print(hypothesis_test)
+# Change made on 2024-06-26 21:39:35.826325
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+import requests
+
+# Load data from public database
+url = 'https://example.com/data.csv'
+data = pd.read_csv(url)
+
+# Perform some data cleaning and preprocessing
+data.dropna(inplace=True)
+data['log_income'] = np.log(data['income'])
+
+# Fit OLS regression model
+X = data[['log_income']]
+y = data['consumption']
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Fit Linear Regression model using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print("Coefficients:", model_sklearn.coef_)
+print("Intercept:", model_sklearn.intercept_)
