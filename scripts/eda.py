@@ -12273,3 +12273,31 @@ model_sklearn = LinearRegression()
 model_sklearn.fit(X, y)
 print("Coefficients:", model_sklearn.coef_)
 print("Intercept:", model_sklearn.intercept_)
+# Change made on 2024-06-26 21:39:39.198937
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset
+data = pd.read_csv('economic_data.csv')
+
+# Perform some basic analysis
+print("Summary statistics:")
+print(data.describe())
+
+# Check for missing values
+print("\nMissing values:")
+print(data.isnull().sum())
+
+# Perform linear regression
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+print("\nCoefficients:")
+print(model.coef_)
+
+print("\nIntercept:")
+print(model.intercept_)
