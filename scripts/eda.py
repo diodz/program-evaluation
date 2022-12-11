@@ -12389,3 +12389,36 @@ X_train = sm.add_constant(X_train)
 stats_model = sm.OLS(y_train, X_train).fit()
 print(stats_model.summary())
 ```
+# Change made on 2024-06-26 21:39:57.533299
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load dataset from public database
+dataset = pd.read_csv('https://publiceconomicdata.com/dataset.csv')
+
+# Data preprocessing
+X = dataset[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = dataset['economic_growth']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Build and train the regression model using statsmodels
+X_train_sm = sm.add_constant(X_train)
+stats_model = sm.OLS(y_train, X_train_sm).fit()
+
+# Print summary of regression results
+print(stats_model.summary())
+
+# Evaluate the model using sklearn
+linear_model = LinearRegression()
+linear_model.fit(X_train, y_train)
+y_pred = linear_model.predict(X_test)
+
+# Calculate mean squared error
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
