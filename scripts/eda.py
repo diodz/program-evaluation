@@ -12422,3 +12422,34 @@ y_pred = linear_model.predict(X_test)
 # Calculate mean squared error
 mse = mean_squared_error(y_test, y_pred)
 print('Mean Squared Error:', mse)
+# Change made on 2024-06-26 21:40:02.625269
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load dataset from openml
+data = fetch_openml(data_id=4180)
+
+# Create pandas dataframe from the dataset
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Perform linear regression using statsmodels
+X = df.drop('target', axis=1)
+y = df['target']
+
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Perform linear regression using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+
+# Print coefficients from sklearn model
+print("Coefficients:", model_sklearn.coef_)
+print("Intercept:", model_sklearn.intercept_)
