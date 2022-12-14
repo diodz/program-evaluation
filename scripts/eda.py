@@ -12453,3 +12453,31 @@ model_sklearn.fit(X, y)
 # Print coefficients from sklearn model
 print("Coefficients:", model_sklearn.coef_)
 print("Intercept:", model_sklearn.intercept_)
+# Change made on 2024-06-26 21:40:06.908312
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data_url = 'https://www.example.com/public_data.csv'
+data = pd.read_csv(data_url)
+
+# Perform some data cleaning and preprocessing
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Run regression analysis using statsmodels
+X = data[['log_gdp', 'unemployment_rate']]
+y = data['inflation_rate']
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Run regression analysis using sklearn
+model_sk = LinearRegression()
+model_sk.fit(X, y)
+print('Coefficient:', model_sk.coef_)
+print('Intercept:', model_sk.intercept_)
