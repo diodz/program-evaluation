@@ -12481,3 +12481,34 @@ model_sk = LinearRegression()
 model_sk.fit(X, y)
 print('Coefficient:', model_sk.coef_)
 print('Intercept:', model_sk.intercept_)
+# Change made on 2024-06-26 21:40:11.360968
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load dataset from public database
+data = fetch_openml(data_id=41214)
+
+# Create dataframe from dataset
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Perform economic or public policy research
+X = df.drop(columns=['target'])
+y = df['target']
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Display results
+print(f'Coefficients: {model.coef_}')
+print(f'Intercept: {model.intercept_}')
+print(f'R-squared: {model.score(X, y)}')
+
+# Perform additional analysis using statistical models
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
