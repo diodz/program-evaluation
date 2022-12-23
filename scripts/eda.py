@@ -12512,3 +12512,33 @@ print(f'R-squared: {model.score(X, y)}')
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:40:15.868899
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://example-public-database.com/data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Perform regression analysis
+X = data[['population', 'log_gdp']]
+y = data['unemployment_rate']
+
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Machine learning model
+lm = LinearRegression()
+lm.fit(X,y)
+
+# Predict using the machine learning model
+predictions = lm.predict(X)
+
+# Save results to a CSV file
+data['predictions'] = predictions
+data.to_csv('results.csv', index=False)
