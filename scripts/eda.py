@@ -12576,3 +12576,52 @@ print(model.summary())
 ```
 
 This code will load the economic data from a public database, calculate the correlation between GDP growth and unemployment rate, fit a linear regression model to predict GDP growth based on unemployment rate, and perform a more detailed regression analysis using statsmodels. This analysis can be used as the basis for an article in an economics or policy journal.
+# Change made on 2024-06-26 21:40:27.485260
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+url = 'https://example.com/dataset.csv'
+data = pd.read_csv(url)
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate coefficient and intercept
+coefficient = model.coef_
+intercept = model.intercept_
+
+print("Coefficients: ", coefficient)
+print("Intercept: ", intercept)
+# Change made on 2024-06-26 21:40:31.814467
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/public_data.csv')
+
+# Clean and preprocess data
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Perform OLS regression
+ols_model = OLS(y, X).fit()
+ols_coefficients = ols_model.params
+
+# Perform Linear Regression using sklearn
+lr_model = LinearRegression().fit(X, y)
+lr_coefficients = lr_model.coef_
+
+# Print results
+print("OLS coefficients:", ols_coefficients)
+print("Linear Regression coefficients:", lr_coefficients)
