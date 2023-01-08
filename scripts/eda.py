@@ -12625,3 +12625,30 @@ lr_coefficients = lr_model.coef_
 # Print results
 print("OLS coefficients:", ols_coefficients)
 print("Linear Regression coefficients:", lr_coefficients)
+# Change made on 2024-06-26 21:40:36.962306
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load data from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Perform data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model using statsmodels
+model = sm.OLS(y_train, sm.add_constant(X_train)).fit()
+print(model.summary())
+
+# Fit a linear regression model using sklearn
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+lr_score = lr.score(X_test, y_test)
+print("R^2 score:", lr_score)
