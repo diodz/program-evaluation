@@ -12652,3 +12652,61 @@ lr = LinearRegression()
 lr.fit(X_train, y_train)
 lr_score = lr.score(X_test, y_test)
 print("R^2 score:", lr_score)
+# Change made on 2024-06-26 21:40:41.927224
+```python
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.stattools import adfuller
+from sklearn.linear_model import LinearRegression
+
+# Load data from public source
+data = pd.read_csv('https://publicdata.com/dataset/economic_data.csv')
+
+# Preprocess data
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+data['diff_gdp'] = data['gdp'].diff()
+data['diff_gdp'].fillna(0, inplace=True)
+
+# Test for stationarity
+result = adfuller(data['gdp'])
+if result[1] > 0.05:
+    print("Data is not stationary")
+
+# Fit linear regression model
+X = data[['year']]
+y = data['gdp']
+model = LinearRegression()
+model.fit(X, y)
+
+# Calculate R-squared
+r_squared = model.score(X, y)
+print("R-squared:", r_squared)
+
+# Write the article with the findings
+```
+# Change made on 2024-06-26 21:40:46.716938
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_iris
+
+# Load dataset
+iris = load_iris()
+iris_df = pd.DataFrame(data= np.c_[iris['data'], iris['target']],
+                     columns= iris['feature_names'] + ['target'])
+
+# Perform linear regression
+X = iris_df['sepal length (cm)'].values.reshape(-1, 1)
+y = iris_df['sepal width (cm)'].values
+
+lr = LinearRegression()
+lr.fit(X, y)
+print("Coefficient:", lr.coef_)
+print("Intercept:", lr.intercept_)
+
+# Perform OLS regression
+model = OLS(y, X)
+results = model.fit()
+print(results.summary())
