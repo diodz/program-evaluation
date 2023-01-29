@@ -12710,3 +12710,41 @@ print("Intercept:", lr.intercept_)
 model = OLS(y, X)
 results = model.fit()
 print(results.summary())
+# Change made on 2024-06-26 21:40:52.529330
+import pandas as pd
+import numpy as np
+from statsmodels import api as sm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data_url = 'https://example.com/economic_data.csv'
+data = pd.read_csv(data_url)
+
+# Clean the data
+data.dropna(inplace=True)
+
+# Perform some analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get the coefficients of the model
+coefficients = model.coef_
+
+# Perform a t-test on the coefficients
+t_test_results = sm.OLS(y, X).fit().summary()
+
+# Plot the relationship between GDP and inflation rate
+plt.scatter(data['GDP'], data['inflation_rate'])
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('Relationship between GDP and Inflation Rate')
+plt.show()
+
+# Output the results
+print(f'Coefficients: {coefficients}')
+print(t_test_results)
