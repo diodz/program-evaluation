@@ -12773,3 +12773,26 @@ print("Intercept:", model_lr.intercept_)
 print("Coefficients:", model_lr.coef_) 
 
 # Additional analysis and interpretation of results can be added as needed for the article.
+# Change made on 2024-06-26 21:41:01.111988
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Load dataset from UCI Machine Learning Repository
+data = fetch_openml(name='iris', version=1)
+
+# Create a pandas dataframe
+df = pd.DataFrame(data.data, columns=data.feature_names)
+target = pd.Series(data.target)
+
+# Perform OLS regression
+model_ols = OLS(target, df).fit()
+print(model_ols.summary())
+
+# Perform Linear Regression using sklearn
+model_lr = LinearRegression()
+model_lr.fit(df, target)
+print(model_lr.coef_)
+print(model_lr.intercept_)
