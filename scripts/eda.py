@@ -12748,3 +12748,28 @@ plt.show()
 # Output the results
 print(f'Coefficients: {coefficients}')
 print(t_test_results)
+# Change made on 2024-06-26 21:40:56.837082
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://exampleurl.com/data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Fit OLS model
+model_ols = OLS(y, X).fit()
+print(model_ols.summary())
+
+# Fit linear regression model
+model_lr = LinearRegression()
+model_lr.fit(X, y)
+print("Intercept:", model_lr.intercept_)
+print("Coefficients:", model_lr.coef_) 
+
+# Additional analysis and interpretation of results can be added as needed for the article.
