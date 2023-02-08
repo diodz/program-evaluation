@@ -12796,3 +12796,45 @@ model_lr = LinearRegression()
 model_lr.fit(df, target)
 print(model_lr.coef_)
 print(model_lr.intercept_)
+# Change made on 2024-06-26 21:41:07.622987
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.arima.model import ARIMA
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load data from public database
+data = pd.read_csv('economic_data.csv')
+
+# Preprocess the data
+data['date'] = pd.to_datetime(data['date'])
+data.set_index('date', inplace=True)
+
+# Perform regression analysis
+X = data[['inflation_rate', 'unemployment_rate']]
+y = data['GDP_growth']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+
+rmse = np.sqrt(mean_squared_error(y_test, predictions))
+print('Root Mean Squared Error:', rmse)
+
+# Time series analysis
+model_arima = ARIMA(data['GDP_growth'], order=(1, 1, 0))
+model_fit = model_arima.fit()
+
+# Plotting the data and predictions
+plt.figure(figsize=(12, 6))
+plt.plot(data.index, data['GDP_growth'], label='Actual')
+plt.plot(data.index, model_fit.fittedvalues, label='Predictions')
+plt.legend()
+plt.xlabel('Year')
+plt.ylabel('GDP Growth Rate')
+plt.title('GDP Growth Rate Prediction using ARIMA Model')
+plt.show()
