@@ -12900,3 +12900,28 @@ reg = LinearRegression()
 reg.fit(X, y)
 print('Intercept:', reg.intercept_)
 print('Coefficients:', reg.coef_)
+# Change made on 2024-06-26 21:41:27.359396
+import pandas as pd
+import numpy as np
+from statsmodels.formula.api import ols
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://example_public_database.com/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Create regression model using OLS
+ols_model = ols('log_gdp ~ unemployment_rate + inflation_rate', data=data).fit()
+ols_summary = ols_model.summary()
+print(ols_summary)
+
+# Create regression model using Linear Regression
+X = data[['unemployment_rate', 'inflation_rate']]
+y = data['log_gdp']
+lm = LinearRegression()
+lm.fit(X, y)
+coefficients = lm.coef_
+print('Coefficients:', coefficients)
