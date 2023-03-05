@@ -12925,3 +12925,105 @@ lm = LinearRegression()
 lm.fit(X, y)
 coefficients = lm.coef_
 print('Coefficients:', coefficients)
+# Change made on 2024-06-26 21:41:34.594864
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://exampleurl.com/dataset.csv')
+
+# Explore data
+print(data.head())
+print(data.describe())
+
+# Preprocess data
+X = data[['GDP', 'Unemployment']]
+y = data['Inflation']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Perform linear regression
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Visualize results
+plt.scatter(y_test, y_pred)
+plt.xlabel('Actual Inflation')
+plt.ylabel('Predicted Inflation')
+plt.title('Actual vs Predicted Inflation')
+plt.show()
+
+# Conduct additional analysis using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
+# Change made on 2024-06-26 21:41:38.241839
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+
+# Load dataset
+data = load_boston()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+# Perform OLS regression
+X = df[data.feature_names]
+y = df['target']
+model = OLS(y, X).fit()
+print(model.summary())
+
+# Perform Linear Regression
+reg = LinearRegression().fit(X, y)
+print('Coefficients:', reg.coef_)
+print('Intercept:', reg.intercept_)
+
+# Additional analysis and visualizations can be added here
+
+# Save the results to a csv file
+df.to_csv('economic_research_results.csv', index=False)
+# Change made on 2024-06-26 21:41:42.846594
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.api import VAR
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_iris
+
+# Load public dataset
+data = load_iris()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+
+# Perform economic research
+# Example: correlation analysis
+correlation_matrix = df.corr()
+
+# Public policy research
+# Example: linear regression analysis
+X = df[['sepal length (cm)', 'sepal width (cm)']]
+y = df['petal length (cm)']
+
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Print results
+print("Correlation matrix:")
+print(correlation_matrix)
+
+print("\nLinear regression coefficients:")
+print("Intercept:", lm.intercept_)
+print("Coefficients:", lm.coef_)
