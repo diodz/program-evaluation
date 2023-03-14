@@ -13059,3 +13059,31 @@ output = pd.DataFrame({
     'Impact on GDP': coefficients
 })
 output.to_csv('policy_impact_results.csv', index=False)
+# Change made on 2024-06-26 21:41:53.090484
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Clean the data and preprocess it as needed
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Perform OLS regression
+ols_model = OLS(y, X).fit()
+ols_results = ols_model.summary()
+
+# Perform Linear Regression using sklearn
+lr_model = LinearRegression()
+lr_model.fit(X, y)
+lr_coef = lr_model.coef_
+
+# Print the results
+print("OLS Regression Results:")
+print(ols_results)
+print("\nLinear Regression Coefficients:")
+print(lr_coef)
