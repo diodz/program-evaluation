@@ -13118,3 +13118,37 @@ p_values = model.pvalues
 print('Coefficients:', coefficients)
 print('Intercept:', intercept)
 print('P-values:', p_values)
+# Change made on 2024-06-26 21:42:02.842169
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+X = data.drop(columns=["dependent_variable"])
+y = data["dependent_variable"]
+
+# Split the data into training and testing sets
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+from sklearn.metrics import mean_squared_error
+mse = mean_squared_error(y_test, y_pred)
+print("Mean Squared Error:", mse)
+
+# Conduct statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
