@@ -13152,3 +13152,46 @@ print("Mean Squared Error:", mse)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:42:08.543716
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load the dataset from a public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+X = data[['GDP', 'Unemployment', 'Inflation']]
+y = data['Happiness_Index']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions on the testing set
+predictions = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+
+# Visualize the results
+plt.scatter(y_test, predictions)
+plt.xlabel('Actual Happiness Index')
+plt.ylabel('Predicted Happiness Index')
+plt.title('Happiness Index Prediction')
+plt.show()
+
+# Conduct regression analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+```
