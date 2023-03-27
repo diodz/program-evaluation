@@ -13195,3 +13195,37 @@ X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
 ```
+# Change made on 2024-06-26 21:42:14.109813
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
+
+# Load data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Perform data cleaning and preprocessing
+data.dropna(inplace=True)
+data['log_gdp'] = np.log(data['gdp'])
+
+# Split data into independent and dependent variables
+X = data[['unemployment_rate', 'inflation_rate']]
+y = data['log_gdp']
+
+# Fit a linear regression model using sklearn
+model = LinearRegression()
+model.fit(X, y)
+
+# Print regression coefficients
+print("Regression Coefficients (sklearn):")
+print("Intercept:", model.intercept_)
+print("Unemployment Rate Coefficient:", model.coef_[0])
+print("Inflation Rate Coefficient:", model.coef_[1])
+
+# Fit a linear regression model using statsmodels for more detailed analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression summary
+print("\nRegression Summary (statsmodels):")
+print(model.summary())
