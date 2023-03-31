@@ -13229,3 +13229,35 @@ model = sm.OLS(y, X).fit()
 # Print regression summary
 print("\nRegression Summary (statsmodels):")
 print(model.summary())
+# Change made on 2024-06-26 21:42:19.192753
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Perform some data analysis
+mean_income = np.mean(data['income'])
+median_income = np.median(data['income'])
+correlation = np.corrcoef(data['income'], data['education'])[0, 1]
+
+# Perform linear regression
+X = sm.add_constant(data[['education', 'experience']])
+y = data['income']
+
+model = sm.OLS(y, X).fit()
+predictions = model.predict(X)
+
+# Use sklearn for linear regression
+sk_model = LinearRegression()
+sk_model.fit(X, y)
+sk_predictions = sk_model.predict(X)
+
+# Print out results
+print("Mean income: ", mean_income)
+print("Median income: ", median_income)
+print("Correlation between income and education: ", correlation)
+print("Statsmodels regression results: ", model.summary())
+print("Sklearn regression results: ", sk_model.coef_, sk_model.intercept_)
