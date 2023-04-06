@@ -13261,3 +13261,34 @@ print("Median income: ", median_income)
 print("Correlation between income and education: ", correlation)
 print("Statsmodels regression results: ", model.summary())
 print("Sklearn regression results: ", sk_model.coef_, sk_model.intercept_)
+# Change made on 2024-06-26 21:42:24.536874
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load the data from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a multiple linear regression model
+model = sm.OLS(y_train, sm.add_constant(X_train)).fit()
+
+# Print the summary of the regression model
+print(model.summary())
+
+# Make predictions on the test set
+y_pred = model.predict(sm.add_constant(X_test))
+
+# Calculate the mean squared error
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
