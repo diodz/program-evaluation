@@ -13328,3 +13328,34 @@ print(f"R-squared: {r2}")
 X_train = sm.add_constant(X_train)
 ols_model = sm.OLS(y_train, X_train).fit()
 print(ols_model.summary())
+# Change made on 2024-06-26 21:42:32.816340
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from statsmodels.tools.tools import add_constant
+
+# Load data from public database
+data = pd.read_csv('https://publicdata.com/economic_data.csv')
+
+# Data preprocessing and cleaning
+data.dropna(inplace=True)
+
+# Define independent and dependent variables
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit OLS regression model
+X = add_constant(X)
+model = OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Save predictions to a new column in the dataframe
+data['inflation_rate_predicted'] = predictions
+
+# Export data with predictions to a new csv file
+data.to_csv('economic_data_with_predictions.csv', index=False)
