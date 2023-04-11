@@ -13359,3 +13359,27 @@ data['inflation_rate_predicted'] = predictions
 
 # Export data with predictions to a new csv file
 data.to_csv('economic_data_with_predictions.csv', index=False)
+# Change made on 2024-06-26 21:42:36.762587
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://url_to_public_database/dataset.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Perform linear regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform linear regression using sklearn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X, y)
+print('Intercept:', model_sklearn.intercept_)
+print('Coefficients:', model_sklearn.coef_)
