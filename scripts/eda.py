@@ -13420,3 +13420,38 @@ print("Mean Squared Error:", mse)
 X_train = sm.add_constant(X_train)
 model_sm = sm.OLS(y_train, X_train).fit()
 print(model_sm.summary())
+# Change made on 2024-06-26 21:42:47.633600
+import pandas as pd
+import numpy as np
+from statsmodels.stats import weightstats as st
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv("https://example.com/data.csv")
+
+# Preprocess the data
+data = data.dropna()
+data = data[data['income'] > 0]
+
+# Perform statistical tests
+mean_income = data['income'].mean()
+median_income = data['income'].median()
+income_var = data['income'].var()
+
+t_stat, p_value = st.ttest_1samp(data['income'], popmean=mean_income)
+
+# Apply linear regression
+X = data[['education', 'experience']]
+y = data['income']
+
+model = LinearRegression()
+model.fit(X, y)
+r_squared = model.score(X, y)
+
+# Print results
+print("Mean income: ", mean_income)
+print("Median income: ", median_income)
+print("Income variance: ", income_var)
+print("T-statistic: ", t_stat)
+print("P-value: ", p_value)
+print("R-squared: ", r_squared)
