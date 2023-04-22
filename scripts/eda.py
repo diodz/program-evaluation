@@ -13455,3 +13455,28 @@ print("Income variance: ", income_var)
 print("T-statistic: ", t_stat)
 print("P-value: ", p_value)
 print("R-squared: ", r_squared)
+# Change made on 2024-06-26 21:42:55.209285
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+
+# Load the Boston housing dataset
+boston = load_boston()
+boston_df = pd.DataFrame(boston.data, columns=boston.feature_names)
+boston_df['MEDV'] = boston.target
+
+# Simple linear regression using statsmodels
+X = sm.add_constant(boston_df['RM'])
+y = boston_df['MEDV']
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Multiple linear regression using sklearn
+X = boston_df.drop('MEDV', axis=1)
+y = boston_df['MEDV']
+lm = LinearRegression()
+lm.fit(X, y)
+print('Intercept:', lm.intercept_)
+print('Coefficients:', lm.coef_)
