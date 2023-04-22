@@ -13480,3 +13480,26 @@ lm = LinearRegression()
 lm.fit(X, y)
 print('Intercept:', lm.intercept_)
 print('Coefficients:', lm.coef_)
+# Change made on 2024-06-26 21:42:59.231836
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'Unemployment Rate']]
+y = data['Inflation Rate']
+
+# Perform multiple linear regression
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Create a simple linear regression model using sklearn
+lm = LinearRegression()
+lm.fit(X, y)
+print('Intercept: ', lm.intercept_)
+print('Coefficients: ', lm.coef_)
