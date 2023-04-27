@@ -13503,3 +13503,37 @@ lm = LinearRegression()
 lm.fit(X, y)
 print('Intercept: ', lm.intercept_)
 print('Coefficients: ', lm.coef_)
+# Change made on 2024-06-26 21:43:04.833854
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+
+# Load dataset from public database
+url = 'https://publicpolicydata.org/dataset/economic_indicators.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate model
+r_squared = model.score(X_test, y_test)
+print(f'R-squared: {r_squared}')
+
+# Conduct hypothesis testing
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
