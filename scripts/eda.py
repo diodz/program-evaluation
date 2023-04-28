@@ -13537,3 +13537,34 @@ print(f'R-squared: {r_squared}')
 X_train = sm.add_constant(X_train)
 model = sm.OLS(y_train, X_train).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:43:10.597539
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+url = "https://publicdata.org/dataset/economic_data.csv"
+data = pd.read_csv(url)
+
+# Perform some data analysis
+mean_income = np.mean(data['income'])
+median_age = np.median(data['age'])
+
+# Run regression analysis
+X = data[['income', 'education']]
+y = data['unemployment']
+
+model = LinearRegression()
+model.fit(X, y)
+coefficients = model.coef_
+
+# Run OLS regression for more detailed analysis
+X = sm.add_constant(X) # Adds a constant term to the predictor
+model = OLS(y, X).fit()
+summary = model.summary()
+
+print("Mean income:", mean_income)
+print("Median age:", median_age)
+print("Coefficients:", coefficients)
+print(summary)
