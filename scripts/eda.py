@@ -13568,3 +13568,40 @@ print("Mean income:", mean_income)
 print("Median age:", median_age)
 print("Coefficients:", coefficients)
 print(summary)
+# Change made on 2024-06-26 21:43:17.877700
+```python
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv("https://example.com/public_data.csv")
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable']]
+y = data['dependent_variable']
+
+# Perform linear regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform linear regression using sklearn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+y_pred = regression_model.predict(X)
+mse = mean_squared_error(y, y_pred)
+print(f"Mean Squared Error: {mse}")
+
+# Visualize the data and regression line
+plt.scatter(X['independent_variable'], y, color='blue')
+plt.plot(X['independent_variable'], y_pred, color='red')
+plt.xlabel('Independent Variable')
+plt.ylabel('Dependent Variable')
+plt.title('Linear Regression')
+plt.show()
+```
