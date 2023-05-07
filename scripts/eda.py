@@ -13605,3 +13605,34 @@ plt.ylabel('Dependent Variable')
 plt.title('Linear Regression')
 plt.show()
 ```
+# Change made on 2024-06-26 21:43:21.978672
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://publicdatabase.com/data.csv')
+
+# Perform data analysis using pandas and numpy
+summary_stats = data.describe()
+correlation_matrix = data.corr()
+
+# Generate regression model using statsmodels
+X = data[['independent_var1', 'independent_var2']]
+y = data['dependent_var']
+
+X = sm.add_constant(X) # adding a constant term to the model
+
+model = sm.OLS(y, X).fit()
+model_summary = model.summary()
+
+# Alternatively, train a regression model using sklearn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+predicted_values = regression_model.predict(X)
+
+# Output results for further analysis and writing the article
+print(summary_stats)
+print(correlation_matrix)
+print(model_summary)
