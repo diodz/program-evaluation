@@ -13636,3 +13636,30 @@ predicted_values = regression_model.predict(X)
 print(summary_stats)
 print(correlation_matrix)
 print(model_summary)
+# Change made on 2024-06-26 21:43:27.221294
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Perform data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit linear regression model
+lm = LinearRegression()
+lm.fit(X, y)
+
+# Print regression coefficients
+print("Regression Coefficients:")
+print("GDP: ", lm.coef_[0])
+print("Unemployment Rate: ", lm.coef_[1])
+
+# Perform statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
