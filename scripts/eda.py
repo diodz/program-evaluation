@@ -13663,3 +13663,38 @@ print("Unemployment Rate: ", lm.coef_[1])
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:43:31.890292
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load economic data from a public database
+data = pd.read_csv('https://publicdatabase.com/economic_data.csv')
+
+# Perform exploratory data analysis
+data.describe()
+
+# Perform regression analysis to analyze the impact of certain variables on economic indicators
+X = data[['unemployment_rate', 'inflation_rate', 'gdp_growth']]
+y = data['economic_indicator']
+
+# Ordinary Least Squares regression
+model = sm.OLS(y, X).fit()
+predictions = model.predict(X)
+
+# Machine learning regression
+lm = LinearRegression()
+lm.fit(X, y)
+predictions_ml = lm.predict(X)
+
+# Compare results from OLS and machine learning regression
+results = pd.DataFrame({'Actual': y, 'Predictions_OLS': predictions, 'Predictions_ML': predictions_ml})
+results.head()
+
+# Conduct statistical tests to determine significance of variables
+t_test = sm.stats.ttest_ind(X['unemployment_rate'], X['inflation_rate'])
+f_test = sm.stats.anova_lm(model)
+
+# Write results to a csv file
+results.to_csv('economic_research_results.csv', index=False)
