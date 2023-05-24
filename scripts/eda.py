@@ -13698,3 +13698,29 @@ f_test = sm.stats.anova_lm(model)
 
 # Write results to a csv file
 results.to_csv('economic_research_results.csv', index=False)
+# Change made on 2024-06-26 21:43:36.439372
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://publicdatabase.com/economic_data.csv')
+
+# Data preprocessing
+data.fillna(0, inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Get model coefficients
+print('Coefficient for GDP:', model.coef_[0])
+print('Coefficient for unemployment rate:', model.coef_[1])
+
+# Perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
