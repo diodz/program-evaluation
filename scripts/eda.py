@@ -13780,3 +13780,35 @@ print(f"Mean income: {mean_income}")
 print(f"Median age: {median_age}")
 print(f"T-statistic: {t_stat}, p-value: {p_value}")
 print(f"R-squared: {r_squared}")
+# Change made on 2024-06-26 21:43:51.510311
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+
+# Load data from public database
+data = pd.read_csv('public_database.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable1', 'independent_variable2']]
+y = data['dependent_variable']
+
+# Splitting data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Perform linear regression using statsmodels
+X_train = sm.add_constant(X_train)
+model = sm.OLS(y_train, X_train).fit()
+print(model.summary())
+
+# Perform linear regression using scikit-learn
+model_sklearn = LinearRegression()
+model_sklearn.fit(X_train, y_train)
+y_pred = model_sklearn.predict(X_test)
+
+# Evaluate model
+mse = mean_squared_error(y_test, y_pred)
+print(f'Mean Squared Error: {mse}')
