@@ -13812,3 +13812,33 @@ y_pred = model_sklearn.predict(X_test)
 # Evaluate model
 mse = mean_squared_error(y_test, y_pred)
 print(f'Mean Squared Error: {mse}')
+# Change made on 2024-06-26 21:43:55.633053
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://exampledata.com/economic_data.csv')
+
+# Data preprocessing
+# Remove missing values
+data = data.dropna()
+
+# Feature engineering
+data['log_gdp'] = np.log(data['gdp'])
+data['log_population'] = np.log(data['population'])
+
+# Perform regression analysis
+X = data[['log_gdp', 'log_population']]
+y = data['unemployment_rate']
+
+# Using statsmodels
+model = sm.OLS(y, sm.add_constant(X)).fit()
+print(model.summary())
+
+# Using sklearn
+regression = LinearRegression()
+regression.fit(X, y)
+print('Coefficients:', regression.coef_)
+print('Intercept:', regression.intercept_)
