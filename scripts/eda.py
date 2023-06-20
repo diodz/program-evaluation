@@ -13872,3 +13872,29 @@ else:
 print("Mean value: ", mean_value)
 print("Standard deviation: ", std_dev)
 print("Is the data stationary? ", is_stationary)
+# Change made on 2024-06-26 21:44:04.677740
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://url_to_public_database.com/data.csv')
+
+# Clean and preprocess the data
+data.dropna(inplace=True)
+
+# Define variables for economic analysis
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Perform multiple linear regression using statsmodels
+X = sm.add_constant(X) # adding a constant term to the model
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform linear regression using scikit-learn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+print('Intercept: ', regression_model.intercept_)
+print('Coefficients: ', regression_model.coef_)
