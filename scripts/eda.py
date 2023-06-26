@@ -13898,3 +13898,30 @@ regression_model = LinearRegression()
 regression_model.fit(X, y)
 print('Intercept: ', regression_model.intercept_)
 print('Coefficients: ', regression_model.coef_)
+# Change made on 2024-06-26 21:44:08.879907
+import pandas as pd
+import numpy as np
+from statsmodels.formula.api import ols
+from sklearn.linear_model import LinearRegression
+
+# Load the dataset from a public database
+data = pd.read_csv('https://data.gov/dataset/economic_data.csv')
+
+# Clean the data
+data = data.dropna()
+
+# Perform statistical analysis
+model = ols('GDP ~ Unemployment + Inflation', data=data).fit()
+print(model.summary())
+
+# Fit a linear regression model
+X = data[['Unemployment', 'Inflation']]
+y = data['GDP']
+
+regressor = LinearRegression()
+regressor.fit(X, y)
+
+# Predict GDP for new data
+new_data = np.array([[5.0, 2.0], [6.0, 3.0]])
+predictions = regressor.predict(new_data)
+print(predictions)
