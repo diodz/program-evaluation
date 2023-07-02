@@ -13925,3 +13925,31 @@ regressor.fit(X, y)
 new_data = np.array([[5.0, 2.0], [6.0, 3.0]])
 predictions = regressor.predict(new_data)
 print(predictions)
+# Change made on 2024-06-26 21:44:13.414715
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load the data from a public database
+data_url = "https://exampledata.com/economic_data.csv"
+economic_data = pd.read_csv(data_url)
+
+# Explore the data 
+print(economic_data.head())
+
+# Perform some economic or public policy analysis 
+# For example, running a regression analysis
+X = economic_data[['independent_variable1', 'independent_variable2']]
+y = economic_data['dependent_variable']
+
+# Using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn
+regression_model = LinearRegression()
+regression_model.fit(X, y)
+print("Intercept:", regression_model.intercept_)
+print("Coefficients:", regression_model.coef_)
