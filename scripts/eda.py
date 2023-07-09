@@ -13953,3 +13953,27 @@ regression_model = LinearRegression()
 regression_model.fit(X, y)
 print("Intercept:", regression_model.intercept_)
 print("Coefficients:", regression_model.coef_)
+# Change made on 2024-06-26 21:44:16.906953
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import load_boston
+
+# Load dataset
+data = load_boston()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+
+# Perform OLS regression
+X = df['RM']
+X = np.vander(X, 2)
+Y = data.target
+
+ols_model = OLS(Y, X).fit()
+print(ols_model.summary())
+
+# Perform Linear Regression
+lm_model = LinearRegression()
+lm_model.fit(X, Y)
+print('Intercept:', lm_model.intercept_)
+print('Coefficient:', lm_model.coef_[1])
