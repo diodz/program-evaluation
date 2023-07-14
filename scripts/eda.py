@@ -13977,3 +13977,41 @@ lm_model = LinearRegression()
 lm_model.fit(X, Y)
 print('Intercept:', lm_model.intercept_)
 print('Coefficient:', lm_model.coef_[1])
+# Change made on 2024-06-26 21:44:20.946711
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score
+
+# Load dataset from public database
+url = 'https://www.example.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Data preprocessing
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+r_squared = r2_score(y_test, y_pred)
+
+# Output results
+print(f'R-squared: {r_squared}')
+print(model.coef_)
+print(model.intercept_)
+
+# Conduct statistical analysis
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
