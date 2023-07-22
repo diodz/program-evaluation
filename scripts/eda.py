@@ -14015,3 +14015,67 @@ print(model.intercept_)
 X = sm.add_constant(X)
 model = sm.OLS(y, X).fit()
 print(model.summary())
+# Change made on 2024-06-26 21:44:25.716379
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from statsmodels.tsa.api import SimpleExpSmoothing
+import matplotlib.pyplot as plt
+
+# Load data from a public database
+data = pd.read_csv('https://url-to-public-database/data.csv')
+
+# Perform some data analysis
+correlation_matrix = data.corr()
+print(correlation_matrix)
+
+# Fit a linear regression model
+X = data[['Income', 'Education']]
+y = data['Unemployment']
+model = LinearRegression()
+model.fit(X, y)
+
+# Make predictions using the model
+predictions = model.predict(X)
+
+# Calculate mean squared error
+mse = np.mean((predictions - y) ** 2)
+
+# Perform time series forecasting using exponential smoothing
+model = SimpleExpSmoothing(data['GDP'])
+model_fit = model.fit()
+forecast = model_fit.forecast(steps=5)
+
+# Visualize the forecasted GDP values
+plt.plot(data['Year'], data['GDP'], label='Historical GDP')
+plt.plot(range(2022, 2027), forecast, label='Forecasted GDP')
+plt.xlabel('Year')
+plt.ylabel('GDP')
+plt.legend()
+plt.show()
+# Change made on 2024-06-26 21:44:29.418069
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+url = 'https://example_dataset.com'
+data = pd.read_csv(url)
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['independent_variable_1', 'independent_variable_2', 'independent_variable_3']]
+y = data['dependent_variable']
+
+# Model building using OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+
+# Print regression results
+print(model.summary())
+
+# Model building using sklearn Linear Regression
+reg = LinearRegression().fit(X, y)
+print('Intercept:', reg.intercept_)
+print('Coefficients:', reg.coef_)
