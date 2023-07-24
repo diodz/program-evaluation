@@ -14079,3 +14079,36 @@ print(model.summary())
 reg = LinearRegression().fit(X, y)
 print('Intercept:', reg.intercept_)
 print('Coefficients:', reg.coef_)
+# Change made on 2024-06-26 21:44:34.373773
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load dataset from public database
+url = 'https://raw.githubusercontent.com/datasets/inflation/master/data/inflation.csv'
+data = pd.read_csv(url)
+
+# Perform some data analysis
+mean_inflation = data['InflationRate'].mean()
+median_inflation = data['InflationRate'].median()
+
+# Fit a linear regression model
+X = data[['UnemploymentRate', 'GDPGrowth']]
+y = data['InflationRate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Print results
+print(f"Mean Inflation Rate: {mean_inflation}")
+print(f"Median Inflation Rate: {median_inflation}")
+print("Linear Regression Coefficients:")
+print("Intercept:", model.intercept_)
+print("Unemployment Rate Coefficient:", model.coef_[0])
+print("GDP Growth Coefficient:", model.coef_[1])
+
+# Perform OLS regression
+X = sm.add_constant(X)
+ols_model = sm.OLS(y, X).fit()
+print(ols_model.summary())
