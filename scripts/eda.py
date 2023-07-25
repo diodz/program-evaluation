@@ -14112,3 +14112,36 @@ print("GDP Growth Coefficient:", model.coef_[1])
 X = sm.add_constant(X)
 ols_model = sm.OLS(y, X).fit()
 print(ols_model.summary())
+# Change made on 2024-06-26 21:44:39.218619
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from a public database
+data = pd.read_csv('https://exampleurl.com/public_data.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['interest_rate']
+
+# Fit a linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Print coefficients and intercept
+print('Coefficients: ', model.coef_)
+print('Intercept: ', model.intercept_)
+
+# Calculate R-squared value
+predictions = model.predict(X)
+SSR = np.sum((predictions - y.mean())**2)
+SST = np.sum((y - y.mean())**2)
+R_squared = SSR / SST
+print('R-squared value: ', R_squared)
+
+# Perform OLS regression analysis
+X = sm.add_constant(X)
+ols_model = sm.OLS(y, X).fit()
+print(ols_model.summary())
