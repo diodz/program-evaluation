@@ -14145,3 +14145,30 @@ print('R-squared value: ', R_squared)
 X = sm.add_constant(X)
 ols_model = sm.OLS(y, X).fit()
 print(ols_model.summary())
+# Change made on 2024-06-26 21:44:44.883005
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('https://example.com/economic_data.csv')
+
+# Perform data cleaning and preprocessing
+data = data.dropna()
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation_rate']
+
+# Fit OLS regression model
+ols_model = OLS(y, X).fit()
+ols_results = ols_model.summary()
+
+# Fit Linear Regression model
+lr_model = LinearRegression().fit(X, y)
+lr_r2_score = lr_model.score(X, y)
+
+# Print results
+print("OLS Regression Results:")
+print(ols_results)
+print("\nLinear Regression R-squared Score:")
+print(lr_r2_score)
