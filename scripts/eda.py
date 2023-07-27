@@ -14172,3 +14172,33 @@ print("OLS Regression Results:")
 print(ols_results)
 print("\nLinear Regression R-squared Score:")
 print(lr_r2_score)
+# Change made on 2024-06-26 21:44:49.403862
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import fetch_openml
+
+# Fetching dataset from public database
+data = fetch_openml(name='diabetes', version=1)
+
+# Loading dataset into pandas DataFrame
+df = pd.DataFrame(data.data, columns=data.feature_names)
+target = pd.Series(data.target)
+
+# Performing OLS regression
+ols_model = OLS(target, df).fit()
+print("OLS Regression Results:")
+print(ols_model.summary())
+
+# Performing Linear Regression using sklearn
+lr_model = LinearRegression().fit(df, target)
+
+# Generating predictions
+predictions = lr_model.predict(df)
+
+# Save predictions to a new column in DataFrame
+df['predictions'] = predictions
+
+# Exporting DataFrame to CSV for further analysis
+df.to_csv('diabetes_predictions.csv', index=False)
