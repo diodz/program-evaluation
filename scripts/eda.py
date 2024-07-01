@@ -14240,3 +14240,35 @@ print("OLS results:")
 print(model.summary())
 print("R-squared:", r_squared)
 print("P-value:", p_value)
+# Change made on 2024-07-29 20:43:19.613939
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# Fetching data from a public database
+data = pd.read_csv('https://example.com/data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate']]
+y = data['inflation']
+
+# Using statsmodels to perform OLS regression
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Using sklearn to perform linear regression
+lm = LinearRegression()
+lm.fit(X, y)
+print('Intercept: ', lm.intercept_)
+print('Coefficients: ', lm.coef_)
+
+# Visualizing the relationship between GDP and inflation
+plt.scatter(data['GDP'], data['inflation'])
+plt.xlabel('GDP')
+plt.ylabel('Inflation')
+plt.title('GDP vs Inflation')
+plt.show()
