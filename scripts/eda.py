@@ -14272,3 +14272,33 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation')
 plt.title('GDP vs Inflation')
 plt.show()
+# Change made on 2024-07-29 20:43:24.898032
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Load data from public database
+data = pd.read_csv('public_data.csv')
+
+# Data preprocessing
+data.dropna(inplace=True)
+X = data[['GDP', 'unemployment_rate', 'inflation_rate']]
+y = data['economic_growth']
+
+# Adding a constant to the independent variables
+X = sm.add_constant(X)
+
+# Fitting a multiple linear regression model
+model = sm.OLS(y, X).fit()
+
+# Summary of the regression model
+print(model.summary())
+
+# Using sklearn for linear regression
+sklearn_model = LinearRegression()
+sklearn_model.fit(X, y)
+
+# Calculating R-squared
+r_squared = sklearn_model.score(X, y)
+print("R-squared: ", r_squared)
