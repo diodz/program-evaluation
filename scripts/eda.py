@@ -14302,3 +14302,39 @@ sklearn_model.fit(X, y)
 # Calculating R-squared
 r_squared = sklearn_model.score(X, y)
 print("R-squared: ", r_squared)
+# Change made on 2024-07-29 20:43:29.444115
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+data = pd.read_csv('https://example.com/public_dataset.csv')
+
+# Preprocess the data
+data.dropna(inplace=True)
+X = data[['independent_variable_1', 'independent_variable_2']]
+y = data['dependent_variable']
+
+# Perform OLS regression using statsmodels
+X = sm.add_constant(X)
+model = sm.OLS(y, X).fit()
+print(model.summary())
+
+# Perform linear regression using sklearn
+lin_model = LinearRegression()
+lin_model.fit(X, y)
+y_pred = lin_model.predict(X)
+
+# Calculate Mean Squared Error
+mse = mean_squared_error(y, y_pred)
+print('Mean Squared Error:', mse)
+
+# Visualize the results
+plt.scatter(y, y_pred)
+plt.xlabel('Actual Values')
+plt.ylabel('Predicted Values')
+plt.title('Actual vs Predicted Values')
+plt.show()
