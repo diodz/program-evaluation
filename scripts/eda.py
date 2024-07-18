@@ -14338,3 +14338,72 @@ plt.xlabel('Actual Values')
 plt.ylabel('Predicted Values')
 plt.title('Actual vs Predicted Values')
 plt.show()
+# Change made on 2024-07-29 20:43:33.209571
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+
+# Downloading data from public database
+data_url = 'https://publicdatabase.com/economic_data.csv'
+economic_data = pd.read_csv(data_url)
+
+# Preprocessing data
+economic_data.dropna(inplace=True)
+X = economic_data[['GDP', 'Unemployment']]
+y = economic_data['Inflation']
+
+# Using a simple linear regression model
+model = LinearRegression()
+model.fit(X, y)
+
+# Getting model coefficients
+print("Intercept:", model.intercept_)
+print("GDP coefficient:", model.coef_[0])
+print("Unemployment coefficient:", model.coef_[1])
+
+# Using statsmodels for regression analysis
+X = sm.add_constant(X) # adding a constant to the model
+model_sm = sm.OLS(y, X).fit()
+print(model_sm.summary())
+# Change made on 2024-07-29 20:43:39.105372
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
+
+# Load dataset from public database
+url = 'https://example.com/economic_data.csv'
+data = pd.read_csv(url)
+
+# Preprocess data
+data = data.dropna()
+X = data[['GDP', 'Unemployment_rate']]
+y = data['Inflation_rate']
+
+# Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test)
+
+# Calculate RMSE
+rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+
+# Print RMSE
+print('Root Mean Squared Error:', rmse)
+
+# Visualize data
+plt.scatter(X_test['GDP'], y_test, color='red')
+plt.plot(X_test['GDP'], y_pred, color='blue')
+plt.xlabel('GDP')
+plt.ylabel('Inflation Rate')
+plt.title('GDP vs Inflation Rate Prediction')
+plt.show()
