@@ -14407,3 +14407,25 @@ plt.xlabel('GDP')
 plt.ylabel('Inflation Rate')
 plt.title('GDP vs Inflation Rate Prediction')
 plt.show()
+# Change made on 2024-07-29 20:43:43.439270
+import pandas as pd
+import numpy as np
+from statsmodels.api import OLS
+
+# Load data from public database
+data_url = 'https://public_database_url/data.csv'
+df = pd.read_csv(data_url)
+
+# Data preprocessing
+df['log_gdp'] = np.log(df['gdp'])
+df['log_population'] = np.log(df['population'])
+
+# OLS regression analysis
+X = df[['log_population']]
+X = sm.add_constant(X) # add constant term
+y = df['log_gdp']
+
+model = OLS(y, X).fit()
+
+# Print summary of regression results
+print(model.summary())
